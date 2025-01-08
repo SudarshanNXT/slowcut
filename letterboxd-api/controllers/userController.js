@@ -26,11 +26,7 @@ const registerUser = asyncHandler(async (req, res) => {
     //Create user
     const user = await User.create({
         username,
-        password,
-        image: '',
-        followed_items: [],
-        recently_viewed: [],
-        liked_songs: []
+        password
     })
 
     if (user) {
@@ -46,6 +42,29 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc Auth user/set token
+// route POST api/users/auth
+// @access Public
+const authUser = asyncHandler(async (req, res) => {
+    const { username, password } = req.body
+
+    const user = await User.findOne({username})
+
+    if (user && (await user.matchPasswords(password))) {
+        const token = generateToken(user._id)
+        
+        res.status(201).json({
+            _id: user._id,
+            username: user.username,
+            token: token
+        })
+    } else {
+        res.status(401)
+        throw new Error('Invalid username or password')
+    }
+})
+
 export {
-    registerUser
+    registerUser,
+    authUser
 }
