@@ -38,6 +38,7 @@ const Navbar = () => {
     return (
         <div className='flex justify-between px-5'>
             <div className='space-x-5'>
+                <Link to={'/'}>Home</Link>
                 <Link to={'/signup'}>Sign Up</Link>
                 <Link to={'/login'}>Log In</Link>
                 <form onSubmit={handleSearch}>

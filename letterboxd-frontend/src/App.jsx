@@ -17,6 +17,9 @@ const router = createBrowserRouter(
       <Route index element={<HomePage />}/>
       <Route path='/login' element={<LoginPage />}/>
       <Route path='/signup' element={<SignupPage />}/>
+      <Route path='/search/:type/:query/:page' element={<SearchPage />}/>
+      <Route path='/search/:type/:query' element={<SearchPage />}/>
+      <Route path='/search/:query/:page' element={<SearchPage />}/>
       <Route path='/search/:query' element={<SearchPage />}/>
       <Route path='/search' element={<SearchPage />}/>
     </Route>
