@@ -1,11 +1,13 @@
 import express from 'express'
 import {
     search,
+    getFilms
 } from '../controllers/tmdbController.js'
 
 const router = express.Router()
 
 router.get('/search', search)
+router.get('/films', getFilms)
 // router.get('/trending', getTrending)
 // router.get('/popular', getPopular)
 // router.get('/movie_page', getMoviePageData)

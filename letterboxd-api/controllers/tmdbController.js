@@ -38,6 +38,28 @@ const search = asyncHandler(async (req, res) => {
 
 })
 
+// @desc Get movies based off of type filter and page number
+// route GET api/tmdb/films
+// @access Public
+const getFilms = asyncHandler(async (req, res) => {
+    const { type, page } = req.query
+    
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${type}?page=${page}`, {
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${process.env.TMDB_API_KEY}`
+        }
+    })
+    if(response.ok){
+        const data = await response.json()
+        res.json(data)
+        return
+    }
+    res.status(401)
+    res.json('Error fetching movie page data')
+})
+
 export {
-    search
+    search,
+    getFilms
 }
