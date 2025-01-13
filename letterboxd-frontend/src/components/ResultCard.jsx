@@ -6,7 +6,7 @@ const ResultCard = ({ result }) => {
     let link = '', subLabel = ''
 
     if(result.media_type === 'movie'){
-        link += `/movie/${result.id}`
+        link += `/film/${result.id}`
     } else if(result.media_type === 'person'){
         link += `/person/${result.id}`
     }

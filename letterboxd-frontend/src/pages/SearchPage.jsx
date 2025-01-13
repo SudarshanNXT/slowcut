@@ -24,7 +24,7 @@ const SearchPage = () => {
                     const data = await response.json()
                     setResults(data.results)
                     setTotalPages(data.total_pages)
-                    console.log(data);
+                    // console.log(data);
                     
                 } else {
                     const error = await response.json()

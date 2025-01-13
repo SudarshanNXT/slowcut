@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler"
+import findDirector from "../utils/findDirector.js"
 
 // @desc TMDB search query
 // route GET api/tmdb/search
@@ -59,7 +60,62 @@ const getFilms = asyncHandler(async (req, res) => {
     res.json('Error fetching movie page data')
 })
 
+// @desc Get individual movie page details
+// route GET api/users/movie_details
+// @access Public
+const getMovieDetails = asyncHandler(async (req, res) => {
+    const { id } = req.query
+    const resObject = {}
+    const headers = {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${process.env.TMDB_API_KEY}`
+    }
+
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${id}`, {
+        headers
+    })
+    if(response.ok){
+        const data = await response.json()
+        resObject['movie_data'] = data
+    }
+    const castResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits`, {
+        headers
+    })
+    if(castResponse.ok){
+        const data = await castResponse.json()
+        resObject['credits'] = data
+        resObject['director'] = findDirector(data.crew)
+    }
+
+    const altTitlesResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/alternative_titles`, {
+        headers
+    })
+    if(altTitlesResponse.ok){
+        const data = await altTitlesResponse.json()
+        resObject['alternative_titles'] = data
+    }
+
+    const releasesResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/release_dates`, {
+        headers
+    })
+    if(releasesResponse.ok){
+        const data = await releasesResponse.json()
+        resObject['releases'] = data
+    }
+
+    const keywordsResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/keywords`, {
+        headers
+    })
+    if(keywordsResponse.ok){
+        const data = await keywordsResponse.json()
+        resObject['keywords'] = data
+    }
+
+    res.json(resObject)
+})
+
 export {
     search,
-    getFilms
+    getFilms,
+    getMovieDetails
 }

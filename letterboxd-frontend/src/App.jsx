@@ -11,6 +11,7 @@ import SignupPage from './pages/SignupPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import SearchPage from './pages/SearchPage.jsx'
 import FilmsPage from './pages/FilmsPage.jsx'
+import FilmPage from './pages/FilmPage.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
       <Route path='/search/:query' element={<SearchPage />}/>
       <Route path='/search' element={<SearchPage />}/>
       <Route path='/films' element={<FilmsPage />}/>
+      <Route path='/film/:id' element={<FilmPage />}/>
     </Route>
   )
 )
