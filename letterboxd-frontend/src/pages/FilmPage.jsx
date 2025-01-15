@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
+import countries from '../data/countries.js';
+import languages from '../data/languages.js';
 
 const FilmPage = () => {
     const { id } = useParams()
@@ -19,7 +21,7 @@ const FilmPage = () => {
                 })
                 if(response.ok){
                     const data = await response.json()
-                    console.log(data);
+                    // console.log(data);
                     setMovieData(data);
                     setLoading(false)
                     
@@ -33,9 +35,20 @@ const FilmPage = () => {
         getMovieDetails()
     }, [id])
 
+    function getCountryNameByCode(code) {
+        const country = countries.find(country => country.iso_3166_1 === code.toUpperCase());
+        return country ? country.english_name : "Country not found";
+    }
+
+    function getLanguageNameByCode(code) {
+        const language = languages.find(lang => lang.iso_639_1 === code.toLowerCase());
+        return language ? language.english_name : "Language not found";
+    }
+
     if(movieData && !loading){
         return (
             <div>
+                <img className='h-[150px]' src={`${movieData.movie_data.poster_path ? `https://image.tmdb.org/t/p/w500/${movieData.movie_data.poster_path}` : '../images/no-image-1.png'}`} alt={movieData.movie_data.title} />
                 <div>{movieData.movie_data.title}</div>
                 <div>{movieData.movie_data.release_date.slice(0, 4)}</div>
                 <div>Directed by <Link className='text-blue-500 hover:underline' to={`/person/${movieData.director.id}`}>{movieData.director.name}</Link></div>
@@ -65,8 +78,8 @@ const FilmPage = () => {
                     {filter === 'details' &&
                         <div>
                             <div>Studios: {movieData.movie_data.production_companies.map((item, index) => <div key={index}>{item.name}</div>)}</div>
-                            <div>Country: {movieData.movie_data.origin_country[0]}</div>
-                            <div>Primary Language: {movieData.movie_data.original_language}</div>
+                            <div className='border'>Country: {getCountryNameByCode(movieData.movie_data.origin_country[0])}</div>
+                            <div>Primary Language: {getLanguageNameByCode(movieData.movie_data.original_language)}</div>
                             <div>Spoken Languages: {movieData.movie_data.spoken_languages.map((item, index) => <div key={index}>{item.name}</div>)}</div>
                             <div>Alternative Titles: {movieData.alternative_titles.titles.map((item, index) => <div key={index}>{item.title}</div>)}</div>
                         </div>
@@ -85,7 +98,7 @@ const FilmPage = () => {
                         </>
                     )}
                     {filter === 'releases' && 
-                        movieData.releases.results.map((item, index) => <div key={index}>{item.release_dates[0].release_date.slice(0, 4)}</div>)
+                        movieData.releases.results.map((item, index) => <div key={index}>{item.release_dates[0].release_date.slice(0, 4)} {getCountryNameByCode(item.iso_3166_1)}</div>)
                     }
                 </div>
             </div>

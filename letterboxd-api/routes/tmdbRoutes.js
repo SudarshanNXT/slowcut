@@ -2,7 +2,8 @@ import express from 'express'
 import {
     search,
     getFilms,
-    getMovieDetails
+    getMovieDetails,
+    getPersonDetails
 } from '../controllers/tmdbController.js'
 
 const router = express.Router()
@@ -16,6 +17,6 @@ router.get('/films', getFilms)
 // router.get('/people_page', getPeoplePageData)
 router.get('/movie_details', getMovieDetails)
 // router.get('/tv_show_details', getTvShowDetails)
-// router.get('/person_details', getPersonDetails)
+router.get('/person_details', getPersonDetails)
 
 export default router

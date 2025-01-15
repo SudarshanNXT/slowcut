@@ -114,8 +114,40 @@ const getMovieDetails = asyncHandler(async (req, res) => {
     res.json(resObject)
 })
 
+// @desc Get individual person page details
+// route GET api/users/person_details
+// @access Public
+const getPersonDetails = asyncHandler(async (req, res) => {
+    const { id } = req.query
+    const resObject = {}
+
+    const response = await fetch(`https://api.themoviedb.org/3/person/${id}`, {
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${process.env.TMDB_API_KEY}`
+        }
+    })
+    if(response.ok){
+        const data = await response.json()
+        resObject['person_data'] = data
+    }
+    const creditsResponse = await fetch(`https://api.themoviedb.org/3/person/${id}/movie_credits`, {
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${process.env.TMDB_API_KEY}`
+        }
+    })
+    if(creditsResponse.ok){
+        const data = await creditsResponse.json()
+        resObject['credits_data'] = data
+    }
+
+    res.json(resObject)
+})
+
 export {
     search,
     getFilms,
-    getMovieDetails
+    getMovieDetails,
+    getPersonDetails
 }
