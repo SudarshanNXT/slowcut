@@ -14,6 +14,9 @@ import FilmsPage from './pages/FilmsPage.jsx'
 import FilmPage from './pages/FilmPage.jsx'
 import PersonPage from './pages/PersonPage.jsx'
 
+import RequireAuth from './components/RequireAuth.jsx'
+import ProfilePage from './pages/ProfilePage.jsx'
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<MainLayout />}>
@@ -28,6 +31,7 @@ const router = createBrowserRouter(
       <Route path='/films' element={<FilmsPage />}/>
       <Route path='/film/:id' element={<FilmPage />}/>
       <Route path='/person/:id' element={<PersonPage />}/>
+      <Route path='/profile' element={<RequireAuth> <ProfilePage /> </RequireAuth>}/>
     </Route>
   )
 )

@@ -73,7 +73,29 @@ const authUser = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc Delete user with cleanup (Profile)
+// route POST api/users/delete_profile
+// @access Private
+const deleteProfile = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user.id)
+    const profile = await Profile.findOne({ user: req.user._id })
+
+    if(!user || !profile){
+        res.status(400)
+        throw new Error('Error deleting profile')
+    }
+
+    //clean up profile
+    await Profile.deleteOne({_id: profile._id})
+
+    //delete user
+    await User.deleteOne({ _id: user._id })
+
+    res.json('Successfully deleted user')
+})
+
 export {
     registerUser,
-    authUser
+    authUser,
+    deleteProfile
 }
