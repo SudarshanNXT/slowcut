@@ -145,9 +145,35 @@ const getPersonDetails = asyncHandler(async (req, res) => {
     res.json(resObject)
 })
 
+// @desc Get home page tmdb data (trending and popular movies, no filtering)
+// route GET api/tmdb/home_page
+// @access Public
+const getHomePageData = asyncHandler(async (req, res) => {
+    const headers = {
+        Accept: 'application/json',
+        Authorization: `Bearer ${process.env.TMDB_API_KEY}`
+    }
+    const resObject = {}
+
+    const trendingResponse = await fetch(`https://api.themoviedb.org/3/trending/movie/day`, {headers})
+    if(trendingResponse.ok){
+        const data = await trendingResponse.json()
+        resObject['trending_data'] = data.results
+    }
+
+    const popularResponse = await fetch(`https://api.themoviedb.org/3/movie/popular`, {headers})
+    if(popularResponse.ok){
+        const data = await popularResponse.json()
+        resObject['popular_data'] = data.results
+    }
+
+    res.json(resObject)
+})
+
 export {
     search,
     getFilms,
     getMovieDetails,
-    getPersonDetails
+    getPersonDetails,
+    getHomePageData
 }
