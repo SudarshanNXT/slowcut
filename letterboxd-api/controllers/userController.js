@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler"
 import User from '../models/userModel.js'
 import generateToken from "../utils/generateToken.js"
 import validateUserInput from "../utils/inputValidation.js"
+import Profile from "../models/profileModel.js"
 
 // @desc Register a new user
 // route POST api/users/register
@@ -30,6 +31,14 @@ const registerUser = asyncHandler(async (req, res) => {
     })
 
     if (user) {
+        //create profile
+        const profile = await Profile.create({
+            user: user._id,
+            liked_movies: [],
+            watched_movies: [],
+            watchlist: [],
+        })
+
         const token = generateToken(user._id)
         res.status(201).json({
             _id: user._id,

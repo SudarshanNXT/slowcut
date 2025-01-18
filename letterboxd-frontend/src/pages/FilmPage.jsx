@@ -8,8 +8,12 @@ const FilmPage = () => {
     const [movieData, setMovieData] = useState(null);
     const [filter, setFilter] = useState('cast');
     const [loading, setLoading] = useState(true);
+    const [likeStatus, setLikeStatus] = useState(false);
+    const [watchStatus, setWatchStatus] = useState(false);
+    const [watchlistStatus, setWatchlistStatus] = useState(false);
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
+    const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
 
     useEffect(() => {
         const getMovieDetails = async () => {
@@ -25,7 +29,6 @@ const FilmPage = () => {
                     setMovieData(data);
                     setLoading(false)
                     
-                    // favoriteStatus = checkFavoriteStatus()
                     // getUserList()
                 }
             } catch (error) {
@@ -33,16 +36,78 @@ const FilmPage = () => {
             }
         }
         getMovieDetails()
+        if(localStorage.getItem('userInfo')){
+            const getMovieStatus = async () => {
+                const response = await fetch(`${apiBaseUrl}/profile/movie_status?id=${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                })
+                if(response.ok){
+                    const data = await response.json()
+                    setLikeStatus(data.liked_movie_status)
+                    setWatchStatus(data.watch_status)
+                    // console.log(data);
+                }
+            } 
+            getMovieStatus()
+        }
     }, [id])
 
-    function getCountryNameByCode(code) {
-        const country = countries.find(country => country.iso_3166_1 === code.toUpperCase());
-        return country ? country.english_name : "Country not found";
+    const addMovieToProfile = async (field) => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/add_movie_to_profile/${field}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    title: movieData.movie_data.title,
+                    id: movieData.movie_data.id,
+                    image: movieData.movie_data.poster_path,
+                    genres: movieData.movie_data.genres,
+                    release_date: movieData.movie_data.release_date
+                })
+            })
+            if(response.ok){
+                const data = await response.json()
+                if(field === 'liked'){
+                    setLikeStatus(true)
+                } else if(field === 'watched'){
+                    setWatchStatus(true)
+                } else if(field === 'watchlist'){
+                    setWatchlistStatus(true)
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    function getLanguageNameByCode(code) {
-        const language = languages.find(lang => lang.iso_639_1 === code.toLowerCase());
-        return language ? language.english_name : "Language not found";
+    const removeMovieFromProfile = async (field) => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/remove_movie_from_profile/${field}?id=${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            if(response.ok){
+                const data = await response.json()
+                if(field === 'liked'){
+                    setLikeStatus(false)
+                } else if(field === 'watched'){
+                    setWatchStatus(false)
+                } else if(field === 'watchlist'){
+                    setWatchlistStatus(false)
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     if(movieData && !loading){
@@ -54,6 +119,31 @@ const FilmPage = () => {
                 <div>Directed by <Link className='text-blue-500 hover:underline' to={`/person/${movieData.director.id}`}>{movieData.director.name}</Link></div>
                 <div>{movieData.movie_data.tagline}</div>
                 <div>{movieData.movie_data.overview}</div>
+
+                {localStorage.getItem('userInfo') ? (
+                    <>
+                        {likeStatus ? (
+                            <button onClick={() => removeMovieFromProfile('liked')} className='border'>Unlike</button>
+                        ) : (
+                            <button onClick={() => addMovieToProfile('liked')} className='border'>Like</button>
+                        )}
+
+                        {watchStatus ? (
+                            <button onClick={() => removeMovieFromProfile('watched')} className='border'>Watched</button>
+                        ) : (
+                            <button onClick={() => addMovieToProfile('watched')} className='border'>Watch</button>
+                        )}
+
+                        {watchlistStatus ? (
+                            <button onClick={() => removeMovieFromProfile('watchlist')} className='border'>Watchlist remove</button>
+                        ) : (
+                            <button onClick={() => addMovieToProfile('watchlist')} className='border'>Watchlist add</button>
+                        )}
+                    </>
+                ) : (
+                    <div>Log in or sign up</div>
+                )}
+                
 
                 {/*Filtered section */}
                 <div className='border'>
@@ -113,6 +203,16 @@ const FilmPage = () => {
         )   
     }
     
+}
+
+function getCountryNameByCode(code) {
+    const country = countries.find(country => country.iso_3166_1 === code.toUpperCase());
+    return country ? country.english_name : "Country not found";
+}
+
+function getLanguageNameByCode(code) {
+    const language = languages.find(lang => lang.iso_639_1 === code.toLowerCase());
+    return language ? language.english_name : "Language not found";
 }
 
 export default FilmPage
