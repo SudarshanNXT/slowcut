@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import countries from '../data/countries.js';
 import languages from '../data/languages.js';
+import AddToListCard from '../components/AddToListCard.jsx';
 
 const FilmPage = () => {
     const { id } = useParams()
@@ -11,6 +12,9 @@ const FilmPage = () => {
     const [likeStatus, setLikeStatus] = useState(false);
     const [watchStatus, setWatchStatus] = useState(false);
     const [watchlistStatus, setWatchlistStatus] = useState(false);
+    const [listStatusArr, setListStatusArr] = useState(null);
+    const [addToList, setAddToList] = useState(false);
+    const [listOfLists, setListofLists] = useState([]);
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
     const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
@@ -48,7 +52,9 @@ const FilmPage = () => {
                     const data = await response.json()
                     setLikeStatus(data.liked_movie_status)
                     setWatchStatus(data.watch_status)
-                    // console.log(data);
+                    setWatchlistStatus(data.watchlist_status)
+                    setListStatusArr(data.list_status_arr)
+                    console.log(data);
                 }
             } 
             getMovieStatus()
@@ -110,6 +116,31 @@ const FilmPage = () => {
         }
     }
 
+    const addMoviesToLists = async () => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/add_movies_to_lists`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    movie_id: id,
+                    list_of_lists: listOfLists
+                })
+            })
+            if(response.ok){
+                const data = await response.json()
+                console.log(data);
+            } else {
+                const error = await response.json()
+                throw new Error(error)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     if(movieData && !loading){
         return (
             <div>
@@ -138,6 +169,18 @@ const FilmPage = () => {
                             <button onClick={() => removeMovieFromProfile('watchlist')} className='border'>Watchlist remove</button>
                         ) : (
                             <button onClick={() => addMovieToProfile('watchlist')} className='border'>Watchlist add</button>
+                        )}
+
+                        {addToList ? (
+                            <div>
+                                {listStatusArr.map((list, index) => (
+                                    <AddToListCard key={index} list={list.list_item} status={list.status} setListofLists={setListofLists}/>
+                                ))}
+
+                                <button className='bg-green-400' onClick={() => addMoviesToLists()}>Add</button>
+                            </div>
+                        ) : (
+                            <button className='border' onClick={() => setAddToList(true)}>Add to list</button>
                         )}
                     </>
                 ) : (

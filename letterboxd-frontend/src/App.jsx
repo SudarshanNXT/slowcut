@@ -16,6 +16,7 @@ import PersonPage from './pages/PersonPage.jsx'
 
 import RequireAuth from './components/RequireAuth.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
+import CreateListPage from './pages/CreateListPage.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
       <Route path='/film/:id' element={<FilmPage />}/>
       <Route path='/person/:id' element={<PersonPage />}/>
       <Route path='/profile' element={<RequireAuth> <ProfilePage /> </RequireAuth>}/>
+      <Route path='/list/new' element={<RequireAuth> <CreateListPage /> </RequireAuth>}/>
     </Route>
   )
 )

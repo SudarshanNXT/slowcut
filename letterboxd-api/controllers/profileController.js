@@ -2,6 +2,8 @@ import asyncHandler from "express-async-handler"
 import User from '../models/userModel.js'
 import Profile from "../models/profileModel.js"
 import Movie from "../models/movieModel.js"
+import List from "../models/listModel.js"
+import listStatusArr from "../utils/listStatusArr.js"
 
 // @desc Add movie to profile (either liked, watched, watchlist)
 // route POST api/profile/addMovieToProfile
@@ -81,12 +83,13 @@ const removeMovieFromProfile = asyncHandler(async (req, res) => {
     res.json(`${movie.title} removed from ${user.username}'s watched movies`)
 })
 
-// @desc Check liked, watched, watchlisted status for particular movie
+// @desc Check liked, watched, watchlisted status for particular movie, also returns list of user lists with status flag
 // route POST api/profile/movie_status
 // @access Private
 const getMovieStatus = asyncHandler(async (req, res) => {
     const { id } = req.query
     const profile = await Profile.findOne({ user: req.user._id })
+    const userLists = await List.find({ creator: req.user._id })
 
     if(!profile){
         res.status(404)
@@ -99,7 +102,8 @@ const getMovieStatus = asyncHandler(async (req, res) => {
         res.json({
             liked_movie_status: false,
             watch_status: false,
-            watchlist_status: false
+            watchlist_status: false,
+            list_status_arr: listStatusArr(userLists, movie)
         })
         return
     }
@@ -107,15 +111,86 @@ const getMovieStatus = asyncHandler(async (req, res) => {
     //check if its in profile's liked movies
     const likedMovieStatus = profile.liked_movies.some(item => item.movie._id.toString() === movie._id.toString())
     const watchMovieStatus = profile.watched_movies.some(item => item.movie._id.toString() === movie._id.toString())
+    const watchlistStatus = profile.watchlist.some(item => item.movie._id.toString() === movie._id.toString())
     res.json({
         liked_movie_status: likedMovieStatus,
         watch_status: watchMovieStatus,
-        watchlist_status: false
+        watchlist_status: watchlistStatus,
+        list_status_arr: listStatusArr(userLists, movie)
     })
+})
+
+// @desc Create new list
+// route POST api/profile/create_list
+// @access Private
+const createList = asyncHandler(async (req, res) => {
+    const { name, description, ranked, is_public } = req.body
+    const user = await User.findById(req.user._id)
+    const profile = await Profile.findOne({ user: req.user._id })
+
+    if(!profile){
+        res.status(404)
+        throw new Error('User not found')
+    }
+
+    //input validation
+    if(name.length > 50){
+        res.status(400)
+        throw new Error('List name too long.')
+    }
+
+    //create list
+    const list = await List.create({
+        name: name,
+        description: description,
+        creator: user.username,
+        ranked: ranked,
+        is_public: is_public,
+        comments: [],
+        list_items: []
+    })
+
+    res.json({
+        list: list
+    })
+})
+
+// @desc Add movies to lists (receives list of lists)
+// route POST api/profile/add_movies_to_lists
+// @access Private
+const addMoviesToLists = asyncHandler(async (req, res) => {
+    const { movie_id, list_of_lists } = req.body
+
+    //check if movie is already in db, if not then create it
+    let movie = await Movie.findOne({ id: movie_id })
+    if(!movie){
+        movie = await Movie.create({
+            title: title,
+            id: id,
+            image: image,
+            genres: genres,
+            release_date: release_date
+        })
+    }
+
+    //iterate through list of lists and add movie to each
+    for (const list_id of list_of_lists) {
+        const list = await List.findById(list_id);
+        list.list_items.push({
+            item: movie._id,
+            type: 'Movie',
+            id: movie.id
+        })
+        await list.save()
+      }
+
+    res.json('Movies added to lists successfully')
 })
 
 export {
     addMovieToProfile,
     removeMovieFromProfile,
-    getMovieStatus
+    getMovieStatus,
+    createList,
+    addMoviesToLists
 }

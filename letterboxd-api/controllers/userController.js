@@ -3,6 +3,7 @@ import User from '../models/userModel.js'
 import generateToken from "../utils/generateToken.js"
 import validateUserInput from "../utils/inputValidation.js"
 import Profile from "../models/profileModel.js"
+import List from "../models/listModel.js"
 
 // @desc Register a new user
 // route POST api/users/register
@@ -84,6 +85,9 @@ const deleteProfile = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Error deleting profile')
     }
+
+    //clean up lists
+    await List.deleteMany({ creator: user.username })
 
     //clean up profile
     await Profile.deleteOne({_id: profile._id})

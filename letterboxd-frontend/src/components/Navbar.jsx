@@ -57,6 +57,7 @@ const Navbar = () => {
                 <div className='space-x-2'>
                     <Link onClick={(e) => logoutHandler(e)}>Log Out</Link>
                     <Link to={'/profile'}>Profile</Link>
+                    <Link to={'/list/new'}>Create List</Link>
                 </div>
             ) : (
                 <div>Not logged in</div>
