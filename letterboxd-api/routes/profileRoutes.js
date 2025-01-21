@@ -4,7 +4,10 @@ import {
     removeMovieFromProfile,
     getMovieStatus,
     createList,
-    addMoviesToLists
+    addMoviesToLists,
+    getProfileData,
+    getListData,
+    removeMovieFromList
 } from '../controllers/profileController.js'
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -15,5 +18,8 @@ router.route('/remove_movie_from_profile/:field').delete(protect, removeMovieFro
 router.route('/movie_status').get(protect, getMovieStatus)
 router.route('/create_list').post(protect, createList)
 router.route('/add_movies_to_lists').post(protect, addMoviesToLists)
+router.route('/remove_movie_from_list').delete(protect, removeMovieFromList)
+router.route('/get_profile_data').get(protect, getProfileData)
+router.route('/get_list_data/:id').get(protect, getListData)
 
 export default router

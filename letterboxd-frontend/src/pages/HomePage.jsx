@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import sampleHomePageData from '../data/sampleHomePageData'
-import ResultCard from '../components/ResultCard'
+import ResultCard from '../components/cards/ResultCard'
 
 const HomePage = () => {
     const [trendingData, setTrendingData] = useState(null)

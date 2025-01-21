@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
-import ResultCard from '../components/ResultCard';
+import ResultCard from '../components/cards/ResultCard';
 
 const SearchPage = () => {
     const { query, page, type } = useParams();

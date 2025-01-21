@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import ResultCard from '../components/ResultCard'
+import ResultCard from '../components/cards/ResultCard'
 
 const FilmsPage = () => {
     const [filter, setFilter] = useState('now_playing')

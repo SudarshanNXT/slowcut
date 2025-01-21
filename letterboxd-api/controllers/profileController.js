@@ -88,8 +88,9 @@ const removeMovieFromProfile = asyncHandler(async (req, res) => {
 // @access Private
 const getMovieStatus = asyncHandler(async (req, res) => {
     const { id } = req.query
+    const user = await User.findById(req.user._id)
     const profile = await Profile.findOne({ user: req.user._id })
-    const userLists = await List.find({ creator: req.user._id })
+    const userLists = await List.find({ creator: user.username })
 
     if(!profile){
         res.status(404)
@@ -128,7 +129,7 @@ const createList = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id)
     const profile = await Profile.findOne({ user: req.user._id })
 
-    if(!profile){
+    if(!profile || !user){
         res.status(404)
         throw new Error('User not found')
     }
@@ -159,7 +160,7 @@ const createList = asyncHandler(async (req, res) => {
 // route POST api/profile/add_movies_to_lists
 // @access Private
 const addMoviesToLists = asyncHandler(async (req, res) => {
-    const { movie_id, list_of_lists } = req.body
+    const { movie_id, list_of_lists, title, id, image, genres, release_date } = req.body
 
     //check if movie is already in db, if not then create it
     let movie = await Movie.findOne({ id: movie_id })
@@ -187,10 +188,109 @@ const addMoviesToLists = asyncHandler(async (req, res) => {
     res.json('Movies added to lists successfully')
 })
 
+// @desc Remove movie from list 
+// route DELETE api/profile/remove_movie_from_list
+// @access Private
+const removeMovieFromList = asyncHandler(async (req, res) => {
+    const { list_id, movie_id } = req.body
+    const user = await User.findById(req.user._id)
+    const profile = await Profile.findOne({ user: req.user._id })
+
+    if(!profile || !user){
+        res.status(404)
+        throw new Error('User not found')
+    }
+
+    //find the list
+    const list = await List.findById(list_id)
+    if(!list){
+        res.status(404)
+        throw new Error('List not found')
+    }
+
+    //check if user from request is the creator of the list
+    if(list.creator !== user.username){
+        res.status(404)
+        throw new Error('Unauthorized')
+    }
+
+    //find the movie
+    const movie = await Movie.findById(movie_id)
+    if(!movie){
+        res.status(404)
+        throw new Error('Movie not found')
+    }
+
+    const index = list.list_items.findIndex(list_item => list_item.item.toString() === movie._id.toString())
+    if(index !== -1){
+        list.list_items.splice(index, 1)
+        await list.save()
+    }
+    res.json(`${movie.title} removed from ${list.name}`)
+})
+
+// @desc Get List Data
+// route GET api/profile/get_list_data
+// @access Private
+const getListData = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const user = await User.findById(req.user._id)
+    const profile = await Profile.findOne({ user: req.user._id })
+
+    if(!profile || !user){
+        res.status(404)
+        throw new Error('User not found')
+    }
+
+    const list = await List.findById(id)
+    if(!list){
+        res.status(404)
+        throw new Error('List not found')
+    }
+
+    //iterate through list items and grab movie data for each
+    const arr = []
+    for(const movie_id of list.list_items){
+        const movie = await Movie.findById(movie_id.item) 
+        const movieObject = movie.toObject()
+        movieObject['added_on'] = movie_id.added_on
+        arr.push(movieObject)
+    }
+
+    res.json({
+        list: list,
+        movies: arr
+    })
+})
+
+// @desc Get Profile Data
+// route GET api/profile/get_profile_data
+// @access Private
+const getProfileData = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id)
+    const profile = await Profile.findOne({ user: req.user._id })
+
+    if(!user || !profile){
+        res.status(404)
+        throw new Error('User not found')
+    }
+
+    //grab the user's lists
+    const userLists = await List.find({ creator: user.username })
+
+    res.json({
+        profile: profile,
+        user_lists: userLists
+    })
+})
+
 export {
     addMovieToProfile,
     removeMovieFromProfile,
     getMovieStatus,
     createList,
-    addMoviesToLists
+    addMoviesToLists,
+    removeMovieFromList,
+    getProfileData,
+    getListData
 }

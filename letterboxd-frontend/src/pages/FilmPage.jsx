@@ -54,7 +54,7 @@ const FilmPage = () => {
                     setWatchStatus(data.watch_status)
                     setWatchlistStatus(data.watchlist_status)
                     setListStatusArr(data.list_status_arr)
-                    console.log(data);
+                    // console.log(data);
                 }
             } 
             getMovieStatus()
@@ -126,12 +126,17 @@ const FilmPage = () => {
                 },
                 body: JSON.stringify({
                     movie_id: id,
-                    list_of_lists: listOfLists
+                    list_of_lists: listOfLists,
+                    title: movieData.movie_data.title,
+                    id: movieData.movie_data.id,
+                    image: movieData.movie_data.poster_path,
+                    genres: movieData.movie_data.genres,
+                    release_date: movieData.movie_data.release_date
                 })
             })
             if(response.ok){
                 const data = await response.json()
-                console.log(data);
+                setAddToList(false)
             } else {
                 const error = await response.json()
                 throw new Error(error)
