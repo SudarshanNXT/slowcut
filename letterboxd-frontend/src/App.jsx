@@ -18,6 +18,8 @@ import RequireAuth from './components/RequireAuth.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
 import CreateListPage from './pages/CreateListPage.jsx'
 import ListPage from './pages/ListPage.jsx'
+import EditListPage from './pages/EditListPage.jsx'
+import NotFoundPage from './pages/NotFoundPage.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,6 +38,8 @@ const router = createBrowserRouter(
       <Route path='/profile' element={<RequireAuth> <ProfilePage /> </RequireAuth>}/>
       <Route path='/list/new' element={<RequireAuth> <CreateListPage /> </RequireAuth>}/>
       <Route path='/list/:id' element={<RequireAuth> <ListPage /> </RequireAuth>}/>
+      <Route path='/list/:id/edit' element={<RequireAuth> <EditListPage /> </RequireAuth>}/>
+      <Route path='*' element={<NotFoundPage />}/>
     </Route>
   )
 )

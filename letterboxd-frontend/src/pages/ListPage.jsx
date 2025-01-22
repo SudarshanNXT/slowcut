@@ -21,7 +21,7 @@ const ListPage = () => {
                 })
                 if(response.ok){
                     const data = await response.json()
-                    console.log(data);
+                    // console.log(data);
                     setListData(data)
                     
                 }
@@ -39,6 +39,7 @@ const ListPage = () => {
                 <div>List by {listData.list.creator}</div>
                 <div className='text-lg font-bold'>{listData.list.name}</div>
                 <div className=''>{listData.list.description}</div>
+                <Link to={`/list/${id}/edit`} className='bg-green-400'>Edit List</Link>
 
                 <div className='flex flex-wrap gap-2'>
                     {listData.movies.map((movie, index) => (
