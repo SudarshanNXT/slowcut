@@ -6,7 +6,7 @@ import List from "../../models/listModel.js"
 import listStatusArr from "../../utils/listStatusArr.js"
 
 // @desc Add movie to profile (either liked, watched, watchlist)
-// route POST api/profile/addMovieToProfile
+// route POST api/profile/add_movie_to_profile
 // @access Private
 const addMovieToProfile = asyncHandler(async (req, res) => {
     const { title, id, image, genres, release_date } = req.body
@@ -83,7 +83,7 @@ const removeMovieFromProfile = asyncHandler(async (req, res) => {
     res.json(`${movie.title} removed from ${user.username}'s watched movies`)
 })
 
-// @desc Check liked, watched, watchlisted status for particular movie, also returns list of user lists with status flag
+// @desc Check liked, watched, watchlisted status for particular movie, also returns list of user lists with status flag, checks if its in diary
 // route POST api/profile/movie_status
 // @access Private
 const getMovieStatus = asyncHandler(async (req, res) => {
@@ -109,14 +109,16 @@ const getMovieStatus = asyncHandler(async (req, res) => {
         return
     }
 
-    //check if its in profile's liked movies
+    //check if its in profile's different fields
     const likedMovieStatus = profile.liked_movies.some(item => item.movie._id.toString() === movie._id.toString())
     const watchMovieStatus = profile.watched_movies.some(item => item.movie._id.toString() === movie._id.toString())
     const watchlistStatus = profile.watchlist.some(item => item.movie._id.toString() === movie._id.toString())
+    const diaryStatus = profile.diary.some(item => item.movie._id.toString() === movie._id.toString())
     res.json({
         liked_movie_status: likedMovieStatus,
         watch_status: watchMovieStatus,
         watchlist_status: watchlistStatus,
+        diary_status: diaryStatus,
         list_status_arr: listStatusArr(userLists, movie)
     })
 })

@@ -52,6 +52,25 @@ const profileSchema = mongoose.Schema({
             default: Date.now
         }
     }],
+    diary: [{
+        movie: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            refPath: 'watchlist.type'
+        },
+        id: {
+            type: Number,
+            required: true
+        },
+        added_on: {
+            type: Date,
+            default: Date.now
+        },
+        rewatch: {
+            type: Boolean,
+            default: false
+        },
+    }]
 })
 
 const Profile = mongoose.model('Profile', profileSchema)

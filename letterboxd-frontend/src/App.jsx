@@ -20,6 +20,7 @@ import CreateListPage from './pages/CreateListPage.jsx'
 import ListPage from './pages/ListPage.jsx'
 import EditListPage from './pages/EditListPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+import DiaryPage from './pages/DiaryPage.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,6 +37,7 @@ const router = createBrowserRouter(
       <Route path='/film/:id' element={<FilmPage />}/>
       <Route path='/person/:id' element={<PersonPage />}/>
       <Route path='/profile' element={<RequireAuth> <ProfilePage /> </RequireAuth>}/>
+      <Route path='/profile/diary' element={<RequireAuth> <DiaryPage /> </RequireAuth>}/>
       <Route path='/list/new' element={<RequireAuth> <CreateListPage /> </RequireAuth>}/>
       <Route path='/list/:id' element={<RequireAuth> <ListPage /> </RequireAuth>}/>
       <Route path='/list/:id/edit' element={<RequireAuth> <EditListPage /> </RequireAuth>}/>

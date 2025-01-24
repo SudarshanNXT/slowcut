@@ -12,6 +12,7 @@ const FilmPage = () => {
     const [likeStatus, setLikeStatus] = useState(false);
     const [watchStatus, setWatchStatus] = useState(false);
     const [watchlistStatus, setWatchlistStatus] = useState(false);
+    const [diaryStatus, setDiaryStatus] = useState(false);
     const [listStatusArr, setListStatusArr] = useState(null);
     const [addToList, setAddToList] = useState(false);
     const [listOfLists, setListofLists] = useState([]);
@@ -53,6 +54,7 @@ const FilmPage = () => {
                     setLikeStatus(data.liked_movie_status)
                     setWatchStatus(data.watch_status)
                     setWatchlistStatus(data.watchlist_status)
+                    setDiaryStatus(data.diary_status)
                     setListStatusArr(data.list_status_arr)
                     // console.log(data);
                 }
@@ -146,6 +148,35 @@ const FilmPage = () => {
         }
     }
 
+    const addDiaryEntry = async () => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/add_diary_entry`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    id: id,
+                    title: movieData.movie_data.title,
+                    image: movieData.movie_data.poster_path,
+                    genres: movieData.movie_data.genres,
+                    release_date: movieData.movie_data.release_date,
+                    rewatch: true
+                })
+            })
+            if(response.ok){
+                const data = await response.json()
+                setDiaryStatus(true)
+            } else {
+                const error = await response.json()
+                throw new Error(error)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     if(movieData && !loading){
         return (
             <div>
@@ -187,6 +218,14 @@ const FilmPage = () => {
                         ) : (
                             <button className='border' onClick={() => setAddToList(true)}>Add to list</button>
                         )}
+
+                        {/*Diary entry */}
+                        {diaryStatus ? (
+                            <button onClick={() => addDiaryEntry()} className='border'>Add to diary again</button>
+                        ) : (
+                            <button onClick={() => addDiaryEntry()} className='border'>Add to diary</button>
+                        )}
+                        
                     </>
                 ) : (
                     <div>Log in or sign up</div>
