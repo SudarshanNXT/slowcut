@@ -13,9 +13,11 @@ const FilmPage = () => {
     const [watchStatus, setWatchStatus] = useState(false);
     const [watchlistStatus, setWatchlistStatus] = useState(false);
     const [diaryStatus, setDiaryStatus] = useState(false);
+    const [reviewStatus, setReviewStatus] = useState(false);
     const [listStatusArr, setListStatusArr] = useState(null);
     const [addToList, setAddToList] = useState(false);
     const [listOfLists, setListofLists] = useState([]);
+    const [reviewBody, setReviewBody] = useState('');
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
     const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
@@ -55,8 +57,9 @@ const FilmPage = () => {
                     setWatchStatus(data.watch_status)
                     setWatchlistStatus(data.watchlist_status)
                     setDiaryStatus(data.diary_status)
+                    setReviewStatus(data.review_status)
                     setListStatusArr(data.list_status_arr)
-                    // console.log(data);
+                    console.log(data);
                 }
             } 
             getMovieStatus()
@@ -177,6 +180,37 @@ const FilmPage = () => {
         }
     }
 
+    const addReview = async () => {
+        try {
+            if(reviewBody.length === 0) return
+            const response = await fetch(`${apiBaseUrl}/profile/create_review`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    movie_id: id,
+                    title: movieData.movie_data.title,
+                    image: movieData.movie_data.poster_path,
+                    genres: movieData.movie_data.genres,
+                    release_date: movieData.movie_data.release_date,
+                    body: reviewBody
+                })
+            })
+            if(response.ok){
+                const data = await response.json()
+                setReviewStatus(true)
+                setReviewBody('')
+            } else {
+                const error = await response.json()
+                throw new Error(error)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     if(movieData && !loading){
         return (
             <div>
@@ -226,6 +260,16 @@ const FilmPage = () => {
                             <button onClick={() => addDiaryEntry()} className='border'>Add to diary</button>
                         )}
                         
+                        {/*Review */}
+                        <label htmlFor="review_body">{reviewStatus ? 'Review again' : 'Review'}</label>
+                        <textarea
+                            id="review_body"
+                            value={reviewBody}
+                            onChange={(e) => setReviewBody(e.target.value)}
+                            className='border border-gray-400 bg-primary rounded-md p-2 w-full h-32'
+                            placeholder="Enter review..."
+                        ></textarea>
+                        <button onClick={() => addReview()} className='bg-green-400'>Save</button>
                     </>
                 ) : (
                     <div>Log in or sign up</div>

@@ -4,6 +4,7 @@ import Profile from "../../models/profileModel.js"
 import Movie from "../../models/movieModel.js"
 import List from "../../models/listModel.js"
 import listStatusArr from "../../utils/listStatusArr.js"
+import Review from "../../models/reviewModel.js"
 
 // @desc Add movie to profile (either liked, watched, watchlist)
 // route POST api/profile/add_movie_to_profile
@@ -114,11 +115,15 @@ const getMovieStatus = asyncHandler(async (req, res) => {
     const watchMovieStatus = profile.watched_movies.some(item => item.movie._id.toString() === movie._id.toString())
     const watchlistStatus = profile.watchlist.some(item => item.movie._id.toString() === movie._id.toString())
     const diaryStatus = profile.diary.some(item => item.movie._id.toString() === movie._id.toString())
+    const reviewCheck = await Review.findOne({ creator: user.username, movie: movie._id })
+    const reviewStatus = reviewCheck ? true : false
+
     res.json({
         liked_movie_status: likedMovieStatus,
         watch_status: watchMovieStatus,
         watchlist_status: watchlistStatus,
         diary_status: diaryStatus,
+        review_status: reviewStatus,
         list_status_arr: listStatusArr(userLists, movie)
     })
 })

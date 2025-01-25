@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler"
 import User from "../../models/userModel.js"
 import Profile from "../../models/profileModel.js"
 import Movie from "../../models/movieModel.js"
+import Review from "../../models/reviewModel.js"
 import List from "../../models/listModel.js"
 
 // @desc Add diary entry to profile
@@ -113,6 +114,11 @@ const getDiaryData = asyncHandler(async (req, res) => {
         //check like status
         const likeStatus = profile.liked_movies.some(item => item.movie._id.toString() === movie._id.toString())
         obj['like_status'] = likeStatus
+
+        //check review status
+        const reviewCheck = await Review.findOne({ creator: user.username, movie: movie._id })
+        const reviewStatus = reviewCheck ? true : false
+        obj['review_status'] = reviewStatus
 
         arr.push(obj)
     }

@@ -53,6 +53,7 @@ const ProfilePage = () => {
             <button onClick={() => handleProfileDelete()} className='bg-red-400 text-white'>Delete Profile</button>
 
             <Link to={'/profile/diary'} className='bg-blue-300'>Diary</Link>
+            <Link to={'/profile/reviews'} className='bg-purple-300'>Reviews</Link>
             {profileData && 
                 <div className='flex flex-col space-y-3'>
                     {profileData.user_lists.map((list, index) => (

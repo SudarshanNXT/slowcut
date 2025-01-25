@@ -10,6 +10,7 @@ import {
     updateListData
 } from '../controllers/profile/listController.js'
 import { addDiaryEntry, deleteDiaryEntry, getDiaryData, updateDiaryEntry } from '../controllers/profile/diaryController.js';
+import { createReview, updateReview, getReviews, getReview, deleteReview } from '../controllers/profile/reviewController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -28,5 +29,10 @@ router.route('/add_diary_entry').post(protect, addDiaryEntry)
 router.route('/update_diary_entry/:entry_id').put(protect, updateDiaryEntry)
 router.route('/delete_diary_entry/:entry_id').delete(protect, deleteDiaryEntry)
 router.route('/get_diary_data').get(protect, getDiaryData)
+router.route('/create_review').post(protect, createReview)
+router.route('/update_review/:id').put(protect, updateReview)
+router.route('/delete_review/:id').delete(protect, deleteReview)
+router.get('/get_reviews/:username', getReviews)
+router.get('/get_review/:id', getReview)
 
 export default router
