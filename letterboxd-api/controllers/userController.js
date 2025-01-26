@@ -4,6 +4,7 @@ import generateToken from "../utils/generateToken.js"
 import validateUserInput from "../utils/inputValidation.js"
 import Profile from "../models/profileModel.js"
 import List from "../models/listModel.js"
+import Review from "../models/reviewModel.js"
 
 // @desc Register a new user
 // route POST api/users/register
@@ -91,6 +92,9 @@ const deleteProfile = asyncHandler(async (req, res) => {
 
     //clean up profile
     await Profile.deleteOne({_id: profile._id})
+
+    //clean up reviews
+    await Review.deleteMany({ creator: user.username })
 
     //delete user
     await User.deleteOne({ _id: user._id })

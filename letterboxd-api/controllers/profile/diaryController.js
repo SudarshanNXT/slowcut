@@ -120,6 +120,11 @@ const getDiaryData = asyncHandler(async (req, res) => {
         const reviewStatus = reviewCheck ? true : false
         obj['review_status'] = reviewStatus
 
+        //check rating
+        const ratingIndex = profile.watched_movies.findIndex(item => item.movie._id.toString() === movie._id.toString())
+        const rating = ratingIndex !== -1 ? profile.watched_movies[ratingIndex].rating : null
+        obj['rating'] = rating
+
         arr.push(obj)
     }
 

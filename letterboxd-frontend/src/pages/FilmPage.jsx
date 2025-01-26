@@ -18,6 +18,7 @@ const FilmPage = () => {
     const [addToList, setAddToList] = useState(false);
     const [listOfLists, setListofLists] = useState([]);
     const [reviewBody, setReviewBody] = useState('');
+    const [rating, setRating] = useState(null);
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
     const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
@@ -59,6 +60,7 @@ const FilmPage = () => {
                     setDiaryStatus(data.diary_status)
                     setReviewStatus(data.review_status)
                     setListStatusArr(data.list_status_arr)
+                    setRating(data.rating_status)
                     console.log(data);
                 }
             } 
@@ -66,7 +68,7 @@ const FilmPage = () => {
         }
     }, [id])
 
-    const addMovieToProfile = async (field) => {
+    const addMovieToProfile = async (field, rating = null) => {
         try {
             const response = await fetch(`${apiBaseUrl}/profile/add_movie_to_profile/${field}`, {
                 method: 'POST',
@@ -79,7 +81,8 @@ const FilmPage = () => {
                     id: movieData.movie_data.id,
                     image: movieData.movie_data.poster_path,
                     genres: movieData.movie_data.genres,
-                    release_date: movieData.movie_data.release_date
+                    release_date: movieData.movie_data.release_date,
+                    rating: rating
                 })
             })
             if(response.ok){
@@ -112,6 +115,7 @@ const FilmPage = () => {
                     setLikeStatus(false)
                 } else if(field === 'watched'){
                     setWatchStatus(false)
+                    setRating(null)
                 } else if(field === 'watchlist'){
                     setWatchlistStatus(false)
                 }
@@ -211,6 +215,17 @@ const FilmPage = () => {
         }
     }
 
+    const handleRatingChange = (event) => {
+        const rating = Number(event.target.value)
+        setRating(rating)
+        addMovieToProfile('watched', rating)
+    }
+
+    const handleDeleteRating = () => {
+        setRating(null)
+        addMovieToProfile('watched')
+    }
+
     if(movieData && !loading){
         return (
             <div>
@@ -240,6 +255,23 @@ const FilmPage = () => {
                         ) : (
                             <button onClick={() => addMovieToProfile('watchlist')} className='border'>Watchlist add</button>
                         )}
+
+                        {/*Rating */}
+                        
+                        <div>
+                            <button onClick={() => handleDeleteRating()} className='bg-red-300'>Delete Rating</button>
+                            {[1, 2, 3, 4, 5].map((num) => (
+                                <label key={num}>
+                                <input
+                                    type="radio"
+                                    value={num}
+                                    checked={rating === num}
+                                    onChange={handleRatingChange}
+                                />
+                                {num}
+                                </label>
+                            ))}
+                        </div>
 
                         {addToList ? (
                             <div>

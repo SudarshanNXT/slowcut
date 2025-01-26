@@ -10,7 +10,7 @@ import Review from "../../models/reviewModel.js"
 // route POST api/profile/add_movie_to_profile
 // @access Private
 const addMovieToProfile = asyncHandler(async (req, res) => {
-    const { title, id, image, genres, release_date } = req.body
+    const { title, id, image, genres, release_date, rating } = req.body
     const { field } = req.params
     const user = await User.findById(req.user._id)
     const profile = await Profile.findOne({ user: req.user._id })
@@ -22,6 +22,7 @@ const addMovieToProfile = asyncHandler(async (req, res) => {
 
     //check if movie is already in db, if not then create it
     let movie = await Movie.findOne({ id: id })
+    let flag = false
     if(!movie){
         movie = await Movie.create({
             title: title,
@@ -30,6 +31,8 @@ const addMovieToProfile = asyncHandler(async (req, res) => {
             genres: genres,
             release_date: release_date
         })
+    } else {
+        flag = true
     }
 
     //add to profile depending on field
@@ -39,10 +42,20 @@ const addMovieToProfile = asyncHandler(async (req, res) => {
             id: movie.id
         })
     } else if(field === 'watched'){
-        profile.watched_movies.push({
-            movie: movie._id,
-            id: movie.id
-        })
+        //determine whether movie is already in profile's watched movies
+        const watchMovieStatus = profile.watched_movies.some(item => item.movie._id.toString() === movie._id.toString())
+        if(watchMovieStatus) {
+            
+            const index = profile.watched_movies.findIndex(item => item.movie.toString() === movie._id.toString())
+            profile.watched_movies[index].rating = rating
+            await profile.save()
+        } else {
+            profile.watched_movies.push({
+                movie: movie._id,
+                id: movie.id,
+                rating: rating ? rating : null
+            })
+        }
     } else if(field === 'watchlist'){
         profile.watchlist.push({
             movie: movie._id,
@@ -117,6 +130,10 @@ const getMovieStatus = asyncHandler(async (req, res) => {
     const diaryStatus = profile.diary.some(item => item.movie._id.toString() === movie._id.toString())
     const reviewCheck = await Review.findOne({ creator: user.username, movie: movie._id })
     const reviewStatus = reviewCheck ? true : false
+    
+    //get rating status, if its watched, grab the index and then the rating
+    const ratingIndex = profile.watched_movies.findIndex(item => item.movie._id.toString() === movie._id.toString())
+    const ratingStatus = ratingIndex !== -1 ? profile.watched_movies[ratingIndex].rating : null
 
     res.json({
         liked_movie_status: likedMovieStatus,
@@ -124,6 +141,7 @@ const getMovieStatus = asyncHandler(async (req, res) => {
         watchlist_status: watchlistStatus,
         diary_status: diaryStatus,
         review_status: reviewStatus,
+        rating_status: ratingStatus,
         list_status_arr: listStatusArr(userLists, movie)
     })
 })

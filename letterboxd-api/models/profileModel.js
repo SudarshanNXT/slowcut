@@ -32,6 +32,10 @@ const profileSchema = mongoose.Schema({
             type: Number,
             required: true
         },
+        rating: {
+            type: Number,
+            default: null
+        },
         followedAt: {
             type: Date,
             default: Date.now
