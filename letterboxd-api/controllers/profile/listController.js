@@ -110,7 +110,7 @@ const addMoviesToLists = asyncHandler(async (req, res) => {
     for (const list_id of list_of_lists) {
         const list = await List.findById(list_id);
         list.list_items.push({
-            item: movie._id,
+            movie: movie._id,
             type: 'Movie',
             id: movie.id
         })
@@ -153,7 +153,7 @@ const removeMovieFromList = asyncHandler(async (req, res) => {
         throw new Error('Movie not found')
     }
 
-    const index = list.list_items.findIndex(list_item => list_item.item.toString() === movie._id.toString())
+    const index = list.list_items.findIndex(list_item => list_item.movie.toString() === movie._id.toString())
     if(index !== -1){
         list.list_items.splice(index, 1)
         await list.save()
@@ -183,7 +183,7 @@ const getListData = asyncHandler(async (req, res) => {
     //iterate through list items and grab movie data for each
     const arr = []
     for(const movie_id of list.list_items){
-        const movie = await Movie.findById(movie_id.item) 
+        const movie = await Movie.findById(movie_id.movie) 
         const movieObject = movie.toObject()
         movieObject['added_on'] = movie_id.added_on
         arr.push(movieObject)

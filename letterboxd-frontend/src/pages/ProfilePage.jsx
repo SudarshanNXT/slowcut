@@ -100,7 +100,10 @@ const ProfilePage = () => {
 
             <Link to={`/${username}/diary`} className='bg-blue-300'>Diary</Link>
             <Link to={`/${username}/watched`} className='bg-blue-300'>Watched</Link>
-            <Link to={'/profile/reviews'} className='bg-purple-300'>Reviews</Link>
+            <Link to={`/${username}/reviews`} className='bg-purple-300'>Reviews</Link>
+            <Link to={`/${username}/watchlist`} className='bg-orange-300'>Watchlist</Link>
+            <Link to={`/${username}/likes`} className='bg-green-300'>Likes</Link>
+            <Link to={`/${username}/lists`} className='bg-pink-600'>Lists</Link>
             {profileData && 
                 <div className='flex flex-col space-y-3'>
                     {/* {profileData.user_lists.map((list, index) => (

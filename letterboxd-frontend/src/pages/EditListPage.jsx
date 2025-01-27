@@ -18,6 +18,7 @@ const EditListPage = () => {
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
     const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
+    const username = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).username : ''
 
     useEffect(() => {
         if(localStorage.getItem('userInfo')){
@@ -106,7 +107,7 @@ const EditListPage = () => {
             })
             if(response.ok){
                 const data = await response.json()
-                navigate(`/profile`)
+                navigate(`/${username}`)
             } else {
                 const error = await response.json()
                 throw new Error(error.message)

@@ -30,7 +30,7 @@ const listModelSchema = mongoose.Schema({
         }
     }],
     list_items: [{
-        item: {
+        movie: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             refPath: 'list_items.type'
@@ -48,7 +48,11 @@ const listModelSchema = mongoose.Schema({
             type: Date,
             default: Date.now
         }
-    }]
+    }],
+    created_at: {
+        type: Date,
+        default: Date.now 
+    }
 })
 
 const List = mongoose.model('List', listModelSchema)

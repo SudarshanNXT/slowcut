@@ -5,7 +5,7 @@ const mapGrabMovie = async (items) => {
         items.map(async item => {
             const movie = await Movie.findById(item.movie)
             item['movie'] = movie
-            return item
+            return { ...item.toObject(), movie };
         })
     )
 }

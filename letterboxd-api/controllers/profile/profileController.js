@@ -72,6 +72,33 @@ const getProfileSubData = asyncHandler(async(req, res) => {
         const fullWatchedMovies = await mapGrabMovie(watchedMovies)
         res.json(fullWatchedMovies)
         return
+    } else if(category === 'watchlist'){
+        const watchlist = profile.watchlist.sort((a, b) => new Date(b.added_on) - new Date(a.added_on))
+        const fullWatchlist = await mapGrabMovie(watchlist)
+        res.json(fullWatchlist)
+        return
+    } else if(category === 'likes') {
+        const likedMovies = profile.liked_movies.sort((a, b) => new Date(b.added_on) - new Date(a.added_on))
+        const fullLikedMovies = await mapGrabMovie(likedMovies)
+        res.json(fullLikedMovies)
+        return
+    } else if(category === 'reviews'){
+        const reviews = await Review.find({ creator: username }).sort({ created_at: -1 })
+        const fullReviews = await mapGrabMovie(reviews)
+        res.json(fullReviews)
+        return
+    } else if(category === 'lists'){
+        const lists = await List.find({ creator: username }).sort({ created_at: -1 })
+        const arr = []
+        for(const list of lists){
+            //grab movie data for each list
+            const fullListItems = await mapGrabMovie(list.list_items)
+            list.toObject()
+            list['list_items'] = fullListItems
+            arr.push(list)
+        }
+        res.json(arr)
+        return
     }
 
     res.json('hooked up')
