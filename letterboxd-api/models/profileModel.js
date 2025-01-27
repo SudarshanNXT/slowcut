@@ -56,11 +56,26 @@ const profileSchema = mongoose.Schema({
             default: Date.now
         }
     }],
+    favorite_films: [{
+        movie: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            refPath: 'favorite_film.type'
+        },
+        id: {
+            type: Number,
+            required: true
+        },
+        added_on: {
+            type: Date,
+            default: Date.now
+        }
+    }],
     diary: [{
         movie: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            refPath: 'watchlist.type'
+            refPath: 'diary.type'
         },
         id: {
             type: Number,

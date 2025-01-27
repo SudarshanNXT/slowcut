@@ -26,13 +26,11 @@ const getProfileData = asyncHandler(async (req, res) => {
 
     //grab last 3 diary entries
     const diaryEntries = profile.diary.sort((a, b) => new Date(b.added_on) - new Date(a.added_on))
-    const fullDiaryEntries = await Promise.all(
-        diaryEntries.slice(0, 3).map(async diary_entry => {
-            const movie = await Movie.findById(diary_entry.movie)
-            diary_entry['movie'] = movie
-            return diary_entry
-        })
-    ) 
+    const fullDiaryEntries = await mapGrabMovie(diaryEntries)
+
+    //grab favorite films
+    const favoriteFilms = profile.favorite_films
+    const fullFavoriteFilms = await mapGrabMovie(favoriteFilms)
 
     //grab stats (watched films, number of unique films in diary, number of lists)
     const stats = {}
@@ -45,6 +43,7 @@ const getProfileData = asyncHandler(async (req, res) => {
         profile: profile,
         reviews: reviews,
         diary: fullDiaryEntries,
+        favorite_films: fullFavoriteFilms,
         stats: stats
     })
 })
@@ -137,8 +136,82 @@ const updateProfile = asyncHandler(async (req, res) => {
     res.json({ new_username: user.username })
 })
 
+// @desc Add favorite film to profile
+// route POST api/profile/add_favorite_film
+// @access Private
+const addFavoriteFilm = asyncHandler(async (req, res) => {
+    const { title, id, image, genres, release_date, index } = req.body
+    const user = await User.findById(req.user._id)
+    const profile = await Profile.findOne({ user: req.user._id })
+
+    if(!profile || !user){
+        res.status(404)
+        throw new Error('User not found')
+    }
+
+    //check if movie is already in db, if not then create it
+    let movie = await Movie.findOne({ id: id })
+    if(!movie){
+        movie = await Movie.create({
+            title: title,
+            id: id,
+            image: image,
+            genres: genres,
+            release_date: release_date
+        })
+    }
+
+    //add to profile's favorite films
+    if(profile.favorite_films.length < 4){
+        profile.favorite_films.push({
+            movie: movie._id,
+            id: movie.id
+        })
+        await profile.save()
+        res.json(`${movie.title} added to ${user.username}'s favorite films`)
+    } else if(index){
+        profile.favorite_films[index] = { movie: movie._id, id: movie.id }
+        await profile.save()
+        res.json(`${movie.title} added to ${user.username}'s favorite films`)
+    } else {
+        res.status(404)
+        throw new Error('Only 4 films can be favorited')
+    }
+})
+
+// @desc Delete favorite film from profile
+// route DELETE api/profile/delete_favorite_film
+// @access Private
+const deleteFavoriteFilm = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const user = await User.findById(req.user._id)
+    const profile = await Profile.findOne({ user: req.user._id })
+
+    if(!profile || !user){
+        res.status(404)
+        throw new Error('User not found')
+    }
+
+    //grab the movie
+    const movie = await Movie.findOne({ id: id })
+    
+    if(!movie){
+        res.status(404)
+        throw new Error('Error deleting movie')
+    }
+
+    //delete from profile's favorite films
+    const index = profile.favorite_films.findIndex(item => item.movie._id.toString() === movie._id.toString())
+    profile.favorite_films.splice(index, 1)
+    await profile.save()
+
+    res.json(`${movie.title} removed from ${user.username}'s watched movies`)
+})
+
 export {
     getProfileData,
     getProfileSubData,
-    updateProfile
+    updateProfile,
+    addFavoriteFilm,
+    deleteFavoriteFilm
 }

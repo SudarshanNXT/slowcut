@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext.jsx';
+import FavoriteFilms from '../components/FavoriteFilms.jsx';
 
 const ProfilePage = () => {
     const { username } = useParams()
@@ -9,6 +10,8 @@ const ProfilePage = () => {
     const [profileData, setProfileData] = useState(null)
     const [authorized, setAuthorized] = useState(null)
     const [newUsername, setNewUsername] = useState('')
+    const [loading, setLoading] = useState(true)
+    const [update, setUpdate] = useState(1)
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
     const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
     const sessionId = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo'))._id : ''
@@ -35,9 +38,10 @@ const ProfilePage = () => {
             } catch (error) {
                 navigate('/error/not_found')
             }
+            setLoading(false)
         }
         getProfileData()
-    }, [username])
+    }, [username, update])
     
     const handleProfileDelete = async () => {
         try {
@@ -84,7 +88,9 @@ const ProfilePage = () => {
         }
     }
     
-    return (
+    return loading ? (
+        <div>loading</div>
+    ) : (
         <div>
             {authorized ? (
                 <div>
@@ -96,6 +102,10 @@ const ProfilePage = () => {
                 <div></div>
             )}
 
+            {profileData && 
+                <FavoriteFilms authorized={authorized} favorite_films={profileData.favorite_films} setUpdate={setUpdate}/>
+            }
+
             <div className='font-bold text-xl'>{username}</div>
 
             <Link to={`/${username}/diary`} className='bg-blue-300'>Diary</Link>
@@ -104,13 +114,6 @@ const ProfilePage = () => {
             <Link to={`/${username}/watchlist`} className='bg-orange-300'>Watchlist</Link>
             <Link to={`/${username}/likes`} className='bg-green-300'>Likes</Link>
             <Link to={`/${username}/lists`} className='bg-pink-600'>Lists</Link>
-            {profileData && 
-                <div className='flex flex-col space-y-3'>
-                    {/* {profileData.user_lists.map((list, index) => (
-                        <Link to={`/list/${list._id}`} key={index}>{list.name}</Link>
-                    ))} */}
-                </div>
-            }
         </div>
     )
 }

@@ -6,10 +6,8 @@ const SearchPage = () => {
     const { query, page, type } = useParams();
     const currentPage = Number(page) || 1;
     const currentType = type || ''
-    // const [type, setType] = useState('')
     const [results, setResults] = useState(null)
     const [totalPages, setTotalPages] = useState(null)
-    // const [filter, setFilter] = useState('')
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
 
     useEffect(() => {

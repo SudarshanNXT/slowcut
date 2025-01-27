@@ -39,6 +39,8 @@ const registerUser = asyncHandler(async (req, res) => {
             liked_movies: [],
             watched_movies: [],
             watchlist: [],
+            favorite_films: [],
+            diary: []
         })
 
         const token = generateToken(user._id)
