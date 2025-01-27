@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler"
 import User from '../models/userModel.js'
 import generateToken from "../utils/generateToken.js"
-import validateUserInput from "../utils/inputValidation.js"
+import { validateUserInput } from '../utils/inputValidation.js'
 import Profile from "../models/profileModel.js"
 import List from "../models/listModel.js"
 import Review from "../models/reviewModel.js"

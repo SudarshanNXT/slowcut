@@ -27,4 +27,25 @@ const validateUserInput = ( username, password, confirm_password ) => {
     return { isValid: true };
 };
 
-export default validateUserInput
+const validateUsername = (username) => {
+    if (!username) {
+        return { isValid: false, error: 'Please fill in all fields' };
+    }
+
+    // Check the length of the username
+    if (username.length > 150) {
+        return { isValid: false, error: 'Username must be 150 characters or fewer.' };
+    }
+
+    // Check for allowed characters
+    if (!/^[a-zA-Z0-9@.+/_-]+$/.test(username)) {
+        return { isValid: false, error: 'Username must contain only letters, digits, and @/./+/-/_' };
+    }
+
+    return { isValid: true };
+}
+
+export {
+    validateUserInput,
+    validateUsername
+}

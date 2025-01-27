@@ -1,5 +1,5 @@
 import express from 'express';
-import { getProfileData} from '../controllers/profile/profileController.js'
+import { getProfileData, getProfileSubData, updateProfile} from '../controllers/profile/profileController.js'
 import { addMovieToProfile, removeMovieFromProfile, getMovieStatus} from '../controllers/profile/addMovieController.js'
 import {
     createList,
@@ -22,7 +22,6 @@ router.route('/create_list').post(protect, createList)
 router.route('/delete_list/:id').delete(protect, deleteList)
 router.route('/add_movies_to_lists').post(protect, addMoviesToLists)
 router.route('/remove_movie_from_list').delete(protect, removeMovieFromList)
-router.route('/get_profile_data').get(protect, getProfileData)
 router.route('/get_list_data/:id').get(protect, getListData)
 router.route('/update_list_data/:id').put(protect, updateListData)
 router.route('/add_diary_entry').post(protect, addDiaryEntry)
@@ -34,5 +33,8 @@ router.route('/update_review/:id').put(protect, updateReview)
 router.route('/delete_review/:id').delete(protect, deleteReview)
 router.get('/get_reviews/:username', getReviews)
 router.get('/get_review/:id', getReview)
+router.get('/get_profile_data/:username', getProfileData)
+router.get('/get_profile_sub_data/:username/:category', getProfileSubData)
+router.route('/update_profile').put(protect, updateProfile)
 
 export default router

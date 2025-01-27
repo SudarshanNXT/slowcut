@@ -10,6 +10,8 @@ const Navbar = () => {
     const { logoutUser, navbarUpdate } = useContext(AuthContext)
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
 
+    const username = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).username : ''
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -56,7 +58,7 @@ const Navbar = () => {
             {isLoggedIn ? (
                 <div className='space-x-2'>
                     <Link onClick={(e) => logoutHandler(e)}>Log Out</Link>
-                    <Link to={'/profile'}>Profile</Link>
+                    <Link to={`/${username}`}>Profile</Link>
                     <Link to={'/list/new'}>Create List</Link>
                 </div>
             ) : (

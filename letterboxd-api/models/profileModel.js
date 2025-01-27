@@ -17,7 +17,7 @@ const profileSchema = mongoose.Schema({
             type: Number,
             required: true
         },
-        followedAt: {
+        added_on: {
             type: Date,
             default: Date.now
         }
@@ -36,7 +36,7 @@ const profileSchema = mongoose.Schema({
             type: Number,
             default: null
         },
-        followedAt: {
+        added_on: {
             type: Date,
             default: Date.now
         }
@@ -51,7 +51,7 @@ const profileSchema = mongoose.Schema({
             type: Number,
             required: true
         },
-        followedAt: {
+        added_on: {
             type: Date,
             default: Date.now
         }
