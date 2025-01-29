@@ -64,37 +64,37 @@ const LoginPage = () => {
                 <div className='text-center text-4xl font-bold'>Log In</div>
                 {errorMessage && <div className='border-2 border-red-800 bg-red-300 p-1 px-2 w-fit text-red-600'>{errorMessage}</div>}
                 <Form onSubmit={ submitHandler }>
-                <div className='flex flex-col space-y-2 mb-2'>
-                    <label htmlFor="username">Username:</label>
-                    <input
-                    type="text"
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter your username" 
-                    required
-                    className='border border-gray-400 rounded-md p-2 w-full'
-                    />
-                </div>
-                <div className='flex flex-col space-y-2 mb-4'>
-                    <label htmlFor="password">Password:</label>
-                    <div className='relative'>
-                    <input
-                        type='password'
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your password"
+                    <div className='flex flex-col space-y-2 mb-2'>
+                        <label htmlFor="username">Username:</label>
+                        <input
+                        type="text"
+                        id="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Enter your username" 
                         required
                         className='border border-gray-400 rounded-md p-2 w-full'
-                    />
+                        />
                     </div>
-                </div>
-                <div className='flex justify-center'>
-                    <button type="submit" className='border w-fit text-lg py-2 px-3 rounded-lg mb-4 font-semibold'>Log In</button>
-                </div>
+                    <div className='flex flex-col space-y-2 mb-4'>
+                        <label htmlFor="password">Password:</label>
+                        <div className='relative'>
+                        <input
+                            type='password'
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter your password"
+                            required
+                            className='border border-gray-400 rounded-md p-2 w-full'
+                        />
+                        </div>
+                    </div>
+                    <div className='flex justify-center'>
+                        <button type="submit" className='border w-fit text-lg py-2 px-3 rounded-lg mb-4 font-semibold'>Log In</button>
+                    </div>
 
-                <div className='text-center'>Don't have an account? <Link to='/signup' className='text-blue-500 underline' >Sign up</Link> </div>
+                    <div className='text-center'>Don't have an account? <Link to='/signup' className='text-blue-500 underline' >Sign up</Link> </div>
                 </Form>
             </div>
         </div>
