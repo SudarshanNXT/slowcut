@@ -13,6 +13,7 @@ const SearchBar = ({ isMobile, searchDropdown, setSearchDropdown, setSigninDropd
             return
         }
         navigate(`/search/${searchInput}`)
+        setSearchDropdown(false)
     }
 
     return isMobile ? (

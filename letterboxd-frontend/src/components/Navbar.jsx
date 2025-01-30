@@ -35,6 +35,8 @@ const Navbar = () => {
         e.preventDefault()
         logoutUser()
         navigate('/')
+        setMenuDropdown(false)
+        setPopup(false)
     }
     
     return (
@@ -48,7 +50,7 @@ const Navbar = () => {
                     </Link>
                     
                     {/*Right Side */}
-                    <div className='flex items-center gap-x-3 text-sm relative'>
+                    <div className='flex items-center gap-x-3 text-sm h-full relative z-20'>
                         {isLoggedIn ? (
                             <>
                                 <div className='relative flex items-center group font-bold rounded-t-md hover:bg-light w-fit p-2'>
@@ -75,17 +77,14 @@ const Navbar = () => {
                                 <Link to={'/list/new'} className='bg-hover hover:bg-green-500 flex items-center p-1 rounded-md font-bold'><FaPlus className='mr-1'/> <div>List</div></Link>
                             </>
                         ) : (
-                            popup ? (
-                                <SignIn setPopup={setPopup}/>
-                            ) : (
-                                <>
-                                    <button onClick={() => setPopup(true)} className='uppercase hover:text-white'>Sign In</button>
-                                    <button className='uppercase hover:text-white'>Create Account</button>
-                                    <Link className='flex items-center hover:text-white' to={'/films'}>Films</Link>
-                                    <Link className='flex items-center hover:text-white' to={'/about'}>About</Link>
-                                    <SearchBar />
-                                </>
-                            )
+                            <>
+                                <SignIn popup={popup} setPopup={setPopup}/>
+                                <button onClick={() => setPopup(true)} className='uppercase hover:text-white'>Sign In</button>
+                                <button className='uppercase hover:text-white'>Create Account</button>
+                                <Link className='flex items-center hover:text-white' to={'/films'}>Films</Link>
+                                <Link className='flex items-center hover:text-white' to={'/about'}>About</Link>
+                                <SearchBar />
+                            </>
                         )}
                     </div>
                 </div>
@@ -118,13 +117,27 @@ const Navbar = () => {
                 {/*Menu dropdown */}
                 <div className={`absolute top-full w-full flex flex-col bg-primary transform ${menuDropdown ? '-translate-y-0' : "opacity-0 -translate-y-full"} transition-transform duration-300 font-bold z-10`}>
                     {isLoggedIn ? (
-                        <></>
+                        <>
+                            <div className='flex items-center pl-4 py-2 hover:bg-gray-700'><FaUserCircle className='mr-3'/>{sessionUsername.slice(0, 10)}</div>
+                            <div className='grid grid-cols-2 gap-4 pl-8 pr-2 font-normal text-gray-400 mb-1'>
+                                <div className='col-span-2 border-t-gray-700 border-t'></div>
+                                <Link className='hover:bg-gray-700 hover:text-white' to={'/'}>Home</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}`} onClick={() => setMenuDropdown(false)}>Profile</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/watched`} onClick={() => setMenuDropdown(false)}>Watched</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/diary`} onClick={() => setMenuDropdown(false)}>Diary</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/reviews`} onClick={() => setMenuDropdown(false)}>Reviews</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/watchlist`} onClick={() => setMenuDropdown(false)}>Watchlist</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/lists`} onClick={() => setMenuDropdown(false)}>Lists</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/likes`} onClick={() => setMenuDropdown(false)}>Likes</Link>
+                                <button onClick={(e) => logoutHandler(e)} className='col-span-2 hover:bg-gray-700 hover:text-white text-left uppercase border-y border-y-gray-700 py-2'>Sign Out</button>
+                            </div>
+                        </>
                     ) : (
                         <Link className='flex items-center pl-4 py-2 hover:bg-gray-700'><FaKey className='mr-3'/><span>CREATE ACCOUNT</span></Link>
                     )}
                     
-                    <Link to={'/films'} className='flex items-center pl-4 py-2 hover:bg-gray-700'><MdMovie className='mr-3'/> <span>FILMS</span></Link>
-                    <Link to={'/about'} className='flex items-center pl-4 py-2 hover:bg-gray-700'><FaInfoCircle className='mr-3'/> <span>ABOUT</span></Link>
+                    <Link to={'/films'} onClick={() => setMenuDropdown(false)} className='flex items-center pl-4 py-2 hover:bg-gray-700'><MdMovie className='mr-3'/> <span>FILMS</span></Link>
+                    <Link to={'/about'} onClick={() => setMenuDropdown(false)} className='flex items-center pl-4 py-2 hover:bg-gray-700'><FaInfoCircle className='mr-3'/> <span>ABOUT</span></Link>
                 </div>
             </nav>
         </>
@@ -132,3 +145,15 @@ const Navbar = () => {
 }
 
 export default Navbar
+
+// popup ? (
+//     <SignIn setPopup={setPopup}/>
+// ) : (
+//     <>
+//         <button onClick={() => setPopup(true)} className='uppercase hover:text-white'>Sign In</button>
+//         <button className='uppercase hover:text-white'>Create Account</button>
+//         <Link className='flex items-center hover:text-white' to={'/films'}>Films</Link>
+//         <Link className='flex items-center hover:text-white' to={'/about'}>About</Link>
+//         <SearchBar />
+//     </>
+// )

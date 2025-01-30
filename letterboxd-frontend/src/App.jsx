@@ -24,6 +24,7 @@ import DiaryPage from './pages/DiaryPage.jsx'
 import ReviewsPage from './pages/ReviewsPage.jsx'
 import ReviewPage from './pages/ReviewPage.jsx'
 import ProfileSubPage from './pages/ProfileSubPage.jsx'
+import AboutPage from './pages/AboutPage.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +32,7 @@ const router = createBrowserRouter(
       <Route index element={<HomePage />}/>
       <Route path='/login' element={<LoginPage />}/>
       <Route path='/signup' element={<SignupPage />}/>
+      <Route path='/about' element={<AboutPage />}/>
       <Route path='/search/:type/:query/:page' element={<SearchPage />}/>
       <Route path='/search/:type/:query' element={<SearchPage />}/>
       <Route path='/search/:query/:page' element={<SearchPage />}/>
