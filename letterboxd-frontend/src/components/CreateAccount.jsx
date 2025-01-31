@@ -59,7 +59,7 @@ const CreateAccount = ({ createAccount, setCreateAccount }) => {
 
                 <div className='space-y-4'>
                     <div className='text-left text-2xl font-semibold text-gray-300'>Create Account</div>
-                    {errorMessage && <div className='border-2 border-red-800 bg-red-300 p-1 px-2 w-fit text-red-600'>{errorMessage}</div>}
+                    {errorMessage && <div className='border-2 border-red-800 bg-red-400 p-1 px-2 w-fit text-red-700'>{errorMessage}</div>}
                     
                     <Form onSubmit={ submitHandler } className='space-y-4'>
                         <div className='flex flex-col space-y-1 mb-2'>

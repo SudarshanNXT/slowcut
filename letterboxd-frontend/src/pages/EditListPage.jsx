@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams, Form, useNavigate } from 'react-router-dom';
-import ListMovieCard from '../components/cards/ListMovieCard';
+import { useParams, Form, useNavigate } from 'react-router-dom';
 
 const EditListPage = () => {
     const { id } = useParams()
-    const [listData, setListData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [errorMessage, setErrorMessage] = useState('')
     const [formData, setFormData] = useState({
@@ -36,9 +34,6 @@ const EditListPage = () => {
                         //check if creator of list is the signed in user
                         const username = JSON.parse(localStorage.getItem('userInfo')).username
                         if(data.list.creator === username){
-                            console.log(data);
-                            setListData(data)
-
                             //prefill form data
                             setFormData({
                                 name: data.list.name,
@@ -119,58 +114,64 @@ const EditListPage = () => {
     }
 
     return (
-        <div>
-            <div className='text-center text-4xl font-bold '>Create List</div>
+        <div className='flex flex-col mx-3 md:mx-0'>
+            <div className='text-left text-2xl font-semibold text-gray-400 border-b border-gray-400 pb-1 mt-3'>Create List</div>
 
-            <button className='bg-red-400' onClick={handleDelete}>Delete List</button>
-
-            {errorMessage && <div className='border-2 border-red-800 bg-red-300 p-1 px-2 w-fit text-red-600'>{errorMessage}</div>}
+            {errorMessage && <div className='border-2 border-red-800 bg-red-300 p-1 px-2 w-fit text-red-600 mt-3'>{errorMessage}</div>}
             <Form onSubmit={ handleSubmit }>
-                <div className='flex flex-col space-y-2 mb-2'>
-                    <label htmlFor="username">List name:</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name='name'
-                        value={formData.name}
-                        onChange={handleChange} 
-                        required
-                        placeholder='Enter list name'
-                        className='border border-gray-400 bg-primary rounded-md p-2 w-full'
-                    />
-                    <div className='text-xs'>50 character limit</div>
+                <div className='md:grid md:grid-cols-2 md:gap-4 mt-3'>
+                    <div className='space-y-6'>
+                        <div className='flex flex-col space-y-2 mb-2'>
+                            <label htmlFor="username" className='text-white'>List name:</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name='name'
+                                value={formData.name}
+                                onChange={handleChange} 
+                                required
+                                className=' bg-primary rounded-md p-2 w-full text-gray-300 focus:outline-none focus:bg-white focus:text-black'
+                            />
+                            <div className='text-xs text-white'>50 character limit</div>
+                        </div>
+
+                        <div className="flex flex-col space-y-2 mb-2">
+                            <label htmlFor="is_public" className='text-white'>Who can view:</label>
+                            <select name="is_public" value={formData.is_public} onChange={handleChange} className='bg-primary p-2 text-gray-300'>
+                                <option value={true}>Public</option>
+                                <option value={false}>Private</option>
+                            </select>
+                        </div>
+
+                        <div className='flex items-center'>
+                            <input
+                                type="checkbox"
+                                name="ranked"
+                                checked={formData.ranked} 
+                                onChange={handleChange} 
+                            />
+                            <div className='ml-2 text-white'>Ranked</div>
+                        </div>
+                    </div>
+
+                    <div className='flex flex-col space-y-2 mb-4 mt-4 md:mt-0'>
+                        <label htmlFor="description" className='text-white'>Description:</label>
+                        <textarea
+                            id="description"
+                            name='description'
+                            value={formData.description}
+                            onChange={handleChange}
+                            className=' bg-primary rounded-md p-2 w-full h-32 resize-vertical text-gray-300 focus:outline-none focus:bg-white focus:text-black'
+                        ></textarea>
+                        <div className='text-xs text-white'>(Optional)</div>
+                    </div>
                 </div>
-                
 
-                <div className='flex flex-col space-y-2 mb-4'>
-                    <label htmlFor="password">Description:</label>
-                    <textarea
-                        id="description"
-                        name='description'
-                        value={formData.description}
-                        onChange={handleChange}
-                        className='border border-gray-400 bg-primary rounded-md p-2 w-full h-32 resize-vertical'
-                        placeholder="Enter list description"
-                    ></textarea>
-                    <div className='text-xs'>(Optional)</div>
+                <div className='flex items-center justify-end gap-3'>
+                    <button onClick={() => navigate(-1)} className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-light hover:bg-gray-500 text-white'>Cancel</button>
+                    <button className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-red-600 hover:bg-red-500 text-white' onClick={handleDelete}>Delete</button>
+                    <button type="submit" className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-hover hover:bg-green-500 text-white'>Save</button>
                 </div>
-
-                <select name="is_public" value={formData.is_public} onChange={handleChange}>
-                    <option value={true}>Public</option>
-                    <option value={false}>Private</option>
-                </select>
-
-                <label>
-                    <input
-                        type="checkbox"
-                        name="ranked"
-                        checked={formData.ranked} 
-                        onChange={handleChange} 
-                    />
-                    Ranked
-                </label>
-
-                <button type="submit" className='w-fit text-lg py-2 px-3 rounded-lg mb-4 font-semibold'>Create</button>
                 
             </Form>
         </div>
