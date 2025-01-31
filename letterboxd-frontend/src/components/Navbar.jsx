@@ -13,6 +13,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import SearchBar from './SearchBar.jsx';
 import SignIn from './SignIn.jsx';
 import { IoClose } from 'react-icons/io5';
+import CreateAccount from './CreateAccount.jsx';
 
 const Navbar = () => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
@@ -24,6 +25,7 @@ const Navbar = () => {
     const [signinDropdown, setSigninDropdown] = useState(false)
     const [searchDropdown, setSearchDropdown] = useState(false)
     const [menuDropdown, setMenuDropdown] = useState(false)
+    const [createAccount, setCreateAccount] = useState(false)
 
     const navigate = useNavigate();
 
@@ -41,6 +43,9 @@ const Navbar = () => {
     
     return (
         <>
+            {/*Create account pop up form */}
+            <CreateAccount createAccount={createAccount} setCreateAccount={setCreateAccount}/>
+
             {/*Desktop Navbar */}
             <nav className='hidden md:block bg-primary text-gray-300 font-bold h-[65px] uppercase'>
                 <div className='flex justify-between items-center container mx-auto h-full px-5'>
@@ -80,7 +85,7 @@ const Navbar = () => {
                             <>
                                 <SignIn popup={popup} setPopup={setPopup}/>
                                 <button onClick={() => setPopup(true)} className='uppercase hover:text-white'>Sign In</button>
-                                <button className='uppercase hover:text-white'>Create Account</button>
+                                <button onClick={() => setCreateAccount(true)} className='uppercase hover:text-white'>Create Account</button>
                                 <Link className='flex items-center hover:text-white' to={'/films'}>Films</Link>
                                 <Link className='flex items-center hover:text-white' to={'/about'}>About</Link>
                                 <SearchBar />
@@ -133,7 +138,7 @@ const Navbar = () => {
                             </div>
                         </>
                     ) : (
-                        <Link className='flex items-center pl-4 py-2 hover:bg-gray-700'><FaKey className='mr-3'/><span>CREATE ACCOUNT</span></Link>
+                        <Link onClick={() => {setMenuDropdown(false), setCreateAccount(true)}} className='flex items-center pl-4 py-2 hover:bg-gray-700'><FaKey className='mr-3'/><span>CREATE ACCOUNT</span></Link>
                     )}
                     
                     <Link to={'/films'} onClick={() => setMenuDropdown(false)} className='flex items-center pl-4 py-2 hover:bg-gray-700'><MdMovie className='mr-3'/> <span>FILMS</span></Link>
@@ -145,15 +150,3 @@ const Navbar = () => {
 }
 
 export default Navbar
-
-// popup ? (
-//     <SignIn setPopup={setPopup}/>
-// ) : (
-//     <>
-//         <button onClick={() => setPopup(true)} className='uppercase hover:text-white'>Sign In</button>
-//         <button className='uppercase hover:text-white'>Create Account</button>
-//         <Link className='flex items-center hover:text-white' to={'/films'}>Films</Link>
-//         <Link className='flex items-center hover:text-white' to={'/about'}>About</Link>
-//         <SearchBar />
-//     </>
-// )
