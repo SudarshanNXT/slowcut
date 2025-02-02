@@ -1,4 +1,4 @@
-import { Form, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext.jsx'
@@ -16,6 +16,7 @@ import { IoClose } from 'react-icons/io5';
 import CreateAccount from './CreateAccount.jsx';
 
 const Navbar = () => {
+    const location = useLocation();
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     const [isLoggedIn, setIsLoggedIn] = useState(userInfo ? true : false)
     const [popup, setPopup] = useState(false)
@@ -47,15 +48,15 @@ const Navbar = () => {
             <CreateAccount createAccount={createAccount} setCreateAccount={setCreateAccount}/>
 
             {/*Desktop Navbar */}
-            <nav className='hidden md:block bg-primary text-gray-300 font-bold h-[65px] uppercase'>
-                <div className='flex justify-between items-center container mx-auto h-full px-5'>
+            <nav className='hidden md:block bg-primary text-gray-300 font-bold h-[65px] uppercase z-20 w-full'>
+                <div className='flex justify-between items-center container mx-auto h-full'>
                     {/*Logo */}
                     <Link to={'/'} className='flex items-center'>
                         <img src="https://a.ltrbxd.com/logos/letterboxd-logo-h-neg-rgb.svg" alt="Logo" className="h-16" />
                     </Link>
                     
                     {/*Right Side */}
-                    <div className='flex items-center gap-x-3 text-sm h-full relative z-20'>
+                    <div className='flex items-center gap-x-3 text-sm h-full relative'>
                         {isLoggedIn ? (
                             <>
                                 <div className='relative flex items-center group font-bold rounded-t-md hover:bg-light w-fit p-2'>

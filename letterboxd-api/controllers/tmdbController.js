@@ -85,7 +85,30 @@ const getMovieDetails = asyncHandler(async (req, res) => {
         const data = await castResponse.json()
         resObject['credits'] = data
         resObject['director'] = findDirector(data.crew)
-    }
+
+        // Group crew members by job
+        const crewByJob = data.crew.reduce((acc, member) => {
+            if (!acc[member.job]) {
+                acc[member.job] = [];
+            }
+            acc[member.job].push(member);
+            return acc;
+        }, {});
+
+        const jobPriority = ["Director", "Producer", "Writer", "Casting", "Editor", "Director of Photography"];
+        
+        resObject["grouped_crew"] = Object.entries(crewByJob)
+            .map(([job, members]) => ({ job, members }))
+            .sort((a, b) => {
+                const indexA = jobPriority.indexOf(a.job);
+                const indexB = jobPriority.indexOf(b.job);
+                
+                if (indexA === -1 && indexB === -1) return 0; 
+                if (indexA === -1) return 1; 
+                if (indexB === -1) return -1; 
+                return indexA - indexB; 
+            });
+        }
 
     const altTitlesResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/alternative_titles`, {
         headers
@@ -100,7 +123,54 @@ const getMovieDetails = asyncHandler(async (req, res) => {
     })
     if(releasesResponse.ok){
         const data = await releasesResponse.json()
-        resObject['releases'] = data
+
+        const releaseTypes = {
+            1: 'Premiere',
+            2: 'Theatrical Limited',
+            3: 'Theatrical',
+            4: 'Digital',
+            5: 'Physical',
+            6: 'TV' 
+        }
+
+        const groupedReleases = {};
+        // Step 1: Group releases by type and then by release date
+        data.results.forEach(result => {
+            result.release_dates.forEach(release => {
+                const typeName = releaseTypes[release.type]; // Get type name from releaseTypes
+
+                if (!typeName) return; // Skip unknown types
+
+                if (!groupedReleases[typeName]) {
+                    groupedReleases[typeName] = {};
+                }
+
+                // Group by release date
+                if (!groupedReleases[typeName][release.release_date]) {
+                    groupedReleases[typeName][release.release_date] = [];
+                }
+
+                groupedReleases[typeName][release.release_date].push({
+                    country: result.iso_3166_1,
+                    date: release.release_date
+                });
+            });
+        });
+
+        // Step 2: Convert grouped object into an ordered array, and sort by date
+        const orderedReleases = Object.entries(releaseTypes)
+            .map(([type, name]) => ({
+                type: name,
+                releases: Object.entries(groupedReleases[name] || {})
+                    .map(([releaseDate, releases]) => ({
+                        date: releaseDate,
+                        releases: releases
+                    }))
+                    .sort((a, b) => new Date(a.date) - new Date(b.date)) // Sort by date
+            }))
+            .filter(group => group.releases.length > 0); // Remove empty groups
+
+        resObject['releases'] = orderedReleases;
     }
 
     const keywordsResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/keywords`, {

@@ -3,22 +3,24 @@ import { Link, useParams } from 'react-router-dom';
 import countries from '../data/countries.js';
 import languages from '../data/languages.js';
 import AddToListCard from '../components/AddToListCard.jsx';
+import sampleFilmData from '../data/sampleFilmData.js';
+import MovieDetails from '../components/FilmPage/MovieDetails.jsx';
+import Genres from '../components/FilmPage/Genres.jsx';
+import Releases from '../components/FilmPage/Releases.jsx';
+import Cast from '../components/FilmPage/Cast.jsx';
+import Crew from '../components/FilmPage/Crew.jsx';
+import SignInForm from '../components/SignInForm.jsx';
+import CreateAccount from '../components/CreateAccount.jsx';
+import BackendBox from '../components/FilmPage/BackendBox.jsx';
 
 const FilmPage = () => {
     const { id } = useParams()
     const [movieData, setMovieData] = useState(null);
     const [filter, setFilter] = useState('cast');
     const [loading, setLoading] = useState(true);
-    const [likeStatus, setLikeStatus] = useState(false);
-    const [watchStatus, setWatchStatus] = useState(false);
-    const [watchlistStatus, setWatchlistStatus] = useState(false);
-    const [diaryStatus, setDiaryStatus] = useState(false);
-    const [reviewStatus, setReviewStatus] = useState(false);
-    const [listStatusArr, setListStatusArr] = useState(null);
-    const [addToList, setAddToList] = useState(false);
-    const [listOfLists, setListofLists] = useState([]);
-    const [reviewBody, setReviewBody] = useState('');
-    const [rating, setRating] = useState(null);
+    
+    const [flag, setFlag] = useState(false)
+    const [createAccountForm, setCreateAccountForm] = useState(false)
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
     const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
@@ -36,325 +38,85 @@ const FilmPage = () => {
                     // console.log(data);
                     setMovieData(data);
                     setLoading(false)
-                    
-                    // getUserList()
                 }
             } catch (error) {
                 console.log(error);
             }
         }
-        getMovieDetails()
-        if(localStorage.getItem('userInfo')){
-            const getMovieStatus = async () => {
-                const response = await fetch(`${apiBaseUrl}/profile/movie_status?id=${id}`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                })
-                if(response.ok){
-                    const data = await response.json()
-                    setLikeStatus(data.liked_movie_status)
-                    setWatchStatus(data.watch_status)
-                    setWatchlistStatus(data.watchlist_status)
-                    setDiaryStatus(data.diary_status)
-                    setReviewStatus(data.review_status)
-                    setListStatusArr(data.list_status_arr)
-                    setRating(data.rating_status)
-                    console.log(data);
-                }
-            } 
-            getMovieStatus()
-        }
+        // getMovieDetails()
+        setMovieData(sampleFilmData)
+        setLoading(false)
+        console.log(sampleFilmData);
+
+        
     }, [id])
-
-    const addMovieToProfile = async (field, rating = null) => {
-        try {
-            const response = await fetch(`${apiBaseUrl}/profile/add_movie_to_profile/${field}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    title: movieData.movie_data.title,
-                    id: movieData.movie_data.id,
-                    image: movieData.movie_data.poster_path,
-                    genres: movieData.movie_data.genres,
-                    release_date: movieData.movie_data.release_date,
-                    rating: rating
-                })
-            })
-            if(response.ok){
-                const data = await response.json()
-                if(field === 'liked'){
-                    setLikeStatus(true)
-                } else if(field === 'watched'){
-                    setWatchStatus(true)
-                } else if(field === 'watchlist'){
-                    setWatchlistStatus(true)
-                }
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const removeMovieFromProfile = async (field) => {
-        try {
-            const response = await fetch(`${apiBaseUrl}/profile/remove_movie_from_profile/${field}?id=${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            if(response.ok){
-                const data = await response.json()
-                if(field === 'liked'){
-                    setLikeStatus(false)
-                } else if(field === 'watched'){
-                    setWatchStatus(false)
-                    setRating(null)
-                } else if(field === 'watchlist'){
-                    setWatchlistStatus(false)
-                }
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const addMoviesToLists = async () => {
-        try {
-            const response = await fetch(`${apiBaseUrl}/profile/add_movies_to_lists`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    movie_id: id,
-                    list_of_lists: listOfLists,
-                    title: movieData.movie_data.title,
-                    id: movieData.movie_data.id,
-                    image: movieData.movie_data.poster_path,
-                    genres: movieData.movie_data.genres,
-                    release_date: movieData.movie_data.release_date
-                })
-            })
-            if(response.ok){
-                const data = await response.json()
-                setAddToList(false)
-            } else {
-                const error = await response.json()
-                throw new Error(error)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const addDiaryEntry = async () => {
-        try {
-            const response = await fetch(`${apiBaseUrl}/profile/add_diary_entry`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    id: id,
-                    title: movieData.movie_data.title,
-                    image: movieData.movie_data.poster_path,
-                    genres: movieData.movie_data.genres,
-                    release_date: movieData.movie_data.release_date,
-                    rewatch: true
-                })
-            })
-            if(response.ok){
-                const data = await response.json()
-                setDiaryStatus(true)
-            } else {
-                const error = await response.json()
-                throw new Error(error)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const addReview = async () => {
-        try {
-            if(reviewBody.length === 0) return
-            const response = await fetch(`${apiBaseUrl}/profile/create_review`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    movie_id: id,
-                    title: movieData.movie_data.title,
-                    image: movieData.movie_data.poster_path,
-                    genres: movieData.movie_data.genres,
-                    release_date: movieData.movie_data.release_date,
-                    body: reviewBody
-                })
-            })
-            if(response.ok){
-                const data = await response.json()
-                setReviewStatus(true)
-                setReviewBody('')
-            } else {
-                const error = await response.json()
-                throw new Error(error)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const handleRatingChange = (event) => {
-        const rating = Number(event.target.value)
-        setRating(rating)
-        addMovieToProfile('watched', rating)
-    }
-
-    const handleDeleteRating = () => {
-        setRating(null)
-        addMovieToProfile('watched')
-    }
 
     if(movieData && !loading){
         return (
-            <div>
-                <img className='h-[150px]' src={`${movieData.movie_data.poster_path ? `https://image.tmdb.org/t/p/w500/${movieData.movie_data.poster_path}` : '../images/no-image-1.png'}`} alt={movieData.movie_data.title} />
-                <div>{movieData.movie_data.title}</div>
-                <div>{movieData.movie_data.release_date.slice(0, 4)}</div>
-                <div>Directed by <Link className='text-blue-500 hover:underline' to={`/person/${movieData.director.id}`}>{movieData.director.name}</Link></div>
-                <div>{movieData.movie_data.tagline}</div>
-                <div>{movieData.movie_data.overview}</div>
+            <>
+                <SignInForm flag={flag} setFlag={setFlag}/>
 
-                {localStorage.getItem('userInfo') ? (
-                    <>
-                        {likeStatus ? (
-                            <button onClick={() => removeMovieFromProfile('liked')} className='border'>Unlike</button>
-                        ) : (
-                            <button onClick={() => addMovieToProfile('liked')} className='border'>Like</button>
-                        )}
+                <CreateAccount createAccount={createAccountForm} setCreateAccount={setCreateAccountForm}/>
 
-                        {watchStatus ? (
-                            <button onClick={() => removeMovieFromProfile('watched')} className='border'>Watched</button>
-                        ) : (
-                            <button onClick={() => addMovieToProfile('watched')} className='border'>Watch</button>
-                        )}
-
-                        {watchlistStatus ? (
-                            <button onClick={() => removeMovieFromProfile('watchlist')} className='border'>Watchlist remove</button>
-                        ) : (
-                            <button onClick={() => addMovieToProfile('watchlist')} className='border'>Watchlist add</button>
-                        )}
-
-                        {/*Rating */}
-                        
-                        <div>
-                            <button onClick={() => handleDeleteRating()} className='bg-red-300'>Delete Rating</button>
-                            {[1, 2, 3, 4, 5].map((num) => (
-                                <label key={num}>
-                                <input
-                                    type="radio"
-                                    value={num}
-                                    checked={rating === num}
-                                    onChange={handleRatingChange}
-                                />
-                                {num}
-                                </label>
-                            ))}
+                <div className='grid grid-cols-4 pt-4'>
+                    <img className='h-[345px] rounded-md' src={`${movieData.movie_data.poster_path ? `https://image.tmdb.org/t/p/original/${movieData.movie_data.poster_path}` : '../images/no-image-1.png'}`} alt={movieData.movie_data.title} />
+                    
+                    <div className='col-span-2 space-y-3 mr-6'>
+                        <div className='text-white text-3xl font-bold flex items-end'>
+                            {movieData.movie_data.title}
+                            <div className='font-normal text-base ml-3'>{movieData.movie_data.release_date.slice(0, 4)}</div>
+                            <div className='font-normal text-base ml-3 text-gray-300'>Directed by <Link className='text-gray-200 underline hover:text-blue-500' to={`/person/${movieData.director.id}`}>{movieData.director.name}</Link></div>
                         </div>
+                        
+                        <div className='text-gray-300 font-semibold'>{movieData.movie_data.tagline}</div>
+                        <div className='text-gray-300'>{movieData.movie_data.overview}</div>
 
-                        {addToList ? (
-                            <div>
-                                {listStatusArr.map((list, index) => (
-                                    <AddToListCard key={index} list={list.list_item} status={list.status} setListofLists={setListofLists}/>
-                                ))}
-
-                                <button className='bg-green-400' onClick={() => addMoviesToLists()}>Add</button>
+                        {/*Filtered section */}
+                        <div className=''>
+                            <div className='flex space-x-4 text-hover font-semibold border-b border-b-gray-400'>
+                                <button onClick={() => setFilter('cast')} className={`${filter === 'cast' ? 'text-white border-b' : ''}`}>Cast</button>
+                                <button onClick={() => setFilter('crew')} className={`${filter === 'crew' ? 'text-white border-b' : ''}`}>Crew</button>
+                                <button onClick={() => setFilter('details')} className={`${filter === 'details' ? 'text-white border-b' : ''}`}>Details</button>
+                                <button onClick={() => setFilter('genres')} className={`${filter === 'genres' ? 'text-white border-b' : ''}`}>Genres</button>
+                                <button onClick={() => setFilter('releases')} className={`${filter === 'releases' ? 'text-white border-b' : ''}`}>Releases</button>
                             </div>
-                        ) : (
-                            <button className='border' onClick={() => setAddToList(true)}>Add to list</button>
-                        )}
 
-                        {/*Diary entry */}
-                        {diaryStatus ? (
-                            <button onClick={() => addDiaryEntry()} className='border'>Add to diary again</button>
-                        ) : (
-                            <button onClick={() => addDiaryEntry()} className='border'>Add to diary</button>
-                        )}
-                        
-                        {/*Review */}
-                        <label htmlFor="review_body">{reviewStatus ? 'Review again' : 'Review'}</label>
-                        <textarea
-                            id="review_body"
-                            value={reviewBody}
-                            onChange={(e) => setReviewBody(e.target.value)}
-                            className='border border-gray-400 bg-primary rounded-md p-2 w-full h-32'
-                            placeholder="Enter review..."
-                        ></textarea>
-                        <button onClick={() => addReview()} className='bg-green-400'>Save</button>
-                    </>
-                ) : (
-                    <div>Log in or sign up</div>
-                )}
-                
-
-                {/*Filtered section */}
-                <div className='border'>
-                    <div className='flex space-x-2'>
-                        <button onClick={() => setFilter('cast')} className={`${filter === 'cast' ? 'bg-blue-400' : ''}`}>Cast</button>
-                        <button onClick={() => setFilter('crew')} className={`${filter === 'crew' ? 'bg-blue-400' : ''}`}>Crew</button>
-                        <button onClick={() => setFilter('details')} className={`${filter === 'details' ? 'bg-blue-400' : ''}`}>Details</button>
-                        <button onClick={() => setFilter('genres')} className={`${filter === 'genres' ? 'bg-blue-400' : ''}`}>Genres</button>
-                        <button onClick={() => setFilter('releases')} className={`${filter === 'releases' ? 'bg-blue-400' : ''}`}>Releases</button>
-                    </div>
-
-                    {filter === 'cast' &&
-                        movieData.credits.cast.map((item, index) => (
-                            <div key={index}>{item.name}</div>
-                        ))
-                    }
-                    {filter === 'crew' &&
-                        movieData.credits.crew.map((item, index) => (
-                            <div key={index}>{item.name}</div>
-                        ))
-                    }
-                    {filter === 'details' &&
-                        <div>
-                            <div>Studios: {movieData.movie_data.production_companies.map((item, index) => <div key={index}>{item.name}</div>)}</div>
-                            <div className='border'>Country: {getCountryNameByCode(movieData.movie_data.origin_country[0])}</div>
-                            <div>Primary Language: {getLanguageNameByCode(movieData.movie_data.original_language)}</div>
-                            <div>Spoken Languages: {movieData.movie_data.spoken_languages.map((item, index) => <div key={index}>{item.name}</div>)}</div>
-                            <div>Alternative Titles: {movieData.alternative_titles.titles.map((item, index) => <div key={index}>{item.title}</div>)}</div>
+                            {filter === 'cast' &&
+                                <Cast cast={movieData.credits.cast}/>
+                            }
+                            {filter === 'crew' &&
+                                <Crew grouped_crew={movieData.grouped_crew}/>
+                            }
+                            {filter === 'details' &&
+                                <MovieDetails 
+                                    production_companies={movieData.movie_data.production_companies} 
+                                    origin_country={movieData.movie_data.origin_country[0]}
+                                    original_language={movieData.movie_data.original_language}
+                                    spoken_languages={movieData.movie_data.spoken_languages}
+                                    alternative_titles={movieData.alternative_titles.titles}
+                                />
+                            }
+                            {filter === 'genres' && (
+                                <Genres genres={movieData.movie_data.genres} keywords={movieData.keywords.keywords}/>
+                            )}
+                            {filter === 'releases' && 
+                                <Releases releases={movieData.releases}/>
+                            }
                         </div>
-                    }
-                    {filter === 'genres' && (
-                        <>
-                            <div className='underline'>Genres:</div>
-                            {movieData.movie_data.genres.map((item, index) => (
-                                <div key={`genre-${index}`}>{item.name}</div>
-                            ))}
+                    </div>
+                    
 
-                            <div className='underline'>Keywords:</div>
-                            {movieData.keywords.keywords.map((keyword, index) => (
-                                <div key={`keyword-${index}`}>{keyword.name}</div>
-                            ))}
-                        </>
+                    {localStorage.getItem('userInfo') ? (
+                        <BackendBox id={id} movieData={movieData}/>
+                    ) : (
+                        <div className='bg-light text-gray-300 h-fit rounded-md text-center'>
+                            <button onClick={() => setFlag(true)} className='py-1 border-b border-b-black w-full'>Sign in to log, rate or review</button>
+                            <button onClick={() => setCreateAccountForm(true)} className='py-1 w-full'>Create account</button>
+                        </div>
                     )}
-                    {filter === 'releases' && 
-                        movieData.releases.results.map((item, index) => <div key={index}>{item.release_dates[0].release_date.slice(0, 4)} {getCountryNameByCode(item.iso_3166_1)}</div>)
-                    }
+                    
                 </div>
-            </div>
+            </>
         )
     } else if(!movieData && loading){
         return (
@@ -366,16 +128,6 @@ const FilmPage = () => {
         )   
     }
     
-}
-
-function getCountryNameByCode(code) {
-    const country = countries.find(country => country.iso_3166_1 === code.toUpperCase());
-    return country ? country.english_name : "Country not found";
-}
-
-function getLanguageNameByCode(code) {
-    const language = languages.find(lang => lang.iso_639_1 === code.toLowerCase());
-    return language ? language.english_name : "Language not found";
 }
 
 export default FilmPage

@@ -33,7 +33,7 @@ const SignIn = ({ isMobile, popup, setPopup, signinDropdown, setSigninDropdown, 
                 const data = await response.json()
                 
                 loginUser(data);
-                navigate('/')
+                window.location.href = window.location.href
                 setSigninDropdown(false)
             } else {
                 const error = await response.json()
@@ -55,7 +55,7 @@ const SignIn = ({ isMobile, popup, setPopup, signinDropdown, setSigninDropdown, 
 
     return isMobile ? (
         <>
-            <button onClick={() => {setSigninDropdown(prev => !prev) , setSearchDropdown(false)}}>
+            <button id='sign-in-btn' onClick={() => {setSigninDropdown(prev => !prev) , setSearchDropdown(false)}}>
                 {signinDropdown ? <IoClose size={30}/> : <FaUserLock size={30}/>}
             </button>
 
