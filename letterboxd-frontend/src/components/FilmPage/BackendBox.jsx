@@ -256,7 +256,7 @@ const BackendBox = ({ id, movieData }) => {
                 <div className='flex flex-col items-center py-1 border-b border-b-black'>
                     <div className='text-center text-sm'>{rating ? 'Rated' : 'Rate'}</div>
                     <div className='flex justify-center items-center w-full relative'>
-                        <button onClick={() => handleDeleteRating()} className='opacity-0 hover:opacity-100 absolute left-3 transition-opacity duration-200'><IoMdClose size={22}/></button>
+                        <button onClick={() => handleDeleteRating()} className='md:opacity-0 hover:opacity-100 md:absolute left-3 transition-opacity duration-200'><IoMdClose size={22}/></button>
                         {[1, 2, 3, 4, 5].map((num) => (
                             <button onMouseEnter={() => setHoverRating(num)} onMouseLeave={() => setHoverRating(null)} key={num}>
                                 <IoIosStar onClick={() => handleRatingChange(num)} value={num} size={37} className={`${(hoverRating || rating) >= num ? 'text-blue-400' : 'text-gray-900'}`}/>

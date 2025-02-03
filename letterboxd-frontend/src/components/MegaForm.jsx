@@ -158,13 +158,13 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                 </div>
 
                 <Form onSubmit={ submitHandler }>
-                    <div className='flex gap-x-6 p-5'>
-                        <img className='h-[230px] rounded-md' src={`${movieData.image ? `https://image.tmdb.org/t/p/original/${movieData.image}` : '../images/no-image-1.png'}`} alt={movieData.title} />
+                    <div className='flex flex-col md:flex-row gap-x-6 p-5'>
+                        <img className='h-[180px] w-[120px] mx-auto rounded-md' src={`${movieData.image ? `https://image.tmdb.org/t/p/original/${movieData.image}` : '../images/no-image-1.png'}`} alt={movieData.title} />
 
                         <div className='flex flex-col w-full space-y-5 text-gray-300'>
                             <div className='text-gray-300 text-3xl font-bold flex items-end'>{movieData.title} <span className='font-normal text-base ml-2'>{movieData.release_date.slice(0, 4)}</span></div>
 
-                            <div className='flex justify-between items-center'>
+                            <div className='flex flex-col space-y-2 md:space-y-0 md:flex-row md:justify-between md:items-center'>
                                 {addFilmToDiary ? (
                                     <>
                                         <label className="flex items-center space-x-2 cursor-pointer w-fit">
@@ -201,7 +201,7 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                             </div>
 
                             <textarea
-                                id="review_body"
+                                id={`textarea-${crypto.randomUUID()}`}
                                 value={reviewBody}
                                 onChange={(e) => setReviewBody(e.target.value)}
                                 className=' bg-gray-400 placeholder:text-gray-600 focus:bg-white focus:text-black focus:outline-none rounded-md p-2 w-full h-32'
