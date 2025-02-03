@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
-import countries from '../data/countries.js';
-import languages from '../data/languages.js';
 import AddToListCard from '../components/AddToListCard.jsx';
 import sampleFilmData from '../data/sampleFilmData.js';
 import MovieDetails from '../components/FilmPage/MovieDetails.jsx';
@@ -46,7 +44,7 @@ const FilmPage = () => {
         // getMovieDetails()
         setMovieData(sampleFilmData)
         setLoading(false)
-        console.log(sampleFilmData);
+        // console.log(sampleFilmData);
 
         
     }, [id])

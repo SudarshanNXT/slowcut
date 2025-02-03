@@ -5,13 +5,16 @@ import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { Form } from 'react-router-dom';
 
-const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_status }) => {
+const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_status, setUpdate }) => {
     const [addFilmToDiary, setAddFilmToDiary] = useState(true)
     const [watchedBefore, setWatchedBefore] = useState(false)
     const [reviewBody, setReviewBody] = useState('');
     const [rating, setRating] = useState(pre_rating);
     const [hoverRating, setHoverRating] = useState(null);
     const [likeStatus, setLikeStatus] = useState(pre_like_status);
+
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
+    const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
 
     useEffect(() => {
         setRating(pre_rating);
@@ -24,18 +27,128 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
     const submitHandler = async (e) => {
         e.preventDefault()
         try {
-            
+            //Handle adding to diary, review, liked, watched
+            if(addFilmToDiary) await addDiaryEntry()
+            if(!pre_like_status && likeStatus) await addMovieToProfile('liked')
+            if(pre_like_status && !likeStatus) await removeMovieFromProfile('liked')
+            await addReview()
+            await addMovieToProfile('watched', rating)
+            setUpdate(prev => !prev)
+            setMegaForm(false)
         } catch (error) {
             console.error(error.message)
         }
     }
 
-    //className={`fixed inset-0 h-full w-full flex items-center justify-center ${megaForm ? 'bg-opacity-80 z-50' : 'opacity-0 pointer-events-none'} bg-black transition-all duration-200`}
-    //className={`flex flex-col mx-4 w-full md:w-[300px] bg-light p-5 rounded-md relative ${megaForm ? '' : 'scale-50'} transition-all duration-200`}
+    const removeMovieFromProfile = async (field) => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/remove_movie_from_profile/${field}?id=${movieData.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            if(response.ok){
+                const data = await response.json()
+            } else {
+                const error = await response.json()
+                throw new Error(error.message)
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    const addMovieToProfile = async (field, rating = null) => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/add_movie_to_profile/${field}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    title: movieData.title,
+                    id: movieData.id,
+                    image: movieData.image,
+                    genres: movieData.genres,
+                    release_date: movieData.release_date,
+                    rating: rating
+                })
+            })
+            if(response.ok){
+                const data = await response.json()
+                
+            } else {
+                const error = await response.json()
+                throw new Error(error.message)
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    const addDiaryEntry = async () => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/add_diary_entry`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    id: movieData.id,
+                    title: movieData.title,
+                    image: movieData.image,
+                    genres: movieData.genres,
+                    release_date: movieData.release_date,
+                    rewatch: watchedBefore
+                })
+            })
+            if(response.ok){
+                const data = await response.json()
+            } else {
+                const error = await response.json()
+                throw new Error(error)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const addReview = async () => {
+        try {
+            if(reviewBody.length === 0) return
+            const response = await fetch(`${apiBaseUrl}/profile/create_review`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    movie_id: movieData.id,
+                    title: movieData.title,
+                    image: movieData.image,
+                    genres: movieData.genres,
+                    release_date: movieData.release_date,
+                    body: reviewBody
+                })
+            })
+            if(response.ok){
+                const data = await response.json()
+            } else {
+                const error = await response.json()
+                throw new Error(error)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <div className={`fixed inset-0 h-full w-full flex items-center justify-center ${megaForm ? 'bg-opacity-80 z-50' : 'opacity-0 pointer-events-none'} bg-black transition-all duration-200`}>
-            <div className={`flex flex-col mx-4 w-full md:w-[800px] bg-light rounded-md relative ${megaForm ? '' : 'scale-50'} transition-all duration-200`}>
+            <div className={`flex flex-col mx-4 md:mx-0 w-full md:w-[800px] bg-light rounded-md relative ${megaForm ? '' : 'scale-50'} transition-all duration-200`}>
                 
                 <div className='flex items-center justify-between border-b border-b-black p-3'>
                     <div className='text-white text-lg font-bold'>I watched...</div>
@@ -48,8 +161,8 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                     <div className='flex gap-x-6 p-5'>
                         <img className='h-[230px] rounded-md' src={`${movieData.image ? `https://image.tmdb.org/t/p/original/${movieData.image}` : '../images/no-image-1.png'}`} alt={movieData.title} />
 
-                        <div className='flex flex-col w-full space-y-3 text-gray-300'>
-                            <div className='text-gray-300 text-3xl font-bold flex items-end'>{movieData.title} <span className='font-normal text-base ml-2'>{movieData.year}</span></div>
+                        <div className='flex flex-col w-full space-y-5 text-gray-300'>
+                            <div className='text-gray-300 text-3xl font-bold flex items-end'>{movieData.title} <span className='font-normal text-base ml-2'>{movieData.release_date.slice(0, 4)}</span></div>
 
                             <div className='flex justify-between items-center'>
                                 {addFilmToDiary ? (
@@ -102,7 +215,7 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                                     <div className='flex items-center'>
                                         {[1, 2, 3, 4, 5].map((num) => (
                                             <button onMouseEnter={() => setHoverRating(num)} onMouseLeave={() => setHoverRating(null)} key={num}>
-                                                <IoIosStar onClick={() => setRating(num)} value={num} size={32} className={`${(hoverRating || rating) >= num ? 'text-blue-400' : 'text-gray-900'}`}/>
+                                                <IoIosStar onClick={(e) => {e.preventDefault(), setRating(num)}} value={num} size={32} className={`${(hoverRating || rating) >= num ? 'text-blue-400' : 'text-gray-900'}`}/>
                                             </button>
                                         ))}
                                     </div>
@@ -112,15 +225,15 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                                 <div className='flex flex-col h-full ml-6'>
                                     <div>Like</div>
                                     {likeStatus ? (
-                                        <button onClick={() => setLikeStatus(prev => !prev)}><FaHeart className='text-accent' size={32}/></button>
+                                        <button onClick={(e) => {e.preventDefault(), setLikeStatus(prev => !prev)}}><FaHeart className='text-accent' size={32}/></button>
                                     ) : (
-                                        <button onClick={() => setLikeStatus(prev => !prev)}><FaHeart className='text-gray-800 hover:text-gray-700' size={32}/></button>
+                                        <button onClick={(e) => {e.preventDefault(), setLikeStatus(prev => !prev)}}><FaHeart className='text-gray-800 hover:text-gray-700' size={32}/></button>
                                     )}
                                 </div>
                             </div>
                             
                             <div className='flex justify-end'>
-                                <button className='w-fit bg-hover hover:bg-green-500 font-bold px-3 rounded-md text-lg'>Save</button>
+                                <button type='submit' className='w-fit bg-hover hover:bg-green-500 font-bold px-3 rounded-md text-lg text-white'>Save</button>
                             </div>
                         </div>
                     </div>

@@ -3,15 +3,15 @@ import mongoose from "mongoose"
 const profileSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference the User model
+        ref: 'User',
         required: true,
-        unique: true // Ensures one profile per user
+        unique: true 
     },
     liked_movies: [{
         movie: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            refPath: 'liked_movies.type'
+            ref: 'Movie'
         },
         id: {
             type: Number,
@@ -26,7 +26,7 @@ const profileSchema = mongoose.Schema({
         movie: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            refPath: 'watched_movies.type'
+            ref: 'Movie'
         },
         id: {
             type: Number,
@@ -45,7 +45,7 @@ const profileSchema = mongoose.Schema({
         movie: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            refPath: 'watchlist.type'
+            ref: 'Movie'
         },
         id: {
             type: Number,
@@ -60,7 +60,7 @@ const profileSchema = mongoose.Schema({
         movie: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            refPath: 'favorite_film.type'
+            ref: 'Movie'
         },
         id: {
             type: Number,
@@ -75,7 +75,7 @@ const profileSchema = mongoose.Schema({
         movie: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            refPath: 'diary.type'
+            ref: 'movie'
         },
         id: {
             type: Number,

@@ -48,7 +48,7 @@ const Navbar = () => {
             <CreateAccount createAccount={createAccount} setCreateAccount={setCreateAccount}/>
 
             {/*Desktop Navbar */}
-            <nav className='hidden md:block bg-primary text-gray-300 font-bold h-[65px] uppercase z-20 w-full'>
+            <nav className='hidden md:block bg-primary text-gray-300 font-bold h-[65px] uppercase z-50 w-full'>
                 <div className='flex justify-between items-center container mx-auto h-full'>
                     {/*Logo */}
                     <Link to={'/'} className='flex items-center'>
@@ -63,7 +63,7 @@ const Navbar = () => {
                                     <FaUserCircle className='mr-2' size={22}/>
                                     {sessionUsername.slice(0, 10)}
                                     <IoIosArrowDown  className='ml-1'/>
-                                    <div className='absolute left-0 top-full hidden group-hover:flex flex-col bg-inherit text-black rounded-b-md w-full font-normal text-xs'>
+                                    <div className='absolute left-0 top-full hidden group-hover:flex flex-col bg-inherit text-black rounded-b-md w-full font-normal text-xs z-50'>
                                         <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={'/'}>Home</Link>
                                         <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}`}>Profile</Link>
                                         <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/watched`}>Watched</Link>

@@ -35,12 +35,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if (user) {
         //create profile
         const profile = await Profile.create({
-            user: user._id,
-            liked_movies: [],
-            watched_movies: [],
-            watchlist: [],
-            favorite_films: [],
-            diary: []
+            user: user._id
         })
 
         const token = generateToken(user._id)

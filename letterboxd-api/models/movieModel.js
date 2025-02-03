@@ -5,7 +5,8 @@ const movieSchema = mongoose.Schema({
         type: String
     },
     id: {
-        type: Number
+        type: Number,
+        unique: true
     },
     image: {
         type: String

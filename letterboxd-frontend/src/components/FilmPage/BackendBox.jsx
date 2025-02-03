@@ -8,6 +8,7 @@ import { MdWatchLater } from "react-icons/md";
 import { IoIosStar } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import MegaForm from '../MegaForm';
+import AddToListForm from '../AddToListForm';
 
 const BackendBox = ({ id, movieData }) => {
     const [likeStatus, setLikeStatus] = useState(false);
@@ -17,14 +18,23 @@ const BackendBox = ({ id, movieData }) => {
     const [reviewStatus, setReviewStatus] = useState(false);
     const [listStatusArr, setListStatusArr] = useState(null);
     const [addToList, setAddToList] = useState(false);
-    const [listOfLists, setListofLists] = useState([]);
     
     const [rating, setRating] = useState(null);
     const [hoverRating, setHoverRating] = useState(null);
     const [megaForm, setMegaForm] = useState(false);
+    const [addToListForm, setAddToListForm] = useState(false);
+    const [update, setUpdate] = useState(1);
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
     const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
+
+    const movieDataObj = {
+        image: movieData.movie_data.poster_path, 
+        title: movieData.movie_data.title, 
+        release_date: movieData.movie_data.release_date,
+        genres: movieData.movie_data.genres,
+        id: movieData.movie_data.id
+    }
 
     useEffect(() => {
         if(localStorage.getItem('userInfo')){
@@ -44,12 +54,12 @@ const BackendBox = ({ id, movieData }) => {
                     setReviewStatus(data.review_status)
                     setListStatusArr(data.list_status_arr)
                     setRating(data.rating_status)
-                    console.log(data);
+                    // console.log(data);
                 }
             } 
             getMovieStatus()
         }
-    }, [])
+    }, [update])
 
     const addMovieToProfile = async (field, rating = null) => {
         try {
@@ -102,36 +112,6 @@ const BackendBox = ({ id, movieData }) => {
                 } else if(field === 'watchlist'){
                     setWatchlistStatus(false)
                 }
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const addMoviesToLists = async () => {
-        try {
-            const response = await fetch(`${apiBaseUrl}/profile/add_movies_to_lists`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    movie_id: id,
-                    list_of_lists: listOfLists,
-                    title: movieData.movie_data.title,
-                    id: movieData.movie_data.id,
-                    image: movieData.movie_data.poster_path,
-                    genres: movieData.movie_data.genres,
-                    release_date: movieData.movie_data.release_date
-                })
-            })
-            if(response.ok){
-                const data = await response.json()
-                setAddToList(false)
-            } else {
-                const error = await response.json()
-                throw new Error(error)
             }
         } catch (error) {
             console.log(error)
@@ -214,9 +194,18 @@ const BackendBox = ({ id, movieData }) => {
             <MegaForm 
                 megaForm={megaForm}
                 setMegaForm={setMegaForm}
-                movieData={{ image: movieData.movie_data.poster_path, title: movieData.movie_data.title, year: movieData.movie_data.release_date.slice(0, 4) }}
+                movieData={movieDataObj}
                 pre_rating={rating}
                 pre_like_status={likeStatus}
+                setUpdate={setUpdate}
+            />
+
+            <AddToListForm 
+                addToListForm={addToListForm} 
+                setAddToListForm={setAddToListForm} 
+                movieData={movieDataObj}
+                listStatusArr={listStatusArr}
+                setUpdate={setUpdate}
             />
 
             <div className='flex flex-col bg-light text-gray-300 h-fit rounded-md p-1'>
@@ -276,29 +265,14 @@ const BackendBox = ({ id, movieData }) => {
                     </div>
                 </div>
 
-                <button onClick={() => setMegaForm(true)} className='text-center border-b border-b-black py-2'>Review or log...</button>
+                <button onClick={() => setMegaForm(true)} className='text-center border-b border-b-black py-2'>
+                    {diaryStatus || reviewStatus ? 'Review or log again...' : 'Review or log...'}
+                </button>
 
-                {addToList ? (
-                    <div>
-                        {listStatusArr.map((list, index) => (
-                            <AddToListCard key={index} list={list.list_item} status={list.status} setListofLists={setListofLists}/>
-                        ))}
-
-                        <button className='bg-green-400' onClick={() => addMoviesToLists()}>Add</button>
-                    </div>
-                ) : (
-                    <button className='border' onClick={() => setAddToList(true)}>Add to list</button>
-                )}
-
-                {/*Diary entry */}
-                {diaryStatus ? (
-                    <button onClick={() => addDiaryEntry()} className='border'>Add to diary again</button>
-                ) : (
-                    <button onClick={() => addDiaryEntry()} className='border'>Add to diary</button>
-                )}
-                
-                
-                <button onClick={() => addReview()} className='bg-green-400'>Save</button>
+                <button onClick={() => setAddToListForm(true)} className='text-center py-2'>
+                    Add to lists...
+                </button>
+            
             </div>
         </>
     )

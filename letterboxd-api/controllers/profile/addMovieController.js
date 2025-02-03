@@ -13,7 +13,7 @@ const addMovieToProfile = asyncHandler(async (req, res) => {
     const { title, id, image, genres, release_date, rating } = req.body
     const { field } = req.params
     const user = await User.findById(req.user._id)
-    const profile = await Profile.findOne({ user: req.user._id })
+    const profile = await Profile.findOne({ user: user._id })
 
     if(!profile || !user){
         res.status(404)
@@ -43,12 +43,11 @@ const addMovieToProfile = asyncHandler(async (req, res) => {
         })
     } else if(field === 'watched'){
         //determine whether movie is already in profile's watched movies
-        const watchMovieStatus = profile.watched_movies.some(item => item.movie._id.toString() === movie._id.toString())
+        const watchMovieStatus = profile.watched_movies.some(item => item.movie.toString() === movie._id.toString())
         if(watchMovieStatus) {
             
             const index = profile.watched_movies.findIndex(item => item.movie.toString() === movie._id.toString())
             profile.watched_movies[index].rating = rating
-            await profile.save()
         } else {
             profile.watched_movies.push({
                 movie: movie._id,
@@ -74,7 +73,7 @@ const removeMovieFromProfile = asyncHandler(async (req, res) => {
     const { id } = req.query
     const { field } = req.params
     const user = await User.findById(req.user._id)
-    const profile = await Profile.findOne({ user: req.user._id })
+    const profile = await Profile.findOne({ user: user._id })
 
     //find the movie in db
     const movie = await Movie.findOne({ id: id })
@@ -84,7 +83,7 @@ const removeMovieFromProfile = asyncHandler(async (req, res) => {
     }
 
     if(field === 'liked'){
-        const index = profile.liked_movies.findIndex(item => item.movie._id.toString() === movie._id.toString())
+        const index = profile.liked_movies.findIndex(item => item.movie.toString() === movie._id.toString())
         profile.liked_movies.splice(index, 1)
     } else if(field === 'watched'){
         const index = profile.watched_movies.findIndex(item => item.movie._id.toString() === movie._id.toString())

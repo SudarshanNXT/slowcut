@@ -10,7 +10,7 @@ const listStatusArr = (arr, movie) => {
     return arr.map(list_item => {
         const listItemObj = {}
         
-        listItemObj['status'] = list_item.list_items.some(movie_obj => movie_obj.item.toString() === movie._id.toString())
+        listItemObj['status'] = list_item.list_items.some(movie_obj => movie_obj.movie.toString() === movie._id.toString())
         listItemObj['list_item'] = list_item
         return listItemObj
     })
