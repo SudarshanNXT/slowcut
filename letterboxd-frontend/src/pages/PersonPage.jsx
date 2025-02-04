@@ -28,7 +28,6 @@ const PersonPage = () => {
                 })
                 if(response.ok){
                     const data = await response.json()
-                    console.log(data);
                     setPersonData(data);
                     handleFiltering(data.credits_data.crew, data.credits_data.cast, data.person_data.known_for_department)
 
@@ -152,9 +151,9 @@ const PersonPage = () => {
                     </div>
                 </div>
 
-                <div className='grid grid-cols-3 md:block col-span-1 space-x-3'>
-                    {personData.person_data.profile_path ? <img className='col-span-1 h-[285] lg:h-[345px] rounded-md mb-2' src={`https://image.tmdb.org/t/p/w500/${personData.person_data.profile_path}`} alt={personData.person_data.name} /> : (
-                        <div className='w-full h-full bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-center rounded-md'>{personData.person_data.name}</div>
+                <div className='grid grid-cols-3 md:block col-span-1 space-x-3 md:space-x-0'>
+                    {personData.person_data.profile_path ? <img className='col-span-1 lg:h-[345px] rounded-md mb-2' src={`https://image.tmdb.org/t/p/w500/${personData.person_data.profile_path}`} alt={personData.person_data.name} /> : (
+                        <div className='w-full h-[285px] lg:h-[345px] bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-center rounded-md'>{personData.person_data.name}</div>
                     )}
                     {personData.person_data.biography && (
                         more && personData.person_data.biography.length > 200 ? (

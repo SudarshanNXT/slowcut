@@ -4,7 +4,8 @@ import {
     getFilms,
     getMovieDetails,
     getPersonDetails,
-    getHomePageData
+    getHomePageData,
+    getDirector
 } from '../controllers/tmdbController.js'
 
 const router = express.Router()
@@ -20,5 +21,6 @@ router.get('/home_page', getHomePageData)
 router.get('/movie_details', getMovieDetails)
 // router.get('/tv_show_details', getTvShowDetails)
 router.get('/person_details', getPersonDetails)
+router.get('/get_director/:id', getDirector)
 
 export default router

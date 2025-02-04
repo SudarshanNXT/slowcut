@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ResultCard from '../components/cards/ResultCard'
+import sampleFilmsPageData from '../data/sampleFilmsPageData'
+import MovieCard from '../components/cards/MovieCard'
 
 const FilmsPage = () => {
     const [filter, setFilter] = useState('now_playing')
@@ -23,14 +25,12 @@ const FilmsPage = () => {
                 const sortedResults = handleSorting(data.results, sortingMetric)
                 setResults(sortedResults)
                 setTotalPages(data.total_pages)
-                // const arr = sortResults(sortingMetric, data.results)
-                // const newResults = await getPredisplayData(arr)
-                // displayResults(newResults)
-                // setPagination(data.total_pages)
-                // tempResults = arr
             }
         }
         getData()
+        // const sortedResults = handleSorting(sampleFilmsPageData.results, sortingMetric)
+        // setResults(sortedResults)
+        // setTotalPages(sampleFilmsPageData.total_pages)
     }, [filter, page])
 
     const handleFilterClick = (type) => {
@@ -88,42 +88,47 @@ const FilmsPage = () => {
     }
 
     return (
-        <div>
-            {/*Filter buttons section */}
-            <div className='flex space-x-3'>
-                <button onClick={() => handleFilterClick('now_playing')} className={`border ${filter === 'now_playing' ? 'bg-blue-400' : ''}`}>Now Playing</button>
-                <button onClick={() => handleFilterClick('popular')} className={`border ${filter === 'popular' ? 'bg-blue-400' : ''}`}>Popular</button>
-                <button onClick={() => handleFilterClick('top_rated')} className={`border ${filter === 'top_rated' ? 'bg-blue-400' : ''}`}>Top Rated</button>
-                <button onClick={() => handleFilterClick('upcoming')} className={`border ${filter === 'upcoming' ? 'bg-blue-400' : ''}`}>Upcoming</button>
-            </div>
+        <div className='space-y-4 mt-4 px-2 md:px-0'>
 
-            {/*Sorting */}
-            <div className="border">
-                <div className="font-semibold text-gray-300 mb-1">Sort results by</div>
-                <select id="sorting-metric-dropdown" className="rounded-lg py-2 font-semibold" onChange={(e) => handleSortingChange(e.target.value)}>
-                    <option value="popularity_desc">Popularity (Descending)</option>
-                    <option value="popularity_asc">Popularity (Ascending)</option>
-                    <option value="rating_desc">Rating (Descending)</option>
-                    <option value="rating_asc">Rating (Ascending)</option>
-                    <option value="release_date_desc">Release Date (Descending)</option>
-                    <option value="release_date_asc">Release Date (Ascending)</option>
-                    <option value="title_desc">Title (A-Z)</option>
-                    <option value="title_asc">Title (Z-A)</option>
-                </select>
+            {/*Filter/Sorting section */}
+            <div className='flex flex-col md:flex-row md:items-center justify-between'>
+                <div className='flex flex-col md:flex-row md:items-center text-gray-300'>
+                    <div className='uppercase font-semibold mr-3'>Browse By</div>
+                    <div className='flex border border-gray-400  h-fit rounded-md w-fit'>
+                        <button onClick={() => handleFilterClick('now_playing')} className={` ${filter === 'now_playing' ? 'bg-gray-400 text-black' : ''} px-2 py-1 border-r border-gray-400 hover:text-white`}>Now Playing</button>
+                        <button onClick={() => handleFilterClick('popular')} className={` ${filter === 'popular' ? 'bg-gray-400 text-black' : ''} px-2 py-1 border-r border-gray-400 hover:text-white`}>Popular</button>
+                        <button onClick={() => handleFilterClick('top_rated')} className={` ${filter === 'top_rated' ? 'bg-gray-400 text-black' : ''} px-2 py-1 border-r border-gray-400 hover:text-white`}>Top Rated</button>
+                        <button onClick={() => handleFilterClick('upcoming')} className={` ${filter === 'upcoming' ? 'bg-gray-400 text-black' : ''} px-2 py-1 hover:text-white`}>Upcoming</button>
+                    </div>
+                </div>
+
+                <div className="mt-4 md:mt-0">
+                    <div className="font-semibold text-gray-300 mb-1">Sort results by</div>
+                    <select id="sorting-metric-dropdown" className="bg-transparent w-fit outline-none text-gray-300 border border-gray-300 rounded-md px-2 py-1" onChange={(e) => handleSortingChange(e.target.value)}>
+                        <option className={`bg-gray-400 text-black`} value="popularity_desc">Popularity (Descending)</option>
+                        <option className={`bg-gray-400 text-black`} value="popularity_asc">Popularity (Ascending)</option>
+                        <option className={`bg-gray-400 text-black`} value="rating_desc">Rating (Descending)</option>
+                        <option className={`bg-gray-400 text-black`} value="rating_asc">Rating (Ascending)</option>
+                        <option className={`bg-gray-400 text-black`} value="release_date_desc">Release Date (Descending)</option>
+                        <option className={`bg-gray-400 text-black`} value="release_date_asc">Release Date (Ascending)</option>
+                        <option className={`bg-gray-400 text-black`} value="title_desc">Title (A-Z)</option>
+                        <option className={`bg-gray-400 text-black`} value="title_asc">Title (Z-A)</option>
+                    </select>
+                </div>
             </div>
 
             {/*Results display */}
             {results && results.length > 0 && 
-                <div className='flex flex-wrap'>
-                    {results.map((result, index) => (
-                        <ResultCard key={index} result={result}/>
+                <div className='grid grid-cols-2 md:grid-cols-6 xl:grid-cols-7 gap-3'>
+                    {results.map((movie, index) => (
+                        <MovieCard key={index} movie={movie}/>
                     ))}
                 </div>
             }
 
             {/*Show more button */}
             {totalPages && page < totalPages && 
-                <button onClick={() => setPage(prev => prev + 1)} className='bg-blue-400'>Show more</button>
+                <button onClick={() => setPage(prev => prev + 1)} className='bg-hover hover:bg-green-500 font-semibold px-3 py-1 rounded-md text-white'>Show more</button>
             }
         </div>
     )

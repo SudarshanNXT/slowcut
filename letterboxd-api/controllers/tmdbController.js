@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler"
 import findDirector from "../utils/findDirector.js"
+import getGenres from "../utils/getGenres.js"
 
 // @desc TMDB search query
 // route GET api/tmdb/search
@@ -26,10 +27,14 @@ const search = asyncHandler(async (req, res) => {
     if(response.ok){
         const data = await response.json()
         const filteredResults = data.results.filter(item => item.media_type !== 'tv');
-        data['results'] = filteredResults
-        //filter out tv shows
 
-        //update data
+        //get genres for each film
+        const updatedResults = filteredResults.map(result => ({
+            ...result,
+            genres: getGenres(result.genre_ids) 
+        }));
+
+        data['results'] = updatedResults
 
         res.json(data)
         return
@@ -240,10 +245,35 @@ const getHomePageData = asyncHandler(async (req, res) => {
     res.json(resObject)
 })
 
+// @desc Get director for a particular movie
+// route GET api/tmdb/get_director/:id
+// @access Public
+const getDirector = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    let director = ''
+
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits`, {
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${process.env.TMDB_API_KEY}`
+        }
+    })
+    if(response.ok) {
+        const data = await response.json()
+        director = findDirector(data.crew)
+    } else {
+        res.status(404)
+        throw new Error('Error fetching director')
+    }
+
+    res.json(director)
+})
+
 export {
     search,
     getFilms,
     getMovieDetails,
     getPersonDetails,
-    getHomePageData
+    getHomePageData,
+    getDirector
 }

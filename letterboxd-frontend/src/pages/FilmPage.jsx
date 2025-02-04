@@ -31,7 +31,6 @@ const FilmPage = () => {
                 })
                 if(response.ok){
                     const data = await response.json()
-                    // console.log(data);
                     setMovieData(data);
                     setLoading(false)
                 }
