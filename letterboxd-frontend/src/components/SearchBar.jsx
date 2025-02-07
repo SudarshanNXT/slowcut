@@ -1,11 +1,18 @@
 import { Form, Link, useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FaSearch } from "react-icons/fa";
 
 const SearchBar = ({ isMobile, searchDropdown, setSearchDropdown, setSigninDropdown }) => {
     const [searchInput, setSearchInput] = useState('')
+    const inputRef = useRef(null);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (searchDropdown && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [searchDropdown]);
     
     const handleSearch = (e) => {
         e.preventDefault()
@@ -30,6 +37,7 @@ const SearchBar = ({ isMobile, searchDropdown, setSearchDropdown, setSigninDropd
                         <input 
                             type='text'
                             value={searchInput}
+                            ref={inputRef}
                             onChange={(e) => setSearchInput(e.target.value)}
                             className='w-full bg-white focus:outline-none pr-8 py-2 pl-2 text-black font-normal rounded-md'
                         />
