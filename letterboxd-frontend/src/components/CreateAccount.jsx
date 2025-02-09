@@ -27,7 +27,7 @@ const CreateAccount = ({ createAccount, setCreateAccount }) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: username,
+                    username: username.toLowerCase(),
                     password: password,
                     confirm_password: confirmPassword 
                 })

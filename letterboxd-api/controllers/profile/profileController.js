@@ -6,6 +6,7 @@ import List from "../../models/listModel.js"
 import listStatusArr from "../../utils/listStatusArr.js"
 import { validateUsername } from "../../utils/inputValidation.js"
 import mapGrabMovie from "../../utils/mapGrabMovie.js"
+import groupByMonth from "../../utils/groupByMonth.js"
 import Review from "../../models/reviewModel.js"
 
 // @desc Get Profile Data
@@ -23,27 +24,44 @@ const getProfileData = asyncHandler(async (req, res) => {
 
     //grab last 3 reviews
     const reviews = await Review.find({ creator: user.username }).sort({ created_at: -1 }).limit(3)
+    const fullReviews = await mapGrabMovie(reviews)
+
+    //grab last 3 public lists
+    const lists = await List.find({ creator: user.username, is_public: true }).sort({ created_at: -1 })
+    const fullLists = await mapGrabMovie(lists)
 
     //grab last 3 diary entries
     const diaryEntries = profile.diary.sort((a, b) => new Date(b.added_on) - new Date(a.added_on))
     const fullDiaryEntries = await mapGrabMovie(diaryEntries)
+    const groupedDiaryEntries = groupByMonth(fullDiaryEntries)
+    const diaryEntriesByMonth = Object.values(groupedDiaryEntries)
 
     //grab favorite films
     const favoriteFilms = profile.favorite_films
     const fullFavoriteFilms = await mapGrabMovie(favoriteFilms)
+    while (fullFavoriteFilms.length < 4) {
+        fullFavoriteFilms.push(false);
+    }
 
     //grab stats (watched films, number of unique films in diary, number of lists)
     const stats = {}
-    stats['films'] = profile.watched_movies.length
-    const uniqueMovieIds = new Set(diaryEntries.map(entry => entry.movie.toString()));
-    stats['this_year'] = uniqueMovieIds.size
-    stats['lists'] = await List.countDocuments({ creator: username })
+    stats['watched'] = profile.watched_movies.length || 0
+    const currentYear = new Date().getFullYear();
+    const startOfYear = new Date(currentYear, 0, 1);
+    const endOfYear = new Date(currentYear + 1, 0, 1);
+    const thisYearEntries = profile.diary.filter(entry => 
+        new Date(entry.added_on) >= startOfYear && new Date(entry.added_on) < endOfYear
+    );
+    const uniqueMovieIds = new Set(thisYearEntries.map(entry => entry.movie.toString()));
+    stats['this_year'] = uniqueMovieIds.size || 0
+    stats['lists'] = await List.countDocuments({ creator: username }) || 0
     
     res.json({
         profile: profile,
-        reviews: reviews,
-        diary: fullDiaryEntries,
+        reviews: fullReviews,
+        diary: diaryEntriesByMonth,
         favorite_films: fullFavoriteFilms,
+        lists: fullLists,
         stats: stats
     })
 })
@@ -61,30 +79,58 @@ const getProfileSubData = asyncHandler(async(req, res) => {
         throw new Error('User not found')
     }
 
+    //grab stats
+    const stats = {}
+    stats['watched'] = profile.watched_movies.length
+    const currentYear = new Date().getFullYear();
+    const startOfYear = new Date(currentYear, 0, 1);
+    const endOfYear = new Date(currentYear + 1, 0, 1);
+    const thisYearEntries = profile.diary.filter(entry => 
+        new Date(entry.added_on) >= startOfYear && new Date(entry.added_on) < endOfYear
+    );
+    const uniqueMovieIds = new Set(thisYearEntries.map(entry => entry.movie.toString()));
+    stats['this_year'] = uniqueMovieIds.size
+    stats['lists'] = await List.countDocuments({ creator: username })
+
     if(category === 'diary'){
         const diaryEntries = profile.diary.sort((a, b) => new Date(b.added_on) - new Date(a.added_on))
         const fullDiaryEntries = await mapGrabMovie(diaryEntries)
-        res.json(fullDiaryEntries)
+        res.json({
+            stats: stats,
+            data: fullDiaryEntries
+        })
         return
     } else if(category === 'watched'){
         const watchedMovies = profile.watched_movies.sort((a, b) => new Date(b.added_on) - new Date(a.added_on))
         const fullWatchedMovies = await mapGrabMovie(watchedMovies)
-        res.json(fullWatchedMovies)
+        res.json({
+            stats: stats,
+            data: fullWatchedMovies
+        })
         return
     } else if(category === 'watchlist'){
         const watchlist = profile.watchlist.sort((a, b) => new Date(b.added_on) - new Date(a.added_on))
         const fullWatchlist = await mapGrabMovie(watchlist)
-        res.json(fullWatchlist)
+        res.json({
+            stats: stats,
+            data: fullWatchlist
+        })
         return
     } else if(category === 'likes') {
         const likedMovies = profile.liked_movies.sort((a, b) => new Date(b.added_on) - new Date(a.added_on))
         const fullLikedMovies = await mapGrabMovie(likedMovies)
-        res.json(fullLikedMovies)
+        res.json({
+            stats: stats,
+            data: fullLikedMovies
+        })
         return
     } else if(category === 'reviews'){
         const reviews = await Review.find({ creator: username }).sort({ created_at: -1 })
         const fullReviews = await mapGrabMovie(reviews)
-        res.json(fullReviews)
+        res.json({
+            stats: stats,
+            data: fullReviews
+        })
         return
     } else if(category === 'lists'){
         const lists = await List.find({ creator: username }).sort({ created_at: -1 })
@@ -96,7 +142,10 @@ const getProfileSubData = asyncHandler(async(req, res) => {
             list['list_items'] = fullListItems
             arr.push(list)
         }
-        res.json(arr)
+        res.json({
+            stats: stats,
+            data: arr
+        })
         return
     }
 
@@ -169,7 +218,7 @@ const addFavoriteFilm = asyncHandler(async (req, res) => {
         })
         await profile.save()
         res.json(`${movie.title} added to ${user.username}'s favorite films`)
-    } else if(index){
+    } else if(index !== undefined && index !== null){
         profile.favorite_films[index] = { movie: movie._id, id: movie.id }
         await profile.save()
         res.json(`${movie.title} added to ${user.username}'s favorite films`)
