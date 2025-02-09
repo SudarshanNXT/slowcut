@@ -50,7 +50,7 @@ const FavoriteFilms = ({ authorized, favorite_films, setUpdate }) => {
         <>
             <SubSearchForm subSearch={subSearch} setSubSearch={setSubSearch} favorite_films={favorite_films} replace_index={index} setIndex={setIndex} setUpdate={setUpdate}/>
 
-            <div className='grid grid-cols-[150px_150px_150px_150px] gap-3 w-fit'>
+            <div className='grid grid-cols-[90px_90px_90px_90px] lg:grid-cols-[150px_150px_150px_150px] gap-3 w-fit'>
                 
                 <div className='col-span-4 uppercase border-b border-b-gray-400 mb-3 text-gray-300'>Favorite Films</div>
 
@@ -65,7 +65,7 @@ const FavoriteFilms = ({ authorized, favorite_films, setUpdate }) => {
                             }
                         </Link>
                     ) : (
-                        <div key={index} className='w-[150px] h-[225px] bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-center rounded-md'>
+                        <div key={index} className='w-full h-full bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-center rounded-md'>
                             {authorized && 
                                 <button 
                                     className='h-[45px] w-[45px] rounded-full bg-gray-800 flex items-center justify-center shadow-xl hover:shadow-gray-300 hover:shadow-2xl opacity-70 hover:opacity-100'

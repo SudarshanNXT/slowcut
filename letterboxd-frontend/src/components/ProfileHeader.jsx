@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const ProfileHeader = ({ authorized, stats, username, setEditProfile }) => {
     return (
-        <div className='flex justify-between items-center py-4'>
+        <div className='flex flex-col md:flex-row md:justify-between items-center py-4'>
             <div className='flex items-center space-x-4'>
                 <FaUserCircle className='text-gray-400' size={100}/>
 

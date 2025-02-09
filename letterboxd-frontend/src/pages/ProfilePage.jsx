@@ -61,8 +61,8 @@ const ProfilePage = () => {
                 <ProfileHeader authorized={authorized} stats={profileData.stats} username={username} setEditProfile={setEditProfile}/>
                 <ProfileSubPageMenu username={username} />
 
-                <div className='flex space-x-8'>
-                    <div className='flex flex-col space-y-3'>
+                <div className='flex flex-col items-center space-y-6 md:space-y-0 lg:flex-row lg:space-x-8'>
+                    <div className='flex flex-col w-full px-3 md:px-0 space-y-6'>
                         <FavoriteFilms authorized={authorized} favorite_films={profileData.favorite_films} setUpdate={setUpdate}/>
 
                         {/*Reviews section */}
@@ -80,7 +80,7 @@ const ProfilePage = () => {
                     </div>
 
                     
-                    <div className='flex flex-col w-full space-y-3 mt-3'>
+                    <div className='flex flex-col w-full space-y-6 mt-3 px-3 md:px-0'>
                         
                         {/*Diary section */}
                         <div className='space-y-3'>
@@ -117,13 +117,13 @@ const ProfilePage = () => {
                                 <div className='flex flex-col space-y-5'>
                                     {profileData.lists.map((list, index) => (
                                         <div key={index} className='flex flex-col space-y-2'>
-                                            <div className='relative h-[105px] w-[100px]'>
-                                                {list.list_items.map((movie, inner_index) => (
-                                                    movie ? (
-                                                        movie.image ? (
+                                            <div className='relative group h-[105px] w-[100px]'>
+                                                {list.list_items.map((list_item, inner_index) => (
+                                                    list_item ? (
+                                                        list_item.movie.image ? (
                                                             <img key={inner_index}
-                                                                src={`https://image.tmdb.org/t/p/w500/${movie.image}`}
-                                                                alt={movie.title}
+                                                                src={`https://image.tmdb.org/t/p/w500/${list_item.movie.image}`}
+                                                                alt={list_item.movie.title}
                                                                 className="absolute h-[105px] w-[70px] md:h-[111px] md:w-[76px] rounded-md transition-transform duration-300"
                                                                 style={{
                                                                     left: `${inner_index * 40}px`,
@@ -138,12 +138,12 @@ const ProfilePage = () => {
                                                                     zIndex: list.list_items.length - inner_index,
                                                                 }}
                                                                 >
-                                                                {/* <MdImageNotSupported size={40}/> */}
-                                                        </div> 
+                                                                <MdImageNotSupported size={40}/>
+                                                            </div> 
                                                         )
                                                     ) : (
                                                         <div key={inner_index} 
-                                                            className={`absolute h-[105px] w-[70px] md:h-[111px] md:w-[76px] bg-gray-800 border text-gray-300 flex items-center justify-center font-semibold text-center rounded-md`}
+                                                            className={`absolute h-[105px] w-[70px] md:h-[111px] md:w-[76px] bg-gray-900 border text-gray-300 flex items-center justify-center font-semibold text-center rounded-md`}
                                                             style={{
                                                                 left: `${inner_index * 40}px`,
                                                                 zIndex: list.list_items.length - inner_index,
@@ -155,7 +155,7 @@ const ProfilePage = () => {
                                                 ))}
                                             </div>
 
-                                            <div className='font-bold text-white'>{list.name}</div>
+                                            <div className='font-bold text-white hover:text-blue-500'>{list.name} <span className='ml-2 text-gray-400 font-normal'>{list.list_items_length !== 1 ? `${list.list_items_length} films` : '1 film'}</span></div>
                                         </div>
                                     ))}
                                 </div>

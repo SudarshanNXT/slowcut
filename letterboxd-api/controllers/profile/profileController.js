@@ -28,7 +28,14 @@ const getProfileData = asyncHandler(async (req, res) => {
 
     //grab last 3 public lists
     const lists = await List.find({ creator: user.username, is_public: true }).sort({ created_at: -1 })
-    const fullLists = await mapGrabMovie(lists)
+    const fullLists = []
+    for(const list of lists){
+        const fullListItems = await mapGrabMovie(list.list_items.slice(0, 5))
+        let listObject = list.toObject()
+        listObject['list_items'] = fullListItems
+        listObject['list_items_length'] = list.list_items.length
+        fullLists.push(listObject)
+    }
 
     //grab last 3 diary entries
     const diaryEntries = profile.diary.sort((a, b) => new Date(b.added_on) - new Date(a.added_on))
