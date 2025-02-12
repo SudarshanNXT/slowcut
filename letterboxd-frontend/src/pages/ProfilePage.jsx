@@ -155,7 +155,7 @@ const ProfilePage = () => {
                                                 ))}
                                             </div>
 
-                                            <div className='font-bold text-white hover:text-blue-500'>{list.name} <span className='ml-2 text-gray-400 font-normal'>{list.list_items_length !== 1 ? `${list.list_items_length} films` : '1 film'}</span></div>
+                                            <div className='font-bold text-white hover:text-blue-500'><Link to={`/list/${list._id}`}>{list.name}</Link> <span className='ml-2 text-gray-400 font-normal'>{list.list_items_length !== 1 ? `${list.list_items_length} films` : '1 film'}</span></div>
                                         </div>
                                     ))}
                                 </div>

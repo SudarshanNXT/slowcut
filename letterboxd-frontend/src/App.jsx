@@ -2,7 +2,7 @@ import {
   createBrowserRouter, 
   createRoutesFromElements, 
   Route, 
-  RouterProvider 
+  RouterProvider,
 } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext.jsx'
 import MainLayout from './layouts/MainLayout'

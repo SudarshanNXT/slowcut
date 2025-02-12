@@ -1,5 +1,5 @@
 import express from 'express';
-import { addFavoriteFilm, deleteFavoriteFilm, getProfileData, getProfileSubData, updateProfile} from '../controllers/profile/profileController.js'
+import { addFavoriteFilm, deleteFavoriteFilm, getPreDisplayData, getProfileData, getProfileSubData, updateProfile} from '../controllers/profile/profileController.js'
 import { addMovieToProfile, removeMovieFromProfile, getMovieStatus} from '../controllers/profile/addMovieController.js'
 import {
     createList,
@@ -38,5 +38,6 @@ router.get('/get_profile_sub_data/:username/:category', getProfileSubData)
 router.route('/update_profile').put(protect, updateProfile)
 router.route('/add_favorite_film').post(protect, addFavoriteFilm)
 router.route('/delete_favorite_film/:id').delete(protect, deleteFavoriteFilm)
+router.route('/get_pre_display_data').post(protect, getPreDisplayData)
 
 export default router

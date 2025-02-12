@@ -37,7 +37,7 @@ const ResultCard = ({ result }) => {
 
     return (
         <div to={link} className='border-b border-b-gray-500 py-3 flex space-x-3'>
-            <Link to={link} className='relative group'>
+            <Link to={link} className='relative group flex-shrink-0'>
                 {imageUrl ? <img src={imageUrl} alt={result.name || result.title} className='h-[105px] w-[70px] md:h-[111px] md:w-[76px] rounded-md'/> : (
                     <div className='h-[105px] w-[70px] md:h-[111px] md:w-[76px] bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-center rounded-md'>
                         <MdImageNotSupported size={50}/>

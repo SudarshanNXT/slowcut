@@ -76,9 +76,13 @@ const deleteDiaryEntry = asyncHandler(async (req, res) => {
     }
 
     //find the index and delete entry
-    const index = profile.diary.findIndex(entry => entry._id.toString() === entry_id)
+    const index = profile.diary.findIndex(entry => entry._id.toString() === entry_id.toString())
+    if(index !== -1){
+        profile.diary.splice(index, 1)
+    } else {
+        throw new Error('Error deleting diary entry')
+    }
     
-    profile.diary.splice(index, 1)
     await profile.save()
 
     res.json(`Diary entry removed at index ${index}`)

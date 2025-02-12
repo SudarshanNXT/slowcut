@@ -5,9 +5,9 @@ import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { Form } from 'react-router-dom';
 
-const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_status, setUpdate }) => {
+const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_status, setUpdate, edit, entry_id, pre_rewatch_status }) => {
     const [addFilmToDiary, setAddFilmToDiary] = useState(true)
-    const [watchedBefore, setWatchedBefore] = useState(false)
+    const [watchedBefore, setWatchedBefore] = useState(pre_rewatch_status ? pre_rewatch_status : false)
     const [reviewBody, setReviewBody] = useState('');
     const [rating, setRating] = useState(pre_rating);
     const [hoverRating, setHoverRating] = useState(null);
@@ -28,7 +28,8 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
         e.preventDefault()
         try {
             //Handle adding to diary, review, liked, watched
-            if(addFilmToDiary) await addDiaryEntry()
+            if(edit && watchedBefore !== pre_rewatch_status) await updateDiaryEntry()
+            if(addFilmToDiary && !edit) await addDiaryEntry()
             if(!pre_like_status && likeStatus) await addMovieToProfile('liked')
             if(pre_like_status && !likeStatus) await removeMovieFromProfile('liked')
             await addReview()
@@ -134,6 +135,26 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                     release_date: movieData.release_date,
                     body: reviewBody
                 })
+            })
+            if(response.ok){
+                const data = await response.json()
+            } else {
+                const error = await response.json()
+                throw new Error(error)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const updateDiaryEntry = async () => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/update_diary_entry/${entry_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
             })
             if(response.ok){
                 const data = await response.json()

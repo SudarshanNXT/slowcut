@@ -102,9 +102,25 @@ const getProfileSubData = asyncHandler(async(req, res) => {
     if(category === 'diary'){
         const diaryEntries = profile.diary.sort((a, b) => new Date(b.added_on) - new Date(a.added_on))
         const fullDiaryEntries = await mapGrabMovie(diaryEntries)
+        const groupedDiaryEntries = groupByMonth(fullDiaryEntries)
+        const diaryEntriesByMonth = Object.values(groupedDiaryEntries)
+
+        //get rating, like status, review
+        for(const diary_entry of fullDiaryEntries){
+            const ratingIndex = profile.watched_movies.findIndex(item => item.movie._id.toString() === diary_entry.movie._id.toString())
+            const ratingStatus = ratingIndex !== -1 ? profile.watched_movies[ratingIndex].rating : null
+            diary_entry.rating = ratingStatus
+
+            const likedMovieStatus = profile.liked_movies.some(item => item.movie._id.toString() === diary_entry.movie._id.toString())
+            diary_entry.like_status = likedMovieStatus
+
+            const review = await Review.findOne({ creator: user.username, movie: diary_entry.movie._id })
+            diary_entry.review = review
+        }
+        
         res.json({
             stats: stats,
-            data: fullDiaryEntries
+            data: diaryEntriesByMonth
         })
         return
     } else if(category === 'watched'){
@@ -145,9 +161,10 @@ const getProfileSubData = asyncHandler(async(req, res) => {
         for(const list of lists){
             //grab movie data for each list
             const fullListItems = await mapGrabMovie(list.list_items)
-            list.toObject()
-            list['list_items'] = fullListItems
-            arr.push(list)
+            let listObject = list.toObject()
+            listObject['list_items'] = fullListItems
+            listObject['list_items_length'] = list.list_items.length
+            arr.push(listObject)
         }
         res.json({
             stats: stats,
@@ -264,10 +281,78 @@ const deleteFavoriteFilm = asyncHandler(async (req, res) => {
     res.json(`${movie.title} removed from ${user.username}'s watched movies`)
 })
 
+// @desc Get pre display data (array of movies)
+// route POST api/profile/get_pre_display_data
+// @access Private
+const getPreDisplayData = asyncHandler(async (req, res) => {
+    const { data, two_dimension } = req.body
+    const user = await User.findById(req.user._id)
+    const profile = await Profile.findOne({ user: req.user._id })
+
+    if(!profile || !user){
+        res.status(404)
+        throw new Error('User not found')
+    }
+
+    if(!data || data.length === 0){
+        res.status(404)
+        throw new Error('No data to fetch')
+    }
+
+    //iterate through data (check for 2d array)
+    if(two_dimension){
+        for(const month of data){
+            await Promise.all(month.map(async (entry) => {
+                try {
+                    const movie = await Movie.findById(entry.movie._id);
+    
+                    if (movie) { 
+                        const likedMovieStatus = profile.liked_movies.some(
+                            item => item.movie._id.toString() === movie._id.toString()
+                        );
+                        const watchMovieStatus = profile.watched_movies.some(
+                            item => item.movie._id.toString() === movie._id.toString()
+                        );
+    
+                        entry.user_like_status = likedMovieStatus;
+                        entry.user_watch_status = watchMovieStatus;
+                    }
+                } catch (error) {
+                    console.error(`Error fetching movie with ID ${entry.movie._id}:`, error);
+                }
+            }));
+        }
+        res.json(data)
+        return
+    } else {
+        await Promise.all(data.map(async (movie) => {
+            try {
+                const movie = await Movie.findById(movie._id);
+                if (movie) {  
+                    const likedMovieStatus = profile.liked_movies.some(
+                        item => item.movie._id.toString() === movie._id.toString()
+                    );
+                    const watchMovieStatus = profile.watched_movies.some(
+                        item => item.movie._id.toString() === movie._id.toString()
+                    );
+
+                    entry.user_like_status = likedMovieStatus;
+                    entry.user_watch_status = watchMovieStatus;
+                }
+            } catch (error) {
+                console.error(`Error fetching movie with ID ${movie._id}:`, error);
+            }
+        }))
+        res.json(data)
+        return
+    }
+})
+
 export {
     getProfileData,
     getProfileSubData,
     updateProfile,
     addFavoriteFilm,
-    deleteFavoriteFilm
+    deleteFavoriteFilm,
+    getPreDisplayData
 }
