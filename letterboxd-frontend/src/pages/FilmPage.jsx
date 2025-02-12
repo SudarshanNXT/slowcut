@@ -10,6 +10,7 @@ import Crew from '../components/FilmPage/Crew.jsx';
 import SignInForm from '../components/SignInForm.jsx';
 import CreateAccount from '../components/CreateAccount.jsx';
 import BackendBox from '../components/FilmPage/BackendBox.jsx';
+import { IoMdClose, IoIosStar } from "react-icons/io";
 
 const FilmPage = () => {
     const { id } = useParams()
@@ -18,6 +19,7 @@ const FilmPage = () => {
     const [loading, setLoading] = useState(true);
     const [flag, setFlag] = useState(false)
     const [createAccountForm, setCreateAccountForm] = useState(false)
+    const [imageClick, setImageClick] = useState(false)
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -50,11 +52,22 @@ const FilmPage = () => {
             <SignInForm flag={flag} setFlag={setFlag}/>
 
             <CreateAccount createAccount={createAccountForm} setCreateAccount={setCreateAccountForm}/>
+
+            {/*Full image click */}
+            <div className={`fixed inset-0 h-full w-full flex items-center justify-center px-3 ${imageClick ? 'bg-opacity-80 z-50' : 'opacity-0 pointer-events-none'} bg-black transition-all duration-200`}>
+                <button onClick={() => setImageClick(false)} className='absolute top-2 right-2 text-xl text-white hover:bg-gray-500 bg-gray-600 h-fit w-fit rounded-full p-2'>
+                    <IoMdClose size={30}/>
+                </button>
+
+                <img className="w-auto max-h-[80vh] aspect-[2/3] rounded-md object-cover" src={`https://image.tmdb.org/t/p/original/${movieData.movie_data.poster_path}`} alt={movieData.movie_data.title} />
+            </div>
             
             {/*Desktop */}
             <div className='hidden md:grid grid-cols-4 pt-4'>
                 {movieData.movie_data.poster_path ? (
-                    <img className='h-[345px] rounded-md' src={`https://image.tmdb.org/t/p/original/${movieData.movie_data.poster_path}`} alt={movieData.movie_data.title} />
+                    <button onClick={() => setImageClick(true)} className='h-fit w-fit'>
+                        <img className='h-[345px] rounded-md' src={`https://image.tmdb.org/t/p/original/${movieData.movie_data.poster_path}`} alt={movieData.movie_data.title} />
+                    </button>
                 ) : (
                     <div className='w-[230px] h-[345px] bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-2xl text-center rounded-md'>{movieData.movie_data.title}</div>
                 )}
@@ -124,7 +137,9 @@ const FilmPage = () => {
                         {movieData.director && <div className='text-base text-gray-200 font-semibold'><Link className='text-gray-200 hover:text-blue-500' to={`/person/${movieData.director.id}`}>{movieData.director.name}</Link></div>}
                     </div>
 
-                    <img className='h-[180px] rounded-md' src={`${movieData.movie_data.poster_path ? `https://image.tmdb.org/t/p/original/${movieData.movie_data.poster_path}` : '../images/no-image-1.png'}`} alt={movieData.movie_data.title} />
+                    <button onClick={() => setImageClick(true)} className='h-fit w-fit'>
+                        <img className='h-[180px] rounded-md' src={`${movieData.movie_data.poster_path ? `https://image.tmdb.org/t/p/original/${movieData.movie_data.poster_path}` : '../images/no-image-1.png'}`} alt={movieData.movie_data.title} />
+                    </button>
                 </div>
                 
                 <div>

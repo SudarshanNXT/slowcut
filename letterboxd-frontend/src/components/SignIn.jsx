@@ -95,7 +95,7 @@ const SignIn = ({ isMobile, popup, setPopup, signinDropdown, setSigninDropdown, 
     ) : (
         <Form onSubmit={submitHandler} className={`absolute top-0 left-0 w-full h-full transform ${popup ? '-translate-y-0' : "-translate-y-full"} transition-transform duration-300 z-10`}>
             <div className='flex items-center space-x-2 bg-secondary p-1' >
-                <button onClick={(e) => closeSignIn(e)} className='hover:text-white'>
+                <button type='button' onClick={(e) => closeSignIn(e)} className='hover:text-white'>
                     <IoClose size={23}/>
                 </button>
 

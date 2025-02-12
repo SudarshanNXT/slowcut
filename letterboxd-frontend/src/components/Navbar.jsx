@@ -121,7 +121,8 @@ const Navbar = () => {
                 </div>
 
                 {/*Menu dropdown */}
-                <div className={`absolute top-full w-full flex flex-col bg-primary transform ${menuDropdown ? '-translate-y-0' : "opacity-0 -translate-y-full"} transition-transform duration-300 font-bold z-10`}>
+                <div className={`absolute top-full w-full flex flex-col bg-primary transform transition-transform duration-300 font-bold z-10 
+                                ${menuDropdown ? 'translate-y-0' : '-translate-y-[150%] pointer-events-none'}`}>
                     {isLoggedIn ? (
                         <>
                             <div className='flex items-center pl-4 py-2 hover:bg-gray-700'><FaUserCircle className='mr-3'/>{sessionUsername.slice(0, 10)}</div>

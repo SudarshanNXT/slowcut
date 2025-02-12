@@ -21,16 +21,12 @@ const FilmsPage = () => {
             })
             if(response.ok){
                 const data = await response.json()
-                // console.log(data);
                 const sortedResults = handleSorting(data.results, sortingMetric)
                 setResults(sortedResults)
                 setTotalPages(data.total_pages)
             }
         }
         getData()
-        // const sortedResults = handleSorting(sampleFilmsPageData.results, sortingMetric)
-        // setResults(sortedResults)
-        // setTotalPages(sampleFilmsPageData.total_pages)
     }, [filter, page])
 
     const handleFilterClick = (type) => {
@@ -128,7 +124,7 @@ const FilmsPage = () => {
 
             {/*Show more button */}
             {totalPages && page < totalPages && 
-                <button onClick={() => setPage(prev => prev + 1)} className='bg-hover hover:bg-green-500 font-semibold px-3 py-1 rounded-md text-white'>Show more</button>
+                <button onClick={() => {setPage(prev => prev + 1), window.scrollTo({ top: 0, behavior: 'smooth' })}} className='bg-hover hover:bg-green-500 font-semibold px-3 py-1 rounded-md text-white'>Show more</button>
             }
         </div>
     )

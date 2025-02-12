@@ -61,7 +61,7 @@ const ProfilePage = () => {
                 <ProfileHeader authorized={authorized} stats={profileData.stats} username={username} setEditProfile={setEditProfile}/>
                 <ProfileSubPageMenu username={username} />
 
-                <div className='flex flex-col items-center space-y-6 md:space-y-0 lg:flex-row lg:space-x-8'>
+                <div className='flex flex-col md:items-start space-y-6 md:space-y-0 lg:flex-row lg:space-x-8'>
                     <div className='flex flex-col w-full px-3 md:px-0 space-y-6'>
                         <FavoriteFilms authorized={authorized} favorite_films={profileData.favorite_films} setUpdate={setUpdate}/>
 
@@ -80,7 +80,7 @@ const ProfilePage = () => {
                     </div>
 
                     
-                    <div className='flex flex-col w-full space-y-6 mt-3 px-3 md:px-0'>
+                    <div className='flex flex-col w-full space-y-6 md:pt-6 px-3 md:px-0'>
                         
                         {/*Diary section */}
                         <div className='space-y-3'>
