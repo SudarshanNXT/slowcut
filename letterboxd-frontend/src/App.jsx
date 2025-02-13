@@ -41,7 +41,7 @@ const router = createBrowserRouter(
       <Route path="/:username" element={<ProfilePage />} />
       <Route path="/:username/:category" element={<ProfileSubPage />} />
       <Route path='/list/new' element={<RequireAuth> <CreateListPage /> </RequireAuth>}/>
-      <Route path='/list/:id' element={<RequireAuth> <ListPage /> </RequireAuth>}/>
+      <Route path='/list/:id' element={<ListPage />}/>
       <Route path='/list/:id/edit' element={<RequireAuth> <EditListPage /> </RequireAuth>}/>
       <Route path='*' element={<NotFoundPage />}/>
     </Route>

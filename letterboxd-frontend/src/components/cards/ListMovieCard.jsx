@@ -1,44 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-const ListMovieCard = ({ movie, list_id }) => {
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
-    const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
-
+const ListMovieCard = ({ movie, ranked }) => {
     const imageUrl = movie.image ? `https://image.tmdb.org/t/p/w500/${movie.image}` : '../images/no-image-1.png';
-    
-    const handleDelete = async (e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        
-        try {
-            const response = await fetch(`${apiBaseUrl}/profile/remove_movie_from_list`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    list_id: list_id,
-                    movie_id: movie._id
-                })
-            })
-            if(response.ok){
-                const data = await response.json()
-                console.log(data);
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
+   
     return (
-        <div className=''>        
-            <Link to={`/film/${movie.id}`}>
-                <img src={imageUrl} alt={movie.title} className='h-[200px]'/>
+        <div className='flex flex-col items-center w-full h-full'>
+            <Link to={`/film/${movie.id}`} className='rounded-md relative group w-full h-full'>
+                {movie.poster_path || movie.image ? <img src={imageUrl} alt={movie.title} className='w-full rounded-md'/> : (
+                    <div className='w-full h-full bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-center rounded-md'>{movie.title}</div>
+                )}
+                <div className='absolute opacity-0 group-hover:opacity-100 inset-0 border-4 border-hover rounded-md'></div>
             </Link>
-            
-            <button onClick={handleDelete} className='bg-red-400'>remove</button>
+            {ranked && <div className='text-center text-white font-semibold'>{movie.order + 1}</div>}
         </div>
     )
 }

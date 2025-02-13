@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Form, useNavigate } from 'react-router-dom';
+import ListItemCard from '../components/cards/ListItemCard';
 
 const EditListPage = () => {
     const { id } = useParams()
     const [loading, setLoading] = useState(true)
+    const [update, setUpdate] = useState(5)
+    const [listData, setListData] = useState(null)
     const [errorMessage, setErrorMessage] = useState('')
     const [formData, setFormData] = useState({
         name: '',
@@ -30,9 +33,9 @@ const EditListPage = () => {
                     })
                     if(response.ok){
                         const data = await response.json()
+                        console.log(data);
 
                         //check if creator of list is the signed in user
-                        const username = JSON.parse(localStorage.getItem('userInfo')).username
                         if(data.list.creator === username){
                             //prefill form data
                             setFormData({
@@ -41,8 +44,9 @@ const EditListPage = () => {
                                 ranked: data.list.ranked,
                                 is_public: data.list.is_public
                             })
+                            setListData(data)
                         } else {
-                            navigate('/error')
+                            navigate('/error/not_found')
                         }
                         
                     }
@@ -53,7 +57,7 @@ const EditListPage = () => {
             }
             getListData()
         }
-    }, [])
+    }, [id, update])
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -91,7 +95,9 @@ const EditListPage = () => {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-        
+        const confirm = window.confirm('Are you sure you want to delete this list?')
+        if(!confirm) return
+
         try {
             const response = await fetch(`${apiBaseUrl}/profile/delete_list/${id}`, {
                 method: 'DELETE',
@@ -110,7 +116,6 @@ const EditListPage = () => {
         } catch (error) {
             console.error(error)
         }
-
     }
 
     return (
@@ -137,7 +142,7 @@ const EditListPage = () => {
 
                         <div className="flex flex-col space-y-2 mb-2">
                             <label htmlFor="is_public" className='text-white'>Who can view:</label>
-                            <select name="is_public" value={formData.is_public} onChange={handleChange} className='bg-primary p-2 text-gray-300'>
+                            <select name="is_public" value={formData.is_public} onChange={handleChange} className='bg-primary p-2 text-gray-300 rounded-md'>
                                 <option value={true}>Public</option>
                                 <option value={false}>Private</option>
                             </select>
@@ -168,12 +173,24 @@ const EditListPage = () => {
                 </div>
 
                 <div className='flex items-center justify-end gap-3'>
-                    <button onClick={() => navigate(-1)} className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-light hover:bg-gray-500 text-white'>Cancel</button>
-                    <button className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-red-600 hover:bg-red-500 text-white' onClick={handleDelete}>Delete</button>
+                    <button type='button' onClick={() => navigate(-1)} className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-light hover:bg-gray-500 text-white'>Cancel</button>
+                    <button type='button' className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-red-600 hover:bg-red-500 text-white' onClick={handleDelete}>Delete</button>
                     <button type="submit" className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-hover hover:bg-green-500 text-white'>Save</button>
                 </div>
                 
             </Form>
+
+            {/*List items display */}
+            {listData && listData.movies && listData.movies.length > 0 && 
+                <div>
+                    {listData.movies.map((movie, index) => (
+                        <ListItemCard key={index} movie={movie} ranked={formData.ranked} list_id={id} setUpdate={setUpdate}/>
+                    ))}
+                </div>
+            }
+            {listData && listData.movies && listData.movies.length === 0 &&
+                <div className='w-full border flex justify-center items-center text-white h-[250px] mt-2'>Your list is empty.</div>
+            }
         </div>
     )
 }

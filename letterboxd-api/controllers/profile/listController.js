@@ -163,16 +163,9 @@ const removeMovieFromList = asyncHandler(async (req, res) => {
 
 // @desc Get List Data
 // route GET api/profile/get_list_data
-// @access Private
+// @access Public
 const getListData = asyncHandler(async (req, res) => {
     const { id } = req.params
-    const user = await User.findById(req.user._id)
-    const profile = await Profile.findOne({ user: req.user._id })
-
-    if(!profile || !user){
-        res.status(404)
-        throw new Error('User not found')
-    }
 
     const list = await List.findById(id)
     if(!list){
@@ -182,10 +175,11 @@ const getListData = asyncHandler(async (req, res) => {
 
     //iterate through list items and grab movie data for each
     const arr = []
-    for(const movie_id of list.list_items){
+    for(const [index, movie_id] of list.list_items.entries()){
         const movie = await Movie.findById(movie_id.movie) 
         const movieObject = movie.toObject()
         movieObject['added_on'] = movie_id.added_on
+        movieObject['order'] = index
         arr.push(movieObject)
     }
 

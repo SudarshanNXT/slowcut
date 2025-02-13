@@ -38,9 +38,6 @@ const PersonPage = () => {
             }
         }
         getPersonDetails()
-        // setPersonData(samplePersonData)
-        // handleFiltering(samplePersonData.credits_data.crew, samplePersonData.credits_data.cast, samplePersonData.person_data.known_for_department)
-        // setLoading(false)
     }, [id])
 
     function handleFiltering(crewArr, castArr, kfd) {
@@ -119,7 +116,7 @@ const PersonPage = () => {
                     <div className='flex justify-between border-y border-y-gray-300 text-gray-300 py-1'>
                         {filters && filter && filters.length > 0 && 
                             <div className=''>
-                                <select className='bg-transparent w-fit' value={filter} onChange={handleFilterChange}>
+                                <select className='bg-transparent w-fit outline-none uppercase' value={filter} onChange={handleFilterChange}>
                                     {filters.map((filter, index) => (
                                         <option 
                                             className={`bg-gray-400 text-black`} 

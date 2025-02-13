@@ -15,6 +15,15 @@ const formatDate = (isoString) => {
     return `Added ${day} ${month} ${year}`;
 };
 
+const formatDate2 = (date) => {
+    return new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    }).format(new Date(date));
+};
+
 export {
-    formatDate
+    formatDate,
+    formatDate2
 }

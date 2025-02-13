@@ -15,6 +15,10 @@ function sortResults(metric, arr) {
         return arr.sort((a, b) => b.title.localeCompare(a.title)); // Descending: Z to A
     } else if (metric === 'title_asc') {
         return arr.sort((a, b) => a.title.localeCompare(b.title)); // Ascending: A to Z
+    } else if(metric === 'list_order'){
+        return arr.sort((a, b) => a.order - b.order)
+    } else if(metric === 'reverse_order'){
+        return arr.sort((a, b) => b.order - a.order)
     }
 }
 
