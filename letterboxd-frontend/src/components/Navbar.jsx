@@ -49,7 +49,7 @@ const Navbar = () => {
             <CreateAccount createAccount={createAccount} setCreateAccount={setCreateAccount}/>
 
             {/*Desktop Navbar */}
-            <nav className={`hidden md:block ${isHomePage ? 'absolute bg-transparent px-1 text-gray-200' : 'bg-primary text-gray-300'} bg-primary  font-bold h-[65px] uppercase z-50 w-full`}>
+            <nav className={`hidden md:block ${isHomePage ? 'absolute bg-transparent px-1 text-gray-200' : 'bg-primary text-gray-300'} bg-primary font-bold h-[65px] uppercase z-50 w-full`}>
                 <div className='flex justify-between items-center container mx-auto h-full'>
                     {/*Logo */}
                     <Link to={'/'} className='flex items-center'>
@@ -98,7 +98,7 @@ const Navbar = () => {
             </nav>
 
             {/*Mobile navbar */}
-            <nav className={`flex md:hidden ${isHomePage ? 'absolute bg-transparent px-1 text-gray-200' : 'bg-primary text-gray-300'} text-gray-300 h-[65px] uppercase relative`}>
+            <nav className={`flex md:hidden text-gray-300 bg-primary h-[65px] uppercase z-50 w-full relative`}>
                 <div className='flex justify-between items-center h-full p-2 w-full relative z-20'>
                     {/*Logo */}
                     <Link to={'/'} className='flex items-center'>
