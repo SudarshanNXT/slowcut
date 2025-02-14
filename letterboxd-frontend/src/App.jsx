@@ -38,8 +38,8 @@ const router = createBrowserRouter(
       <Route path='/person/:id' element={<PersonPage />}/>
       <Route path='/review/:id' element={<ReviewPage />}/>
       <Route path='/error/not_found' element={<NotFoundPage />}/>
-      <Route path="/:username" element={<ProfilePage />} />
       <Route path="/:username/:category" element={<ProfileSubPage />} />
+      <Route path="/:username" element={<ProfilePage />} />
       <Route path='/list/new' element={<RequireAuth> <CreateListPage /> </RequireAuth>}/>
       <Route path='/list/:id' element={<ListPage />}/>
       <Route path='/list/:id/edit' element={<RequireAuth> <EditListPage /> </RequireAuth>}/>

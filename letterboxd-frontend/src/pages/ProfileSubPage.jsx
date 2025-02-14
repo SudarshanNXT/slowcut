@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams, useNavigate, Navigate, useLocation } from 'react-router-dom';
+import { Link, useParams, useNavigate, Navigate } from 'react-router-dom';
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileSubPageMenu from '../components/ProfileSubPageMenu';
 import EditProfileForm from '../components/EditProfileForm';
@@ -9,10 +9,7 @@ import { MdImageNotSupported } from "react-icons/md";
 import { FaLock } from "react-icons/fa";
 import Diary from '../components/Diary';
 
-const allowedCategories = ['diary', 'watched', 'watchlist', 'lists', 'likes', 'reviews'];
-
 const ProfileSubPage = () => {
-    const location = useLocation()
     const { username, category } = useParams()
     const sessionUsername = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).username : ''
     
@@ -28,11 +25,13 @@ const ProfileSubPage = () => {
     
     const navigate = useNavigate();
 
+    const allowedCategories = ['diary', 'watched', 'watchlist', 'lists', 'likes', 'reviews'];
+
     // Validate the category
     if (!allowedCategories.includes(category)) {
         return <Navigate to="/error/not_found" />;
     }
-
+    
     useEffect(() => {
         setAuthorized(sessionUsername === username)
         const getProfileSubData = async () => {
@@ -44,7 +43,6 @@ const ProfileSubPage = () => {
                 })
                 if(response.ok){
                     const data = await response.json()
-                    console.log(data);
                     if(category === 'lists') data.data = fillListItems(data.data)
                     setData(data.data)
                     setStats(data.stats)
@@ -80,7 +78,6 @@ const ProfileSubPage = () => {
                     })
                     if(response.ok){
                         const data = await response.json()
-                        console.log('user data', data);
                         setUserData(data)
                     } else {
                         const error = await response.json()

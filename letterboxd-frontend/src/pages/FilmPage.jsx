@@ -63,7 +63,7 @@ const FilmPage = () => {
             </div>
             
             {/*Desktop */}
-            <div className='hidden md:grid grid-cols-4 pt-4'>
+            <div className='hidden md:grid grid-cols-4 pt-4 space-x-6'>
                 {movieData.movie_data.poster_path ? (
                     <button onClick={() => setImageClick(true)} className='h-fit w-fit'>
                         <img className='h-[345px] rounded-md' src={`https://image.tmdb.org/t/p/original/${movieData.movie_data.poster_path}`} alt={movieData.movie_data.title} />
@@ -73,7 +73,7 @@ const FilmPage = () => {
                 )}
                 
                 
-                <div className='col-span-2 space-y-3 mr-6'>
+                <div className='col-span-2 space-y-3'>
                     <div className='text-white text-3xl font-bold flex items-end'>
                         {movieData.movie_data.title}
                         <div className='font-normal text-base ml-3'>{movieData.movie_data.release_date.slice(0, 4)}</div>
@@ -133,13 +133,18 @@ const FilmPage = () => {
                 <div className='flex justify-between'>
                     <div className='flex flex-col items-center justify-center text-white text-2xl font-bold'>
                         {movieData.movie_data.title}
-                        <div className='mt-3 font-normal text-base text-gray-300'>{movieData.movie_data.release_date.slice(0, 4)} - DIRECTED BY</div>
+                        <div className='mt-3 font-normal text-base text-gray-300'>{movieData.movie_data.release_date.slice(0, 4)} {movieData.director && ' - DIRECTED BY'}</div>
                         {movieData.director && <div className='text-base text-gray-200 font-semibold'><Link className='text-gray-200 hover:text-blue-500' to={`/person/${movieData.director.id}`}>{movieData.director.name}</Link></div>}
                     </div>
 
-                    <button onClick={() => setImageClick(true)} className='h-fit w-fit'>
-                        <img className='h-[180px] rounded-md' src={`${movieData.movie_data.poster_path ? `https://image.tmdb.org/t/p/original/${movieData.movie_data.poster_path}` : '../images/no-image-1.png'}`} alt={movieData.movie_data.title} />
-                    </button>
+                    {movieData.movie_data.poster_path ? 
+                        <button onClick={() => setImageClick(true)} className='h-fit w-fit flex-shrink-0'>
+                            <img className='h-[180px] rounded-md' src={`https://image.tmdb.org/t/p/original/${movieData.movie_data.poster_path}`} alt={movieData.movie_data.title} />
+                        </button> 
+                        : 
+                        <div className='w-[120px] h-[180px] bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-lg text-center rounded-md'>{movieData.movie_data.title}</div>
+                    }
+                    
                 </div>
                 
                 <div>

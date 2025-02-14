@@ -42,7 +42,7 @@ const ListItemCard = ({ movie, ranked, list_id, setUpdate }) => {
                     <div className='h-[58px] aspect-[2/3] bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-center rounded-sm'></div>
                 )}
                 <div className='inline-flex items-center space-x-2'>
-                    <span className='text-xl font-bold text-white'>{movie.title}</span>
+                    <span className='text-xl font-bold text-white line-clamp-1'>{movie.title}</span>
                     {movie.release_date && <span className='text-lg text-gray-300'>{movie.release_date.slice(0, 4)}</span>}
                 </div>
             </div>

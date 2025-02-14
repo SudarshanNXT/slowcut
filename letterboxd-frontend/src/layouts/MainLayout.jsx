@@ -1,15 +1,20 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 
 const MainLayout = () => {
+    const location = useLocation()
+    const isHomePage = location.pathname === '/'
+    
     return (
         <>
             <Navbar />
 
-            <div className='container mx-auto pb-2'>
-                <Outlet />
-            </div>
+            {isHomePage ? <Outlet /> : 
+                <div className='container mx-auto pb-2 relative'>
+                    <Outlet />
+                </div>
+            }
         </>
     )
 }

@@ -90,7 +90,7 @@ const ProfilePage = () => {
                             {profileData.diary.length > 0 && 
                                 profileData.diary.map((month, index) => (
                                     <div className='flex space-x-4 border-b border-b-gray-600 pb-2' key={index}>
-                                        <div className='relative w-[40px] h-[40px]'>
+                                        <div className='relative w-[40px] h-[40px] flex-shrink-0'>
                                             <FaCalendar className="text-gray-400 w-full h-full"/>
                                             <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-gray-700 mt-1">{getMonthAbbreviation(month[0].added_on)}</span>
                                         </div>
@@ -98,7 +98,7 @@ const ProfilePage = () => {
                                             {month.map((entry, index) => (
                                                 <div className='flex items-end space-x-2' key={index}>
                                                     <div className='text-sm text-gray-500'>{getDayNumber(entry.added_on)}</div>
-                                                    <Link to={`/film/${entry.movie.id}`} className='text-gray-300 text-sm hover:text-blue-500 font-semibold'>{entry.movie.title}</Link>
+                                                    <Link to={`/film/${entry.movie.id}`} className='text-gray-300 text-sm hover:text-blue-500 font-semibold line-clamp-1'>{entry.movie.title}</Link>
                                                 </div>
                                             ))}
                                         </div>

@@ -17,6 +17,7 @@ import CreateAccount from './CreateAccount.jsx';
 
 const Navbar = () => {
     const location = useLocation();
+    const isHomePage = location.pathname === '/'
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     const [isLoggedIn, setIsLoggedIn] = useState(userInfo ? true : false)
     const [popup, setPopup] = useState(false)
@@ -48,7 +49,7 @@ const Navbar = () => {
             <CreateAccount createAccount={createAccount} setCreateAccount={setCreateAccount}/>
 
             {/*Desktop Navbar */}
-            <nav className='hidden md:block bg-primary text-gray-300 font-bold h-[65px] uppercase z-50 w-full'>
+            <nav className={`hidden md:block ${isHomePage ? 'absolute bg-transparent px-1 text-gray-200' : 'bg-primary text-gray-300'} bg-primary  font-bold h-[65px] uppercase z-50 w-full`}>
                 <div className='flex justify-between items-center container mx-auto h-full'>
                     {/*Logo */}
                     <Link to={'/'} className='flex items-center'>
@@ -65,13 +66,13 @@ const Navbar = () => {
                                     <IoIosArrowDown  className='ml-1'/>
                                     <div className='absolute left-0 top-full hidden group-hover:flex flex-col bg-inherit text-black rounded-b-md w-full font-normal text-xs z-50'>
                                         <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={'/'}>Home</Link>
-                                        <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}`}>Profile</Link>
-                                        <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/watched`}>Watched</Link>
-                                        <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/diary`}>Diary</Link>
-                                        <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/reviews`}>Reviews</Link>
-                                        <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/watchlist`}>Watchlist</Link>
-                                        <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/lists`}>Lists</Link>
-                                        <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/likes`}>Likes</Link>
+                                        <Link to={`/${sessionUsername}`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Profile</Link>
+                                        <Link href={`/${sessionUsername}/watched`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Watched</Link>
+                                        <Link href={`/${sessionUsername}/diary`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Diary</Link>
+                                        <Link href={`/${sessionUsername}/reviews`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Reviews</Link>
+                                        <Link href={`/${sessionUsername}/watchlist`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Watchlist</Link>
+                                        <Link href={`/${sessionUsername}/lists`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Lists</Link>
+                                        <Link href={`/${sessionUsername}/likes`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Likes</Link>
                                         <button onClick={(e) => logoutHandler(e)} className='pl-2 py-2 hover:bg-gray-700 hover:text-white text-left uppercase border-t border-t-gray-700'>Sign Out</button>
                                     </div>
                                 </div>
@@ -97,7 +98,7 @@ const Navbar = () => {
             </nav>
 
             {/*Mobile navbar */}
-            <nav className='flex md:hidden bg-primary text-gray-300 h-[65px] uppercase relative'>
+            <nav className={`flex md:hidden ${isHomePage ? 'absolute bg-transparent px-1 text-gray-200' : 'bg-primary text-gray-300'} text-gray-300 h-[65px] uppercase relative`}>
                 <div className='flex justify-between items-center h-full p-2 w-full relative z-20'>
                     {/*Logo */}
                     <Link to={'/'} className='flex items-center'>
@@ -130,12 +131,12 @@ const Navbar = () => {
                                 <div className='col-span-2 border-t-gray-700 border-t'></div>
                                 <Link className='hover:bg-gray-700 hover:text-white' to={'/'}>Home</Link>
                                 <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}`} onClick={() => setMenuDropdown(false)}>Profile</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/watched`} onClick={() => setMenuDropdown(false)}>Watched</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/diary`} onClick={() => setMenuDropdown(false)}>Diary</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/reviews`} onClick={() => setMenuDropdown(false)}>Reviews</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/watchlist`} onClick={() => setMenuDropdown(false)}>Watchlist</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/lists`} onClick={() => setMenuDropdown(false)}>Lists</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}/likes`} onClick={() => setMenuDropdown(false)}>Likes</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/watched`} onClick={() => setMenuDropdown(false)}>Watched</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/diary`} onClick={() => setMenuDropdown(false)}>Diary</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/reviews`} onClick={() => setMenuDropdown(false)}>Reviews</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/watchlist`} onClick={() => setMenuDropdown(false)}>Watchlist</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/lists`} onClick={() => setMenuDropdown(false)}>Lists</Link>
+                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/likes`} onClick={() => setMenuDropdown(false)}>Likes</Link>
                                 <button onClick={(e) => logoutHandler(e)} className='col-span-2 hover:bg-gray-700 hover:text-white text-left uppercase border-y border-y-gray-700 py-2'>Sign Out</button>
                             </div>
                         </>

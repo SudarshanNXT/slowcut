@@ -229,17 +229,33 @@ const getHomePageData = asyncHandler(async (req, res) => {
         Authorization: `Bearer ${process.env.TMDB_API_KEY}`
     }
     const resObject = {}
-
-    const trendingResponse = await fetch(`https://api.themoviedb.org/3/trending/movie/day`, {headers})
-    if(trendingResponse.ok){
-        const data = await trendingResponse.json()
-        resObject['trending_data'] = data.results
-    }
+    const movieSet = new Set()
 
     const popularResponse = await fetch(`https://api.themoviedb.org/3/movie/popular`, {headers})
     if(popularResponse.ok){
         const data = await popularResponse.json()
-        resObject['popular_data'] = data.results
+        const sortedPopularResults = data.results.sort((a, b) => b.popularity - a.popularity).slice(0, 6)
+        for(const movie of sortedPopularResults){
+            movieSet.add(movie.id)
+        }
+        resObject['popular_data'] = sortedPopularResults
+    }
+
+    const trendingResponse = await fetch(`https://api.themoviedb.org/3/trending/movie/day`, {headers})
+    if(trendingResponse.ok){
+        const data = await trendingResponse.json()
+        const sortedTrendingResults = data.results.sort((a, b) => b.popularity - a.popularity)
+        //get first 6 movies that don't also appear in popular movies
+        let arr = []
+        let i = 0
+        while(arr.length < 6 && i < sortedTrendingResults.length){
+            if(!movieSet.has(sortedTrendingResults[i].id)){
+                arr.push(sortedTrendingResults[i])
+            }
+            i++
+        }
+
+        resObject['trending_data'] = arr
     }
 
     res.json(resObject)
