@@ -5,10 +5,10 @@ import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { Form } from 'react-router-dom';
 
-const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_status, setUpdate, edit, entry_id, pre_rewatch_status }) => {
+const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_status, setUpdate, edit, entry_id, pre_rewatch_status, edit_review, pre_review, review_id }) => {
     const [addFilmToDiary, setAddFilmToDiary] = useState(true)
     const [watchedBefore, setWatchedBefore] = useState(pre_rewatch_status ? pre_rewatch_status : false)
-    const [reviewBody, setReviewBody] = useState('');
+    const [reviewBody, setReviewBody] = useState(pre_review ? pre_review : '');
     const [rating, setRating] = useState(pre_rating);
     const [hoverRating, setHoverRating] = useState(null);
     const [likeStatus, setLikeStatus] = useState(pre_like_status);
@@ -17,22 +17,21 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
     const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
 
     useEffect(() => {
-        setRating(pre_rating);
-    }, [pre_rating]);
-
-    useEffect(() => {
+        setRating(pre_rating)
         setLikeStatus(pre_like_status)
-    }, [pre_like_status])
+        // setWatchedBefore(pre_rewatch_status)
+    }, [pre_rating, pre_like_status, pre_rewatch_status]);
 
     const submitHandler = async (e) => {
         e.preventDefault()
         try {
             //Handle adding to diary, review, liked, watched
+            if(edit_review) await updateReview()
             if(edit && watchedBefore !== pre_rewatch_status) await updateDiaryEntry()
             if(addFilmToDiary && !edit) await addDiaryEntry()
             if(!pre_like_status && likeStatus) await addMovieToProfile('liked')
             if(pre_like_status && !likeStatus) await removeMovieFromProfile('liked')
-            await addReview()
+            if(!edit_review) await addReview()
             await addMovieToProfile('watched', rating)
             setUpdate(prev => !prev)
             setMegaForm(false)
@@ -164,6 +163,30 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
             }
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    const updateReview = async () => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/update_review/${review_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    body: reviewBody
+                })
+            })
+            if(response.ok){
+                const data = await response.json()
+
+            } else {
+                const error = await response.json()
+                throw new Error(error)
+            }
+        } catch (error) {
+            console.error(error)
         }
     }
 

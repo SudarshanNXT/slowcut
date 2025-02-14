@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaUserCircle } from "react-icons/fa";
 import { sortResults } from '../utils/sorting';
-import MovieCard from '../components/cards/MovieCard';
 import ListMovieCard from '../components/cards/ListMovieCard';
 import { formatDate2 } from '../utils/formatDate';
 import SignInForm from '../components/SignInForm';
@@ -38,7 +37,6 @@ const ListPage = () => {
                 })
                 if(response.ok){
                     const data = await response.json()
-                    console.log(data);
                     setAuthorized(requestUsername === data.list.creator)
 
                     //check if list is public/private and if request user is the owner
@@ -139,7 +137,6 @@ const ListPage = () => {
     ) : (
         <>
             <SignInForm flag={flag} setFlag={setFlag}/>
-
             <CreateAccount createAccount={createAccountForm} setCreateAccount={setCreateAccountForm}/>
 
             <div className='flex flex-col md:grid md:grid-cols-4 mt-3 md:gap-x-8 mx-3 md:mx-0'>
@@ -214,7 +211,7 @@ const ListPage = () => {
                         <button onClick={() => setCreateAccountForm(true)} className='py-1 w-full'>Create account</button>
                     </div>
                 }
-                
+
             </div>
         </>
     )

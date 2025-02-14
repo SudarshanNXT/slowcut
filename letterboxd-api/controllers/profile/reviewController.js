@@ -135,7 +135,23 @@ const getReview = asyncHandler(async (req, res) => {
     }
 
     const reviewObj = review.toObject()
-    reviewObj['movie'] = movie
+    reviewObj.movie = movie
+
+    //grab the review creators rating and like status for movie
+    const reviewCreator = await User.findOne({ username: review.creator })
+    const profile = await Profile.findOne({user: reviewCreator._id})
+
+    const likedMovieStatus = profile.liked_movies.some(item => item.movie._id.toString() === movie._id.toString())
+    const ratingIndex = profile.watched_movies.findIndex(item => item.movie._id.toString() === movie._id.toString())
+    const ratingStatus = ratingIndex !== -1 ? profile.watched_movies[ratingIndex].rating : null
+    const rewatchIndex = profile.diary.findIndex(item => item.movie._id.toString() === movie._id.toString())
+    const rewatchStatus = rewatchIndex !== -1 ? profile.diary[rewatchIndex].rewatch : null
+    const rewatchEntryId = profile.diary[rewatchIndex]._id
+
+    reviewObj.like_status = likedMovieStatus
+    reviewObj.rating = ratingStatus
+    reviewObj.rewatch_status = rewatchStatus
+    reviewObj.rewatch_entry_id = rewatchEntryId
 
     res.json(reviewObj)
 })
