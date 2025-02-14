@@ -24,11 +24,10 @@ const HomePage = () => {
                     const data = await response.json()
                     setTrendingData(data.trending_data)
                     setPopularData(data.popular_data)
+                    setLoading(false)
                 }
             } catch (error) {
                 console.log(error);
-            } finally {
-                setLoading(false)
             }
         }
         
