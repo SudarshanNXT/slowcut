@@ -18,7 +18,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 app.use(cors({
-    origin: ['https://letterboxd-clone-frontend.vercel.app', 'http://localhost:5173']
+    origin: ['https://letterboxd-clone-frontend.vercel.app', 'http://localhost:5173', 'http://localhost:4173']
 }));
 
 app.use(cookieParser())
@@ -27,9 +27,18 @@ app.use('/api/users', userRoutes);
 app.use('/api/tmdb', tmdbRoutes);
 app.use('/api/profile', profileRoutes);
 
-app.get('/', (req, res) => {
-    res.send('Server is ready')
-})
+// ✅ Serve static files from React's build folder
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname, '../letterboxd-frontend/dist')));
+
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(__dirname, '../letterboxd-frontend/dist', "index.html"));
+    });
+} else {
+    app.get('/', (req, res) => {
+        res.send('Server is ready')
+    })
+}
 
 app.use(notFound)
 app.use(errorHandler)
