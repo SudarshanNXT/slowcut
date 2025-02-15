@@ -12,11 +12,19 @@ module.exports = {
         light: '#556678',
         hover: '#00B021',
         accent: '#F27405'
-      }
+      },
+      animation: {
+        wave: "wave 0.6s infinite ease-in-out",
+      },
+      keyframes: {
+        wave: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+      },
     },
     container: {
       center: true, 
-      // padding: '1rem',
       screens: {
         sm: '600px',
         md: '720px',

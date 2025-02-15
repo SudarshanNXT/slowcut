@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ResultCard from '../components/cards/ResultCard'
 import sampleFilmsPageData from '../data/sampleFilmsPageData'
 import MovieCard from '../components/cards/MovieCard'
+import Loading from '../components/Loading'
 
 const FilmsPage = () => {
     const [filter, setFilter] = useState('now_playing')
@@ -9,6 +10,7 @@ const FilmsPage = () => {
     const [totalPages, setTotalPages] = useState(null)
     const [sortingMetric, setSortingMetric] = useState('popularity_desc')
     const [results, setResults] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -24,6 +26,7 @@ const FilmsPage = () => {
                 const sortedResults = handleSorting(data.results, sortingMetric)
                 setResults(sortedResults)
                 setTotalPages(data.total_pages)
+                setLoading(false)
             }
         }
         getData()
@@ -83,7 +86,11 @@ const FilmsPage = () => {
         }
     }
 
-    return (
+    return loading ? (
+        <div className='flex justify-center items-center min-h-[calc(90vh-65px)]'>
+            <Loading />
+        </div>
+    ) : (
         <div className='space-y-4 mt-4 px-2 md:px-0'>
 
             {/*Filter/Sorting section */}

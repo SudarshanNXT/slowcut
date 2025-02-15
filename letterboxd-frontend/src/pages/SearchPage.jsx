@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom';
 import ResultCard from '../components/cards/ResultCard';
 import sampleSearchResultData from '../data/sampleSearchResultData';
+import Loading from '../components/Loading';
 
 const SearchPage = () => {
     const location = useLocation();
@@ -30,7 +31,7 @@ const SearchPage = () => {
                     
                 } else {
                     const error = await response.json()
-                    console.log(error)
+                    console.error(error)
                 }
             }
             fetchResultData()
@@ -41,7 +42,9 @@ const SearchPage = () => {
     }, [query, page, type])
 
     return loading ? (
-        <div>loading</div>
+        <div className='flex justify-center items-center min-h-[calc(90vh-65px)]'>
+            <Loading />
+        </div>
     ) : (
         <div className='flex flex-col-reverse md:grid grid-cols-4 gap-x-4 text-gray-300 mx-2 md:mx-0'>
             <div className='col-span-3 mt-3 space-y-3'>

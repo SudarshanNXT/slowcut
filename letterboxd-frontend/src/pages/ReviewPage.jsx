@@ -6,6 +6,7 @@ import { formatDate2 } from '../utils/formatDate';
 import MegaForm from '../components/MegaForm';
 import SignInForm from '../components/SignInForm';
 import CreateAccount from '../components/CreateAccount';
+import Loading from '../components/Loading';
 
 const ReviewPage = () => {
     const { id } = useParams()
@@ -71,7 +72,9 @@ const ReviewPage = () => {
     }
     
     return loading ? (
-        <div>Loading</div>
+        <div className='flex justify-center items-center min-h-[calc(90vh-65px)]'>
+            <Loading />
+        </div>
     ) : (
         <>
             <SignInForm flag={flag} setFlag={setFlag}/>

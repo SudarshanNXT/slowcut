@@ -50,7 +50,7 @@ const DiaryEntry = ({ entry, i, j, month, authorized, setUpdate, userData }) => 
                 throw new Error(error.message)
             }
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
         }
     }
 
@@ -77,7 +77,7 @@ const DiaryEntry = ({ entry, i, j, month, authorized, setUpdate, userData }) => 
                 }
                 
             } catch (error) {
-                console.log(error.message)
+                console.error(error.message)
             }
             
         } else {
@@ -99,7 +99,7 @@ const DiaryEntry = ({ entry, i, j, month, authorized, setUpdate, userData }) => 
                 }
                 
             } catch (error) {
-                console.log(error.message)
+                console.error(error.message)
             }
         }
     }
@@ -107,7 +107,7 @@ const DiaryEntry = ({ entry, i, j, month, authorized, setUpdate, userData }) => 
     const handleDeleteClick = async () => {
         const confirm = window.confirm('Are you sure you want to delete this diary entry?')
         if (!confirm) return;
-        console.log(entry._id);
+        
         try {
             const response = await fetch(`${apiBaseUrl}/profile/delete_diary_entry/${entry._id}`, {
                 method: 'DELETE',
@@ -124,7 +124,7 @@ const DiaryEntry = ({ entry, i, j, month, authorized, setUpdate, userData }) => 
                 throw new Error(error.message)
             }
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
         }
     }
 
@@ -151,7 +151,7 @@ const DiaryEntry = ({ entry, i, j, month, authorized, setUpdate, userData }) => 
                 }
                 
             } catch (error) {
-                console.log(error.message)
+                console.error(error.message)
             }
             
         } else {
@@ -173,7 +173,7 @@ const DiaryEntry = ({ entry, i, j, month, authorized, setUpdate, userData }) => 
                 }
                 
             } catch (error) {
-                console.log(error.message)
+                console.error(error.message)
             }
         }
     }

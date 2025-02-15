@@ -37,7 +37,7 @@ const FilmPage = () => {
                     setLoading(false)
                 }
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         }
         getMovieDetails()
@@ -46,7 +46,9 @@ const FilmPage = () => {
     }, [id])
 
     return  loading ? (
-        <div>Loading</div>
+        <div className='border h-5'>
+            loading
+        </div>
     ) : (
         <>
             <SignInForm flag={flag} setFlag={setFlag}/>

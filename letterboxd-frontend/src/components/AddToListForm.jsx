@@ -61,7 +61,7 @@ const AddToListForm = ({ addToListForm, setAddToListForm, movieData, listStatusA
                 throw new Error(error.message)
             }
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
         }
     }
 

@@ -54,7 +54,6 @@ const BackendBox = ({ id, movieData }) => {
                     setReviewStatus(data.review_status)
                     setListStatusArr(data.list_status_arr)
                     setRating(data.rating_status)
-                    // console.log(data);
                 }
             } 
             getMovieStatus()
@@ -89,7 +88,7 @@ const BackendBox = ({ id, movieData }) => {
                 }
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -114,7 +113,7 @@ const BackendBox = ({ id, movieData }) => {
                 }
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -143,7 +142,7 @@ const BackendBox = ({ id, movieData }) => {
                 throw new Error(error)
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -174,7 +173,7 @@ const BackendBox = ({ id, movieData }) => {
                 throw new Error(error)
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 

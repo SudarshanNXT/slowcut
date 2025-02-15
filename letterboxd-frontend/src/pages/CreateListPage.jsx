@@ -1,9 +1,11 @@
 import React from 'react'
 import { useState } from 'react';
 import { Form, useNavigate } from 'react-router-dom'
+import Loading from '../components/Loading';
 
 const CreateListPage = () => {
     const [errorMessage, setErrorMessage] = useState('')
+    const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -25,7 +27,8 @@ const CreateListPage = () => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+        setLoading(true)
+
         try {
             const response = await fetch(`${apiBaseUrl}/profile/create_list`, {
                 method: 'POST',
@@ -37,6 +40,7 @@ const CreateListPage = () => {
             })
             if(response.ok){
                 const data = await response.json()
+                setLoading(false)
                 navigate(`/list/${data.list._id}`)
             } else {
                 const error = await response.json()
@@ -49,7 +53,12 @@ const CreateListPage = () => {
 
     }
 
-    return (
+    return loading ? (
+        <div className='flex justify-center items-center min-h-[calc(90vh-65px)]'>
+            <Loading />
+        </div>
+    ) 
+    : (
         <div className='flex flex-col mx-3 md:mx-0'>
             <div className='text-left text-2xl font-semibold text-gray-400 border-b border-gray-400 pb-1 mt-3'>Create List</div>
             {errorMessage && <div className='border-2 border-red-800 bg-red-300 p-1 px-2 w-fit text-red-600 mt-3'>{errorMessage}</div>}

@@ -3,6 +3,7 @@ import sampleHomePageData from '../data/sampleHomePageData'
 import CreateAccount from '../components/CreateAccount'
 import HomeMovieCard from '../components/cards/HomeMovieCard'
 import Features from '../components/Features'
+import Loading from '../components/Loading'
 
 const HomePage = () => {
     const [trendingData, setTrendingData] = useState(null)
@@ -27,7 +28,7 @@ const HomePage = () => {
                     setLoading(false)
                 }
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         }
         
@@ -38,7 +39,11 @@ const HomePage = () => {
     }, [])
 
     return loading ? (
-        <div>Loading</div>
+        <div className='z-10 absolute top-[65px] w-full h-5/6'>
+            <div className='container mx-auto flex items-center justify-center h-full'>
+                <Loading />
+            </div>
+        </div>
     ) : (
         <>
             <CreateAccount createAccount={createAccount} setCreateAccount={setCreateAccount}/>

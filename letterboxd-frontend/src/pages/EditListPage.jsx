@@ -33,7 +33,6 @@ const EditListPage = () => {
                     })
                     if(response.ok){
                         const data = await response.json()
-                        console.log(data);
 
                         //check if creator of list is the signed in user
                         if(data.list.creator === username){

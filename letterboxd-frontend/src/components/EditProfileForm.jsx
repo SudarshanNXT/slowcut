@@ -37,7 +37,7 @@ const EditProfileForm = ({ editProfile, setEditProfile, username }) => {
                 throw new Error(error.message)
             }
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
         }
     }
 
@@ -66,7 +66,7 @@ const EditProfileForm = ({ editProfile, setEditProfile, username }) => {
                 throw new Error(error)
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 

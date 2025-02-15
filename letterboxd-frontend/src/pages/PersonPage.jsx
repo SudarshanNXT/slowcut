@@ -4,6 +4,7 @@ import ResultCard from '../components/cards/ResultCard';
 import { sortResults } from '../utils/sorting';
 import samplePersonData from '../data/samplePersonData';
 import MovieCard from '../components/cards/MovieCard';
+import Loading from '../components/Loading';
 
 const PersonPage = () => {
     const { id } = useParams()
@@ -34,7 +35,7 @@ const PersonPage = () => {
                     setLoading(false)
                 }
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         }
         getPersonDetails()
@@ -103,7 +104,9 @@ const PersonPage = () => {
     } 
 
     return loading ? (
-            <div>loading</div>
+            <div className='flex justify-center items-center min-h-[calc(90vh-65px)]'>
+                <Loading />
+            </div>
         ) : (
             <div className='flex flex-col-reverse md:grid grid-cols-4 gap-x-8 px-3 md:px-0 py-3'>
                 <div className='col-span-3 space-y-3'>

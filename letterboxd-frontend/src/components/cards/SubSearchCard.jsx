@@ -38,7 +38,7 @@ const SubSearchCard = ({ movie, favoriteFilmsLength, setResults, setQuery, index
                 throw new Error(error.message)
             }
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
         }
     }
     

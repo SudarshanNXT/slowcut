@@ -6,6 +6,7 @@ import ListMovieCard from '../components/cards/ListMovieCard';
 import { formatDate2 } from '../utils/formatDate';
 import SignInForm from '../components/SignInForm';
 import CreateAccount from '../components/CreateAccount';
+import Loading from '../components/Loading';
 
 const ListPage = () => {
     const { id } = useParams()
@@ -133,7 +134,9 @@ const ListPage = () => {
     }
 
     return loading ? (
-        <div>Loading</div>
+        <div className='flex justify-center items-center min-h-[calc(90vh-65px)]'>
+            <Loading />
+        </div>
     ) : (
         <>
             <SignInForm flag={flag} setFlag={setFlag}/>

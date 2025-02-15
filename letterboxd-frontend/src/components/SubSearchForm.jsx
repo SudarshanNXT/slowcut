@@ -22,14 +22,13 @@ const SubSearchForm = ({ subSearch, setSubSearch, favorite_films, replace_index,
                 if(response.ok){
                     const data = await response.json()
                     setResults(data.results)
-                    console.log(data);
                 } else {
                     const error = await response.json()
                     throw new Error(error)
                 }
             }
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
         }
     }
     

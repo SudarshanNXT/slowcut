@@ -56,7 +56,7 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                 throw new Error(error.message)
             }
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
         }
     }
 
@@ -85,7 +85,7 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                 throw new Error(error.message)
             }
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
         }
     }
 
@@ -113,7 +113,7 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                 throw new Error(error)
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -142,7 +142,7 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                 throw new Error(error)
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -162,7 +162,7 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                 throw new Error(error)
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 

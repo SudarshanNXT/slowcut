@@ -11,7 +11,7 @@ const MainLayout = () => {
             <Navbar />
 
             {isHomePage ? <Outlet /> : 
-                <div className='container mx-auto pb-2 relative'>
+                <div className='container mx-auto pb-2 relative '>
                     <Outlet />
                 </div>
             }

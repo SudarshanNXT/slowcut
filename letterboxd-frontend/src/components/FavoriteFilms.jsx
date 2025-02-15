@@ -34,14 +34,13 @@ const FavoriteFilms = ({ authorized, favorite_films, setUpdate }) => {
                 throw new Error(error)
             }
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message)
         }
     }
 
     const handleReplaceClick = (e, replace_index) => {
         e.stopPropagation()
         e.preventDefault()
-        console.log(replace_index);
         setIndex(replace_index)
         setSubSearch(true)
     }

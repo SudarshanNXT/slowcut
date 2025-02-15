@@ -8,6 +8,7 @@ import ReviewCard from '../components/cards/ReviewCard';
 import { MdImageNotSupported } from "react-icons/md";
 import { FaLock } from "react-icons/fa";
 import Diary from '../components/Diary';
+import Loading from '../components/Loading';
 
 const ProfileSubPage = () => {
     const { username, category } = useParams()
@@ -84,7 +85,7 @@ const ProfileSubPage = () => {
                         throw new Error(error)
                     }
                 } catch (error) {
-                    console.log(error.message)
+                    console.error(error.message)
                 }
             }
             getPreDisplayData()
@@ -92,7 +93,9 @@ const ProfileSubPage = () => {
     }, [data])
 
     return loading ? (
-        <div>Loading</div>
+        <div className='flex justify-center items-center min-h-[calc(90vh-65px)]'>
+            <Loading />
+        </div>
     ) : (
         <>
             <EditProfileForm editProfile={editProfile} setEditProfile={setEditProfile} username={username}/>

@@ -9,6 +9,7 @@ import ProfileSubPageMenu from '../components/ProfileSubPageMenu.jsx';
 import ReviewCard from '../components/cards/ReviewCard.jsx';
 import { FaCalendar } from "react-icons/fa";
 import { MdImageNotSupported } from "react-icons/md";
+import Loading from '../components/Loading.jsx';
 
 const ProfilePage = () => {
     const { username } = useParams()
@@ -36,7 +37,6 @@ const ProfilePage = () => {
                 })
                 if(response.ok){
                     const data = await response.json()
-                    console.log(data);
                     data.lists = fillListItems(data.lists)
                     setProfileData(data)
                     setAuthorized(data.profile.user === sessionId)
@@ -52,7 +52,9 @@ const ProfilePage = () => {
     }, [username, update])
     
     return loading ? (
-        <div>loading</div>
+        <div className='flex justify-center items-center min-h-[calc(90vh-65px)]'>
+            <Loading />
+        </div>
     ) : (
         <>
             <EditProfileForm editProfile={editProfile} setEditProfile={setEditProfile} username={username}/>
