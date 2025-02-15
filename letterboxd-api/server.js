@@ -9,6 +9,8 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import connectDB from './config/db.js';
+import path from 'path';
+import { fileURLToPath } from 'url'
 
 connectDB()
 
@@ -28,6 +30,8 @@ app.use('/api/tmdb', tmdbRoutes);
 app.use('/api/profile', profileRoutes);
 
 // ✅ Serve static files from React's build folder
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(path.join(__dirname, '../letterboxd-frontend/dist')));
 
