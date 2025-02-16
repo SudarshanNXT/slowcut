@@ -19,10 +19,9 @@ const app = express();
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-// app.use(cors({
-//     origin: ['https://letterboxd-clone-frontend.vercel.app', 'http://localhost:5173', 'http://localhost:4173']
-// }));
-app.use(cors())
+app.use(cors({
+    origin: ['https://arriagada689-letterboxd-clone.xyz', 'http://localhost:5173', 'http://localhost:4173']
+}));
 
 app.use(cookieParser())
 
