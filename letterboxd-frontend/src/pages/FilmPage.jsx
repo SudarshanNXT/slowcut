@@ -11,6 +11,7 @@ import SignInForm from '../components/SignInForm.jsx';
 import CreateAccount from '../components/CreateAccount.jsx';
 import BackendBox from '../components/FilmPage/BackendBox.jsx';
 import { IoMdClose, IoIosStar } from "react-icons/io";
+import Loading from '../components/Loading.jsx';
 
 const FilmPage = () => {
     const { id } = useParams()
@@ -46,8 +47,8 @@ const FilmPage = () => {
     }, [id])
 
     return  loading ? (
-        <div className='border h-5'>
-            loading
+        <div className='flex justify-center items-center min-h-[calc(90vh-65px)]'>
+            <Loading />
         </div>
     ) : (
         <>
