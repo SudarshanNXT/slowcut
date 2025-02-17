@@ -67,12 +67,12 @@ const Navbar = () => {
                                     <div className='absolute left-0 top-full hidden group-hover:flex flex-col bg-inherit text-black rounded-b-md w-full font-normal text-xs z-50'>
                                         <Link className='pl-2 py-2 hover:bg-gray-700 hover:text-white' to={'/'}>Home</Link>
                                         <Link to={`/${sessionUsername}`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Profile</Link>
-                                        <Link href={`/${sessionUsername}/watched`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Watched</Link>
-                                        <Link href={`/${sessionUsername}/diary`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Diary</Link>
-                                        <Link href={`/${sessionUsername}/reviews`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Reviews</Link>
-                                        <Link href={`/${sessionUsername}/watchlist`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Watchlist</Link>
-                                        <Link href={`/${sessionUsername}/lists`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Lists</Link>
-                                        <Link href={`/${sessionUsername}/likes`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Likes</Link>
+                                        <a href={`/${sessionUsername}/watched`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Watched</a>
+                                        <a href={`/${sessionUsername}/diary`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Diary</a>
+                                        <a href={`/${sessionUsername}/reviews`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Reviews</a>
+                                        <a href={`/${sessionUsername}/watchlist`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Watchlist</a>
+                                        <a href={`/${sessionUsername}/lists`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Lists</a>
+                                        <a href={`/${sessionUsername}/likes`} className='pl-2 py-2 hover:bg-gray-700 hover:text-white'>Likes</a>
                                         <button onClick={(e) => logoutHandler(e)} className='pl-2 py-2 hover:bg-gray-700 hover:text-white text-left uppercase border-t border-t-gray-700'>Sign Out</button>
                                     </div>
                                 </div>
@@ -131,12 +131,12 @@ const Navbar = () => {
                                 <div className='col-span-2 border-t-gray-700 border-t'></div>
                                 <Link className='hover:bg-gray-700 hover:text-white' to={'/'}>Home</Link>
                                 <Link className='hover:bg-gray-700 hover:text-white' to={`/${sessionUsername}`} onClick={() => setMenuDropdown(false)}>Profile</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/watched`} onClick={() => setMenuDropdown(false)}>Watched</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/diary`} onClick={() => setMenuDropdown(false)}>Diary</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/reviews`} onClick={() => setMenuDropdown(false)}>Reviews</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/watchlist`} onClick={() => setMenuDropdown(false)}>Watchlist</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/lists`} onClick={() => setMenuDropdown(false)}>Lists</Link>
-                                <Link className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/likes`} onClick={() => setMenuDropdown(false)}>Likes</Link>
+                                <a className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/watched`} onClick={() => setMenuDropdown(false)}>Watched</a>
+                                <a className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/diary`} onClick={() => setMenuDropdown(false)}>Diary</a>
+                                <a className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/reviews`} onClick={() => setMenuDropdown(false)}>Reviews</a>
+                                <a className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/watchlist`} onClick={() => setMenuDropdown(false)}>Watchlist</a>
+                                <a className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/lists`} onClick={() => setMenuDropdown(false)}>Lists</a>
+                                <a className='hover:bg-gray-700 hover:text-white' href={`/${sessionUsername}/likes`} onClick={() => setMenuDropdown(false)}>Likes</a>
                                 <button onClick={(e) => logoutHandler(e)} className='col-span-2 hover:bg-gray-700 hover:text-white text-left uppercase border-y border-y-gray-700 py-2'>Sign Out</button>
                             </div>
                         </>

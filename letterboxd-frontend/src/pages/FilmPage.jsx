@@ -66,7 +66,7 @@ const FilmPage = () => {
             </div>
             
             {/*Desktop */}
-            <div className='hidden md:grid grid-cols-4 pt-4 space-x-6'>
+            <div className='hidden md:grid grid-cols-4 pt-4 gap-x-6'>
                 {movieData.movie_data.poster_path ? (
                     <button onClick={() => setImageClick(true)} className='h-fit w-fit'>
                         <img className='h-[345px] rounded-md' src={`https://image.tmdb.org/t/p/original/${movieData.movie_data.poster_path}`} alt={movieData.movie_data.title} />

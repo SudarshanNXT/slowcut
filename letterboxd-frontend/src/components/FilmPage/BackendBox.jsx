@@ -117,66 +117,6 @@ const BackendBox = ({ id, movieData }) => {
         }
     }
 
-    const addDiaryEntry = async () => {
-        try {
-            const response = await fetch(`${apiBaseUrl}/profile/add_diary_entry`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    id: id,
-                    title: movieData.movie_data.title,
-                    image: movieData.movie_data.poster_path,
-                    genres: movieData.movie_data.genres,
-                    release_date: movieData.movie_data.release_date,
-                    rewatch: true
-                })
-            })
-            if(response.ok){
-                const data = await response.json()
-                setDiaryStatus(true)
-            } else {
-                const error = await response.json()
-                throw new Error(error)
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-    const addReview = async () => {
-        try {
-            if(reviewBody.length === 0) return
-            const response = await fetch(`${apiBaseUrl}/profile/create_review`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    movie_id: id,
-                    title: movieData.movie_data.title,
-                    image: movieData.movie_data.poster_path,
-                    genres: movieData.movie_data.genres,
-                    release_date: movieData.movie_data.release_date,
-                    body: reviewBody
-                })
-            })
-            if(response.ok){
-                const data = await response.json()
-                setReviewStatus(true)
-                setReviewBody('')
-            } else {
-                const error = await response.json()
-                throw new Error(error)
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
     const handleRatingChange = (num) => {
         const rating = num
         setRating(rating)
