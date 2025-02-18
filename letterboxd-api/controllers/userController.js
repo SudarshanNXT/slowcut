@@ -99,8 +99,16 @@ const deleteProfile = asyncHandler(async (req, res) => {
     res.json('Successfully deleted user')
 })
 
+// @desc Check token validity (using middleware)
+// route GET api/users/check_token
+// @access Private
+const checkToken = asyncHandler(async (req, res) => {
+    res.json('check token')
+})
+
 export {
     registerUser,
     authUser,
-    deleteProfile
+    deleteProfile,
+    checkToken
 }

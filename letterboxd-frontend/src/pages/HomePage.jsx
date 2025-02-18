@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import sampleHomePageData from '../data/sampleHomePageData'
 import CreateAccount from '../components/CreateAccount'
 import HomeMovieCard from '../components/cards/HomeMovieCard'
 import Features from '../components/Features'
 import Loading from '../components/Loading'
+import { AuthContext } from '../contexts/AuthContext'
 
 const HomePage = () => {
     const [trendingData, setTrendingData] = useState(null)
@@ -12,6 +13,7 @@ const HomePage = () => {
     const [createAccount, setCreateAccount] = useState(false)
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
+    const { logoutUser } = useContext(AuthContext)
 
     useEffect(() => {
         const getHomePageData = async () => {
@@ -36,6 +38,31 @@ const HomePage = () => {
         // setTrendingData(sampleHomePageData.trending_data)
         // setPopularData(sampleHomePageData.popular_data)
         // setLoading(false)
+    }, [])
+
+    /*If localStorage, check token validity */
+    useEffect(() => {
+        if(localStorage.getItem('userInfo')){
+            const checkToken = async () => {
+                try {
+                    const token = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')).token : ''
+                    const response = await fetch(`${apiBaseUrl}/users/check_token`, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    if(!response.ok){
+                        const error = await response.json()
+                        logoutUser()
+                        throw new Error(error.message)
+                    }
+                } catch (error) {
+                    console.error(error.message)                    
+                }
+            }
+            checkToken()
+        }
     }, [])
 
     return loading ? (
