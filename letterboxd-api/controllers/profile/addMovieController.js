@@ -127,6 +127,8 @@ const getMovieStatus = asyncHandler(async (req, res) => {
     const watchMovieStatus = profile.watched_movies.some(item => item.movie._id.toString() === movie._id.toString())
     const watchlistStatus = profile.watchlist.some(item => item.movie._id.toString() === movie._id.toString())
     const diaryStatus = profile.diary.some(item => item.movie._id.toString() === movie._id.toString())
+    const diaryStatusIndex = profile.diary.findIndex(item => item.movie._id.toString() === movie._id.toString())
+    const rewatchStatus = diaryStatusIndex !== -1 ? profile.diary[diaryStatusIndex].rewatch : null
     const reviewCheck = await Review.findOne({ creator: user.username, movie: movie._id })
     const reviewStatus = reviewCheck ? true : false
     
@@ -141,6 +143,7 @@ const getMovieStatus = asyncHandler(async (req, res) => {
         diary_status: diaryStatus,
         review_status: reviewStatus,
         rating_status: ratingStatus,
+        rewatch_status: rewatchStatus,
         list_status_arr: listStatusArr(userLists, movie)
     })
 })

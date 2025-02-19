@@ -9,11 +9,13 @@ import { FaList } from "react-icons/fa";
 import { FaKey } from "react-icons/fa";
 import { MdMovie } from "react-icons/md";
 import { FaInfoCircle } from "react-icons/fa";
+import { PiSquaresFourBold } from "react-icons/pi";
 
 import SearchBar from './SearchBar.jsx';
 import SignIn from './SignIn.jsx';
 import { IoClose } from 'react-icons/io5';
 import CreateAccount from './CreateAccount.jsx';
+import SuperMegaForm from './SuperMegaForm.jsx';
 
 const Navbar = () => {
     const location = useLocation();
@@ -28,6 +30,8 @@ const Navbar = () => {
     const [searchDropdown, setSearchDropdown] = useState(false)
     const [menuDropdown, setMenuDropdown] = useState(false)
     const [createAccount, setCreateAccount] = useState(false)
+    const [createList, setCreateList] = useState(false)
+    const [superMegaForm, setSuperMegaForm] = useState(false)
 
     const navigate = useNavigate();
 
@@ -47,6 +51,8 @@ const Navbar = () => {
         <>
             {/*Create account pop up form */}
             <CreateAccount createAccount={createAccount} setCreateAccount={setCreateAccount}/>
+
+            <SuperMegaForm superMegaForm={superMegaForm} setSuperMegaForm={setSuperMegaForm}/>
 
             {/*Desktop Navbar */}
             <nav className={`hidden md:block ${isHomePage ? 'absolute bg-transparent px-1 text-gray-200' : 'bg-primary text-gray-300'} bg-primary font-bold h-[65px] uppercase z-50 w-full`}>
@@ -80,8 +86,15 @@ const Navbar = () => {
                                 <Link className='flex items-center hover:text-white' to={'/films'}>Films</Link>
                                 <Link className='flex items-center hover:text-white' to={'/about'}>About</Link>
                                 <SearchBar />
+                                
+                                <div className='inline-flex items-center font-bold h-[28px] bg-hover rounded-md relative'>
+                                    <button onClick={() => setSuperMegaForm(true)} className=' hover:bg-green-500 flex items-center uppercase p-1 rounded-l-md'><FaPlus className='mr-1' size={12}/><div className='mr-1'>Log</div></button>
+                                    <div className='h-full w-[1px] bg-white'></div>
+                                    <button onClick={() => setCreateList(true)} className='hover:bg-green-500 flex items-center p-1 h-full rounded-r-md'><IoIosArrowDown className=' font-bold text-white' size={14}/></button>
 
-                                <Link to={'/list/new'} className='bg-hover hover:bg-green-500 flex items-center p-1 rounded-md font-bold'><FaPlus className='mr-1'/> <div>List</div></Link>
+                                    {/*Create list dropdown */}
+                                    {createList && <Link to={'/list/new'} className='absolute top-full right-0 mt-1 bg-gray-500 text-gray-100 text-nowrap hover:bg-gray-400 flex items-center p-1 rounded-md px-3 font-normal text-sm normal-case'>Start a new list...</Link>}
+                                </div>
                             </>
                         ) : (
                             <>
@@ -108,7 +121,7 @@ const Navbar = () => {
                     {/*Right Side */}
                     <div className='flex items-center gap-x-3'>
                         {isLoggedIn ? (
-                            <Link to={'/list/new'}><FaPlus size={28}/></Link>
+                            <button onClick={() => setSuperMegaForm(true)}><FaPlus size={28}/></button>
                         ) : (
                             <SignIn isMobile={true} setPopup={setPopup} signinDropdown={signinDropdown} setSigninDropdown={setSigninDropdown} setSearchDropdown={setSearchDropdown}/>
                         )}
@@ -144,6 +157,7 @@ const Navbar = () => {
                         <Link onClick={() => {setMenuDropdown(false), setCreateAccount(true)}} className='flex items-center pl-4 py-2 hover:bg-gray-700'><FaKey className='mr-3'/><span>CREATE ACCOUNT</span></Link>
                     )}
                     
+                    <Link to={'/list/new'} onClick={() => setMenuDropdown(false)} className='flex items-center pl-4 py-2 hover:bg-gray-700'><PiSquaresFourBold className='mr-3'/> <span>CREATE LIST</span></Link>
                     <Link to={'/films'} onClick={() => setMenuDropdown(false)} className='flex items-center pl-4 py-2 hover:bg-gray-700'><MdMovie className='mr-3'/> <span>FILMS</span></Link>
                     <Link to={'/about'} onClick={() => setMenuDropdown(false)} className='flex items-center pl-4 py-2 hover:bg-gray-700'><FaInfoCircle className='mr-3'/> <span>ABOUT</span></Link>
                 </div>

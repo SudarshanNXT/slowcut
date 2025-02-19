@@ -253,7 +253,7 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
                             ></textarea>
 
                             <div className='flex items-end w-fit self-end'>
-                                <button onClick={() => setRating(null)} className=' pb-1'>{rating ? <IoMdClose size={22}/> : ''} </button>
+                                <button type='button' onClick={() => setRating(null)} className=' pb-1'>{rating ? <IoMdClose size={22}/> : ''} </button>
                                 <div className='flex flex-col justify-center items-center w-full'>
                                     <div className='w-full text-start text-sm text-white font-semibold'>Rating <span className='text-sm text-gray-300 font-normal'>{rating ? `${rating} out of 5` : ''}</span></div>
                                     <div className='flex items-center'>
