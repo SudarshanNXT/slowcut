@@ -223,7 +223,11 @@ const SuperMegaForm = ({ superMegaForm, setSuperMegaForm }) => {
                 {selectedMovie ? (
                     <Form onSubmit={ submitHandler }>
                         <div className='flex flex-col md:flex-row gap-x-6 p-5'>
-                            <img className='h-[180px] w-[120px] mx-auto rounded-md' src={`${selectedMovie.poster_path ? `https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}` : '../images/no-image-1.png'}`} alt={selectedMovie.title} />
+                            {selectedMovie.poster_path ? (
+                                <img className='h-[180px] w-[120px] mx-auto rounded-md flex-shrink-0' src={`${`https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`}`} alt={selectedMovie.title} />
+                            ) : (
+                                <div className='h-[180px] w-[120px] bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-2xl text-center rounded-md flex-shrink-0'>{selectedMovie.title}</div>
+                            )}
     
                             <div className='flex flex-col w-full space-y-5 text-gray-300'>
                                 <div className='text-gray-300 text-3xl font-bold flex items-end'>{selectedMovie.title} <span className='font-normal text-base ml-2'>{selectedMovie.release_date.slice(0, 4)}</span></div>

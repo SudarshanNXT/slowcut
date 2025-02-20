@@ -90,7 +90,7 @@ const Navbar = () => {
                                 <div className='inline-flex items-center font-bold h-[28px] bg-hover rounded-md relative'>
                                     <button onClick={() => setSuperMegaForm(true)} className=' hover:bg-green-500 flex items-center uppercase p-1 rounded-l-md'><FaPlus className='mr-1' size={12}/><div className='mr-1'>Log</div></button>
                                     <div className='h-full w-[1px] bg-white'></div>
-                                    <button onClick={() => setCreateList(true)} className='hover:bg-green-500 flex items-center p-1 h-full rounded-r-md'><IoIosArrowDown className=' font-bold text-white' size={14}/></button>
+                                    <button onClick={() => setCreateList(prev => !prev)} className='hover:bg-green-500 flex items-center p-1 h-full rounded-r-md'><IoIosArrowDown className=' font-bold text-white' size={14}/></button>
 
                                     {/*Create list dropdown */}
                                     {createList && <Link to={'/list/new'} className='absolute top-full right-0 mt-1 bg-gray-500 text-gray-100 text-nowrap hover:bg-gray-400 flex items-center p-1 rounded-md px-3 font-normal text-sm normal-case'>Start a new list...</Link>}

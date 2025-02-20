@@ -203,7 +203,11 @@ const MegaForm = ({ megaForm, setMegaForm, movieData, pre_rating, pre_like_statu
 
                 <Form onSubmit={ submitHandler }>
                     <div className='flex flex-col md:flex-row gap-x-6 p-5'>
-                        <img className='h-[180px] w-[120px] mx-auto rounded-md' src={`${movieData.image ? `https://image.tmdb.org/t/p/original/${movieData.image}` : '../images/no-image-1.png'}`} alt={movieData.title} />
+                        {movieData.image ? (
+                            <img className='h-[180px] w-[120px] mx-auto rounded-md' src={`${`https://image.tmdb.org/t/p/original/${movieData.image}`}`} alt={movieData.title} />
+                        ) : (
+                            <div className='h-[180px] w-[120px] bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-2xl text-center rounded-md'>{movieData.title}</div>
+                        )}
 
                         <div className='flex flex-col w-full space-y-5 text-gray-300'>
                             <div className='text-gray-300 text-3xl font-bold flex items-end'>{movieData.title} <span className='font-normal text-base ml-2'>{movieData.release_date.slice(0, 4)}</span></div>
