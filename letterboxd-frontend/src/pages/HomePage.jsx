@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import sampleHomePageData from '../data/sampleHomePageData'
+// import sampleHomePageData from '../data/sampleHomePageData'
 import CreateAccount from '../components/CreateAccount'
 import HomeMovieCard from '../components/cards/HomeMovieCard'
 import Features from '../components/Features'
@@ -11,9 +11,21 @@ const HomePage = () => {
     const [popularData, setPopularData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [createAccount, setCreateAccount] = useState(false)
+    const [imageQuality, setImageQuality] = useState("original");
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
     const { logoutUser } = useContext(AuthContext)
+
+    useEffect(() => {
+        if ("connection" in navigator) {
+            const connection = navigator.connection;
+            if (connection.effectiveType === "4g") {
+                setImageQuality("original"); 
+            } else {
+                setImageQuality("w500"); 
+            }
+        }
+    }, []);
 
     useEffect(() => {
         const getHomePageData = async () => {
@@ -78,12 +90,12 @@ const HomePage = () => {
             <div className='md:absolute md:left-0 md:top-0 w-full z-10 pb-6'>
                 <div className='container mx-auto w-full'>
                     <div className='relative h-fit'>
-                        <img src={`https://image.tmdb.org/t/p/original/${popularData[0].backdrop_path}`} alt={`${popularData[0].title}`} className='hidden md:block w-full shadow-[0_0_50px_20px_rgba(0,0,0,0.5)]'
+                        <img src={`https://image.tmdb.org/t/p/${imageQuality}/${popularData[0].backdrop_path}`} alt={`${popularData[0].title}`} className='hidden md:block w-full shadow-[0_0_50px_20px_rgba(0,0,0,0.5)]'
                         style={{
                             maskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
                             WebkitMaskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)"
                         }}/>
-                        <img src={`https://image.tmdb.org/t/p/original/${popularData[0].backdrop_path}`} alt={`${popularData[0].title}`} className='block md:hidden w-full shadow-[0_0_50px_20px_rgba(0,0,0,0.5)]'
+                        <img src={`https://image.tmdb.org/t/p/${imageQuality}/${popularData[0].backdrop_path}`} alt={`${popularData[0].title}`} className='block md:hidden w-full shadow-[0_0_50px_20px_rgba(0,0,0,0.5)]'
                         style={{
                             maskImage: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
                             WebkitMaskImage: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)"

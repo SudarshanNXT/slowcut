@@ -22,7 +22,6 @@ const addMovieToProfile = asyncHandler(async (req, res) => {
 
     //check if movie is already in db, if not then create it
     let movie = await Movie.findOne({ id: id })
-    let flag = false
     if(!movie){
         movie = await Movie.create({
             title: title,
@@ -31,16 +30,17 @@ const addMovieToProfile = asyncHandler(async (req, res) => {
             genres: genres,
             release_date: release_date
         })
-    } else {
-        flag = true
     }
 
     //add to profile depending on field
     if(field === 'liked'){
-        profile.liked_movies.push({
-            movie: movie._id,
-            id: movie.id
-        })
+        const flag = profile.liked_movies.some(item => item.movie.toString() === movie._id.toString())
+        if(!flag){
+            profile.liked_movies.push({
+                movie: movie._id,
+                id: movie.id
+            })
+        }
     } else if(field === 'watched'){
         //determine whether movie is already in profile's watched movies
         const watchMovieStatus = profile.watched_movies.some(item => item.movie.toString() === movie._id.toString())
@@ -56,10 +56,13 @@ const addMovieToProfile = asyncHandler(async (req, res) => {
             })
         }
     } else if(field === 'watchlist'){
-        profile.watchlist.push({
-            movie: movie._id,
-            id: movie.id
-        })
+        const flag = profile.watchlist.some(item => item.movie.toString() === movie._id.toString())
+        if(!flag){
+            profile.watchlist.push({
+                movie: movie._id,
+                id: movie.id
+            })  
+        }
     }
     await profile.save()
 

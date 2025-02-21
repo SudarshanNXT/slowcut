@@ -9,7 +9,7 @@ import listStatusArr from "../../utils/listStatusArr.js"
 // route POST api/profile/create_list
 // @access Private
 const createList = asyncHandler(async (req, res) => {
-    const { name, description, ranked, is_public } = req.body
+    const { name, description, ranked, is_public, list_items } = req.body
     const user = await User.findById(req.user._id)
     const profile = await Profile.findOne({ user: req.user._id })
 
@@ -34,6 +34,27 @@ const createList = asyncHandler(async (req, res) => {
         comments: [],
         list_items: []
     })
+
+    //iterate through list items, adding each to list
+    for(const list_item of list_items){
+        let movie = await Movie.findOne({ id: list_item.id })
+        if(!movie){
+            movie = await Movie.create({
+                title: list_item.title,
+                id: list_item.id,
+                image: list_item.poster_path,
+                genres: list_item.genres,
+                release_date: list_item.release_date
+            })
+        }
+
+        list.list_items.push({
+            movie: movie._id,
+            type: 'Movie',
+            id: movie.id
+        })
+    }
+    await list.save()
 
     res.json({
         list: list

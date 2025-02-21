@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useParams, Form, useNavigate } from 'react-router-dom';
 import ListItemCard from '../components/cards/ListItemCard';
+import SuperMegaFormCard from '../components/cards/SuperMegaFormCard';
+import { FaSearch } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 
 const EditListPage = () => {
     const { id } = useParams()
+    const [query, setQuery] = useState('')
+    const [results, setResults] = useState(null)
     const [loading, setLoading] = useState(true)
+    const inputRef = useRef(null)
+
     const [update, setUpdate] = useState(5)
     const [listData, setListData] = useState(null)
     const [errorMessage, setErrorMessage] = useState('')
@@ -117,9 +124,73 @@ const EditListPage = () => {
         }
     }
 
+    const handleSearch = async () => {
+        if (inputRef.current) {
+            inputRef.current.blur(); // Hide keyboard
+        }
+        
+        try {
+            if(query.length > 0){
+                const response = await fetch(`${apiBaseUrl}/tmdb/search?query=${query}&page=1&type=films`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                if(response.ok){
+                    const data = await response.json()
+                    setResults(data.results)
+                } else {
+                    const error = await response.json()
+                    throw new Error(error.message)
+                }
+            }
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault(); 
+            handleSearch();
+        }
+    };
+
+    const handleMovieClick = async (movie) => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/add_movies_to_lists`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    movie_id: movie.id,
+                    list_of_lists: [id],
+                    title: movie.title,
+                    id: movie.id,
+                    image: movie.image,
+                    genres: movie.genres,
+                    release_date: movie.release_date
+                })
+            })
+            if(response.ok){
+                const data = await response.json()
+                setQuery('')
+                setResults(null)
+                setUpdate(prev => prev + 1)
+            } else {
+                const error = await response.json()
+                throw new Error(error.message)
+            }
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+
     return (
         <div className='flex flex-col mx-3 md:mx-0'>
-            <div className='text-left text-2xl font-semibold text-gray-400 border-b border-gray-400 pb-1 mt-3'>Create List</div>
+            <div className='text-left text-2xl font-semibold text-gray-400 border-b border-gray-400 pb-1 mt-3'>Edit List</div>
 
             {errorMessage && <div className='border-2 border-red-800 bg-red-300 p-1 px-2 w-fit text-red-600 mt-3'>{errorMessage}</div>}
             <Form onSubmit={ handleSubmit }>
@@ -171,13 +242,50 @@ const EditListPage = () => {
                     </div>
                 </div>
 
-                <div className='flex items-center justify-end gap-3'>
-                    <button type='button' onClick={() => navigate(-1)} className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-light hover:bg-gray-500 text-white'>Cancel</button>
-                    <button type='button' className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-red-600 hover:bg-red-500 text-white' onClick={handleDelete}>Delete</button>
-                    <button type="submit" className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-hover hover:bg-green-500 text-white'>Save</button>
-                </div>
-                
+                <div className='flex items-center flex-col-reverse md:flex-row md:justify-between my-3 relative gap-y-6 md:gap-y-0'>
+                    <div className='inline-flex'>
+                        <button onClick={() => inputRef.current?.focus()} type='button' className='uppercase text-nowrap w-fit px-2 rounded-md font-semibold bg-hover hover:bg-green-500 text-white text-sm mr-2'>Add a film</button>
+                        <div className='relative w-fit'>
+                            <button type='button' onClick={() => handleSearch()}>
+                                <FaSearch size={20} className='absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500' />
+                            </button>
+                            <input 
+                                type="text" 
+                                ref={inputRef}
+                                placeholder='Enter name of film...' 
+                                className='bg-primary rounded-md p-2 text-gray-300 focus:outline-none focus:bg-white focus:text-black'
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                            />
+                        </div>
+                        {results && results.length > 0 &&
+                            <button type='button' onClick={() => {setResults(null), setQuery('')}} className='rounded-full bg-red-500 hover:bg-red-400 text-white font-bold h-[35px] w-[35px] ml-2 flex items-center justify-center'><IoMdClose size={27}/></button>
+                        }
+                    </div>
+
+                    <div className='inline-flex items-center gap-3'>
+                        <button type='button' onClick={() => navigate(-1)} className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-light hover:bg-gray-500 text-white'>Cancel</button>
+                        <button type='button' className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-red-600 hover:bg-red-500 text-white' onClick={handleDelete}>Delete</button>
+                        <button type="submit" className='w-fit text-lg py-1 px-2 rounded-md font-semibold bg-hover hover:bg-green-500 text-white'>Save</button>
+                    </div>
+
+                    {/*Search results display */}
+                    {results && results.length > 0 &&
+                        <div className='absolute top-full left-0 mt-1 p-2 right-0 flex flex-col space-y-1 h-[350px] overflow-y-auto rounded-md bg-gray-800'>
+                            {results.map((movie, index) => (
+                                <SuperMegaFormCard
+                                    key={index} 
+                                    movie={movie} 
+                                    handleMovieClick={handleMovieClick}
+                                />
+                            ))}
+                        </div>
+                    }
+                </div>                
             </Form>
+
+            
 
             {/*List items display */}
             {listData && listData.movies && listData.movies.length > 0 && 

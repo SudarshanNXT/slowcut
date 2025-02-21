@@ -93,7 +93,7 @@ const Navbar = () => {
                                     <button onClick={() => setCreateList(prev => !prev)} className='hover:bg-green-500 flex items-center p-1 h-full rounded-r-md'><IoIosArrowDown className=' font-bold text-white' size={14}/></button>
 
                                     {/*Create list dropdown */}
-                                    {createList && <Link to={'/list/new'} className='absolute top-full right-0 mt-1 bg-gray-500 text-gray-100 text-nowrap hover:bg-gray-400 flex items-center p-1 rounded-md px-3 font-normal text-sm normal-case'>Start a new list...</Link>}
+                                    {createList && <Link to={'/list/new'} onClick={() => setCreateList(false)} className='absolute top-full right-0 mt-1 bg-gray-500 text-gray-100 text-nowrap hover:bg-gray-400 flex items-center p-1 rounded-md px-3 font-normal text-sm normal-case'>Start a new list...</Link>}
                                 </div>
                             </>
                         ) : (
