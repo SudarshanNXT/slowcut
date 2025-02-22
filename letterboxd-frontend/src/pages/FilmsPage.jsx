@@ -95,8 +95,8 @@ const FilmsPage = () => {
 
             {/*Filter/Sorting section */}
             <div className='flex flex-col md:flex-row md:items-center justify-between'>
-                <div className='flex flex-col md:flex-row md:items-center text-gray-300'>
-                    <div className='uppercase font-semibold mr-3'>Browse By</div>
+                <div className='flex flex-col text-gray-300'>
+                    <div className='uppercase font-semibold mr-3 mb-1'>Browse By</div>
                     <div className='flex border border-gray-400  h-fit rounded-md w-fit'>
                         <button onClick={() => handleFilterClick('now_playing')} className={` ${filter === 'now_playing' ? 'bg-gray-400 text-black' : ''} px-2 py-1 border-r border-gray-400 hover:text-white`}>Now Playing</button>
                         <button onClick={() => handleFilterClick('popular')} className={` ${filter === 'popular' ? 'bg-gray-400 text-black' : ''} px-2 py-1 border-r border-gray-400 hover:text-white`}>Popular</button>

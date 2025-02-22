@@ -48,6 +48,17 @@ const CreateAccount = ({ createAccount, setCreateAccount }) => {
         setLoading(false)
     }
 
+    const validateUsername = () => {
+        if (username.length > 150) {
+            return false
+        }
+        // Check for allowed characters
+        if (!/^[a-zA-Z0-9@.+/_-]+$/.test(username)) {
+            return false
+        }
+        return true;
+    }
+
     return (
         <div className={`fixed inset-0 h-full w-full flex items-center justify-center ${createAccount ? 'bg-opacity-80 z-50' : 'opacity-0 pointer-events-none'} bg-black transition-all duration-200`}>
             <div className={`flex flex-col mx-4 w-full md:w-[300px] bg-light p-5 rounded-md relative ${createAccount ? '' : 'scale-50'} transition-all duration-200`}>
@@ -63,7 +74,11 @@ const CreateAccount = ({ createAccount, setCreateAccount }) => {
                     
                     <Form onSubmit={ submitHandler } className='space-y-4'>
                         <div className='flex flex-col space-y-1 mb-2'>
-                            <label htmlFor="username" className='text-white'>Username:</label>
+                            <div className='flex justify-between items-center'>
+                                <label htmlFor="username" className='text-white'>Username:</label>
+                                {username.length > 0 && !validateUsername() && <span className='text-red-500'>Invalid</span>}
+                                {username.length > 0 && validateUsername() && <span className='text-green-500'>Valid</span>}
+                            </div>
                             <input
                                 type="text"
                                 id="create_account_username"
@@ -75,32 +90,32 @@ const CreateAccount = ({ createAccount, setCreateAccount }) => {
                             <div className='text-xs'>Username must be 150 characters or fewer and contain only letters, digits and @/./+/-/_.</div>
                         </div>
                         <div className='flex flex-col space-y-1 mb-2'>
-                            <label htmlFor="password" className='text-white'>Password:</label>
-                            <div className='relative'>
-                                <input
-                                    type='password'
-                                    id="create_account_password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                    className='rounded-md p-2 w-full bg-gray-300 focus:outline-none focus:bg-white'
-                                />
+                            <div className='flex justify-between items-center'>
+                                <label htmlFor="password" className='text-white'>Password:</label>
+                                {password.length > 0 && password.length < 4 && <span className='text-red-500'>Invalid</span>}
+                                {password.length > 0 && password.length >= 4 && <span className='text-green-500'>Valid</span>}
                             </div>
+                            <input
+                                type='password'
+                                id="create_account_password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className='rounded-md p-2 w-full bg-gray-300 focus:outline-none focus:bg-white'
+                            />
                             <div className='text-xs'>Password must be at least 4 characters long.</div>
                         </div>
                         
                         <div className='flex flex-col space-y-1 mb-4'>
                             <label htmlFor="password" className='text-white'>Confirm Password:</label>
-                            <div className='relative'>
-                                <input
-                                    type='password'
-                                    id="confirmPassword"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    required
-                                    className='rounded-md p-2 w-full bg-gray-300 focus:outline-none focus:bg-white'
-                                />
-                            </div>
+                            <input
+                                type='password'
+                                id="confirmPassword"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                                className='rounded-md p-2 w-full bg-gray-300 focus:outline-none focus:bg-white'
+                            />
                         </div>
                     
                         <button type="submit" className='w-fit py-1 px-2 rounded mb-4 self-start bg-hover hover:bg-green-500 text-gray-300 font-bold'>Sign Up</button>

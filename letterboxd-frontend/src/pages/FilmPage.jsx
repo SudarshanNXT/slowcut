@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
-import AddToListCard from '../components/AddToListCard.jsx';
-import sampleFilmData from '../data/sampleFilmData.js';
+// import sampleFilmData from '../data/sampleFilmData.js';
 import MovieDetails from '../components/FilmPage/MovieDetails.jsx';
 import Genres from '../components/FilmPage/Genres.jsx';
 import Releases from '../components/FilmPage/Releases.jsx';
@@ -10,7 +9,7 @@ import Crew from '../components/FilmPage/Crew.jsx';
 import SignInForm from '../components/SignInForm.jsx';
 import CreateAccount from '../components/CreateAccount.jsx';
 import BackendBox from '../components/FilmPage/BackendBox.jsx';
-import { IoMdClose, IoIosStar } from "react-icons/io";
+import { IoMdClose } from "react-icons/io";
 import Loading from '../components/Loading.jsx';
 
 const FilmPage = () => {

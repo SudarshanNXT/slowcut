@@ -1,5 +1,6 @@
 import React from 'react'
 import countries from '../../data/countries.js';
+import ReactCountryFlag from "react-country-flag"
 
 const Releases = ({ releases }) => {
     return (
@@ -9,11 +10,20 @@ const Releases = ({ releases }) => {
                     <div className='border-b-2 h-fit'>{release_type.type}</div>
                     <div>
                         {release_type.releases.map((release, index) => (
-                            <div className='grid grid-cols-2 gap-2' key={index}>
+                            <div className='grid grid-cols-2 gap-2 mt-2' key={index}>
                                 <div className='border-b border-dashed h-fit'>{formatDate(release.date)}</div>
-                                <div className='flex flex-wrap gap-1 pt-2'>
+                                <div className='flex flex-wrap gap-y-3 gap-x-4 pt-3'>
                                     {release.releases.map((item, index) => (
-                                        <div className='bg-gray-900 text-gray-300 text-xs px-2 py-1 rounded w-fit' key={index}>{getCountryNameByCode(item.country)}</div>
+                                        <div className='text-gray-300 text-sm rounded w-fit inline-flex items-center' key={index}>
+                                            <ReactCountryFlag 
+                                                    countryCode={item.country} 
+                                                    svg  
+                                                    style={{
+                                                    fontSize: '16px',
+                                                    lineHeight: '1em',
+                                                }}/>
+                                            <span className='ml-2 font-semibold'>{getCountryNameByCode(item.country)}</span>
+                                        </div>
                                     ))}
                                 </div>
                             </div>
