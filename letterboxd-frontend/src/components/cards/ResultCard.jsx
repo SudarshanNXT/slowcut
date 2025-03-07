@@ -62,7 +62,7 @@ const ResultCard = ({ result }) => {
                 {result.known_for && result.known_for.length > 0 && 
                     <div className='flex items-start md:items-center'>
                         <div className='mr-2 text-nowrap'>Known for: </div>
-                        <div className='flex flex-wrap items-center gap-2 md:gap-0 md:space-x-2'>
+                        <div className='flex flex-wrap items-center gap-2'>
                             {result.known_for.map((movie, index) => (
                                 movie.media_type === 'movie' ? (
                                     <Link to={`/film/${movie.id}`} className=' bg-gray-600 text-white text-sm p-1 rounded-md hover:text-blue-500' key={index}>{movie.title}</Link>

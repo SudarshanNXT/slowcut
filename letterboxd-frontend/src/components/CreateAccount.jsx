@@ -118,7 +118,7 @@ const CreateAccount = ({ createAccount, setCreateAccount }) => {
                             />
                         </div>
                     
-                        <button type="submit" className='w-fit py-1 px-2 rounded mb-4 self-start bg-hover hover:bg-green-500 text-gray-300 font-bold'>Sign Up</button>
+                        <button type="submit" className='w-fit py-1 px-2 rounded mb-4 self-start bg-hover hover:bg-green-500 text-white font-bold'>Sign Up</button>
                     </Form>
                 </div>
             </div>

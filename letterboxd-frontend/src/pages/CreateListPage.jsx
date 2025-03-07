@@ -49,7 +49,7 @@ const CreateListPage = () => {
             })
             if(response.ok){
                 const data = await response.json()
-                setLoading(false)
+                
                 navigate(`/list/${data.list._id}`)
             } else {
                 const error = await response.json()
@@ -58,8 +58,9 @@ const CreateListPage = () => {
         } catch (error) {
             console.error(error)
             setErrorMessage(error.message)
+        } finally {
+            setLoading(false)
         }
-
     }
 
     const handleSearch = async () => {
@@ -134,7 +135,7 @@ const CreateListPage = () => {
                                 required
                                 className=' bg-primary rounded-md p-2 w-full text-gray-300 focus:outline-none focus:bg-white focus:text-black'
                             />
-                            <div className='text-xs text-gray-300'>50 character limit</div>
+                            <div className='text-xs text-gray-300'>100 character limit</div>
                         </div>
 
                         <div className="flex flex-col space-y-2 mb-2">

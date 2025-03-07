@@ -5,10 +5,14 @@ import HomeMovieCard from '../components/cards/HomeMovieCard'
 import Features from '../components/Features'
 import Loading from '../components/Loading'
 import { AuthContext } from '../contexts/AuthContext'
+import ReviewCard from '../components/cards/ReviewCard'
+import ListCard from '../components/cards/ListCard'
 
 const HomePage = () => {
     const [trendingData, setTrendingData] = useState(null)
     const [popularData, setPopularData] = useState(null)
+    const [lists, setLists] = useState(null)
+    const [reviews, setReviews] = useState(null)
     const [loading, setLoading] = useState(true)
     const [createAccount, setCreateAccount] = useState(false)
     const [imageQuality, setImageQuality] = useState("original");
@@ -39,6 +43,8 @@ const HomePage = () => {
                     const data = await response.json()
                     setTrendingData(data.trending_data)
                     setPopularData(data.popular_data)
+                    setLists(data.lists)
+                    setReviews(data.reviews)
                     setLoading(false)
                 }
             } catch (error) {
@@ -49,6 +55,8 @@ const HomePage = () => {
         getHomePageData()
         // setTrendingData(sampleHomePageData.trending_data)
         // setPopularData(sampleHomePageData.popular_data)
+        // setLists(sampleHomePageData.lists)
+        // setReviews(sampleHomePageData.reviews)
         // setLoading(false)
     }, [])
 
@@ -116,6 +124,7 @@ const HomePage = () => {
 
                         <div className='text-gray-400 text-center'>The social network for film lovers.</div>
 
+                        {/*Popular films section */}
                         <div>
                             <div className='uppercase text-gray-400 border-b border-b-gray-400 mb-2'>Popular films</div>
                             <div className='hidden md:flex gap-x-3 lg:justify-center overflow-hidden'>
@@ -131,7 +140,8 @@ const HomePage = () => {
                         </div>
 
                         <Features />
-
+                        
+                        {/*Trending films section */}
                         <div>
                             <div className='uppercase text-gray-400 border-b border-b-gray-400 mb-2'>Trending films</div>
                             <div className='hidden md:flex gap-x-3 lg:justify-center overflow-hidden'>
@@ -143,6 +153,25 @@ const HomePage = () => {
                                 {trendingData.slice(0, 4).map((movie, index) => (
                                     <HomeMovieCard movie={movie} key={index}/>
                                 ))}
+                            </div>
+                        </div>
+
+                        {/*Popular reviews and lists section */}
+                        <div className='grid grid-cols-1 lg:grid-cols-4 gap-y-6 lg:gap-x-5'>
+                            <div className='lg:col-span-3'>
+                                <div className='uppercase text-gray-400 border-b border-b-gray-400 mb-2'>Popular Reviews</div>
+                                {reviews.map(review => (
+                                    <ReviewCard key={review._id} review={review}/>
+                                ))}
+                            </div>
+
+                            <div className='lg:col-span-1'>
+                                <div className='uppercase text-gray-400 border-b border-b-gray-400 mb-2'>Popular Lists</div>
+                                <div className='space-y-4'>
+                                    {lists.map(list => (
+                                        <ListCard key={list._id} list={list} home={true}/>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>

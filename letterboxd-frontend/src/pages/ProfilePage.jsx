@@ -10,6 +10,7 @@ import ReviewCard from '../components/cards/ReviewCard.jsx';
 import { FaCalendar } from "react-icons/fa";
 import { MdImageNotSupported } from "react-icons/md";
 import Loading from '../components/Loading.jsx';
+import ListCard from '../components/cards/ListCard.jsx';
 
 const ProfilePage = () => {
     const { username } = useParams()
@@ -118,47 +119,7 @@ const ProfilePage = () => {
                             {profileData.lists.length > 0 &&
                                 <div className='flex flex-col space-y-5'>
                                     {profileData.lists.map((list, index) => (
-                                        <div key={index} className='flex flex-col space-y-2'>
-                                            <div className='relative group h-[105px] w-[100px]'>
-                                                {list.list_items.map((list_item, inner_index) => (
-                                                    list_item ? (
-                                                        list_item.movie.image ? (
-                                                            <img key={inner_index}
-                                                                src={`https://image.tmdb.org/t/p/w500/${list_item.movie.image}`}
-                                                                alt={list_item.movie.title}
-                                                                className="absolute h-[105px] w-[70px] md:h-[111px] md:w-[76px] rounded-md transition-transform duration-300"
-                                                                style={{
-                                                                    left: `${inner_index * 40}px`,
-                                                                    zIndex: list.list_items.length - inner_index,
-                                                                }}
-                                                            />
-                                                        ) : (
-                                                            <div key={inner_index} 
-                                                                className={`absolute h-[105px] w-[70px] md:h-[111px] md:w-[76px] bg-gray-800 border text-gray-300 flex items-center justify-center font-semibold text-center rounded-md`}
-                                                                style={{
-                                                                    left: `${inner_index * 40}px`,
-                                                                    zIndex: list.list_items.length - inner_index,
-                                                                }}
-                                                                >
-                                                                <MdImageNotSupported size={40}/>
-                                                            </div> 
-                                                        )
-                                                    ) : (
-                                                        <div key={inner_index} 
-                                                            className={`absolute h-[105px] w-[70px] md:h-[111px] md:w-[76px] bg-gray-900 border text-gray-300 flex items-center justify-center font-semibold text-center rounded-md`}
-                                                            style={{
-                                                                left: `${inner_index * 40}px`,
-                                                                zIndex: list.list_items.length - inner_index,
-                                                            }}
-                                                            >
-                                                            {/* <MdImageNotSupported size={40}/> */}
-                                                        </div>
-                                                    )
-                                                ))}
-                                            </div>
-
-                                            <div className='font-bold text-white hover:text-blue-500'><Link to={`/list/${list._id}`}>{list.name}</Link> <span className='ml-2 text-gray-400 font-normal'>{list.list_items_length !== 1 ? `${list.list_items_length} films` : '1 film'}</span></div>
-                                        </div>
+                                        <ListCard key={index} list={list}/>
                                     ))}
                                 </div>
                             }

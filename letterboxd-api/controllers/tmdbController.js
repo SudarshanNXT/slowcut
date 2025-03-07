@@ -1,6 +1,9 @@
 import asyncHandler from "express-async-handler"
 import findDirector from "../utils/findDirector.js"
-import getGenres from "../utils/getGenres.js"
+import { getGenres } from "../utils/getGenres.js"
+import Review from "../models/reviewModel.js"
+import mapGrabMovie from "../utils/mapGrabMovie.js"
+import List from "../models/listModel.js"
 
 // @desc TMDB search query
 // route GET api/tmdb/search
@@ -18,7 +21,7 @@ const search = asyncHandler(async (req, res) => {
         base_url += 'person'
     }
 
-    const response = await fetch(`${base_url}?query=${query}&page=${Number(page)}&include_adult=true`, {
+    const response = await fetch(`${base_url}?query=${query}&page=${Number(page)}`, {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_API_KEY}`
@@ -257,6 +260,26 @@ const getHomePageData = asyncHandler(async (req, res) => {
 
         resObject['trending_data'] = arr
     }
+
+    //get reviews and lists for home page display
+    const review_ids = ['67cb27d8c25238a0f6ee09c1', '67cb36cfec0afa0e72d98c39', '67cb3887ec0afa0e72d98cf2']
+    const list_ids = ['67cb3336ec0afa0e72d98942', '67cb37d2ec0afa0e72d98c56', '67cb38d1ec0afa0e72d98d0f']
+    const reviews = [], lists = []
+    for(const review_id of review_ids){
+        const review = await Review.findById(review_id) 
+        reviews.push(review)
+    }
+    for(const list_id of list_ids){
+        const list = await List.findById(list_id)
+        const fullListItems = await mapGrabMovie(list.list_items)
+        let listObject = list.toObject()
+        listObject['list_items'] = fullListItems
+        listObject['list_items_length'] = list.list_items.length
+        lists.push(listObject)
+    }
+    const fullReviews = await mapGrabMovie(reviews)
+    resObject['reviews'] = fullReviews
+    resObject['lists'] = lists
 
     res.json(resObject)
 })

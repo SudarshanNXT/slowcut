@@ -86,4 +86,11 @@ const getGenres = (genreIds) => {
     });
 };
 
-export default getGenres
+const getGenreObjects = (genreNames) => {
+    return movie_genres.filter(genre => genreNames.includes(genre.name));
+};
+
+export {
+    getGenres,
+    getGenreObjects
+}

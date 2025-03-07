@@ -20,13 +20,15 @@ const Diary = ({ data, authorized, setUpdate, userData }) => {
                 <div className='pl-6 bg-gray-900 border-b border-b-gray-400'>Review</div>
                 {authorized ? <div className='pl-6 bg-gray-900 border-b border-b-gray-400'>Edit</div> : <div className='pl-6 bg-gray-900 border-b border-b-gray-400'>You</div>}
                 
-                {data.map((month, i) => (
-                    <div className=' ' key={i}>
-                        {month.map((entry, j) => (
-                            <DiaryEntry key={j} entry={entry} i={i} j={j} month={month} authorized={authorized} setUpdate={setUpdate} userData={userData}/>
-                        ))}
-                    </div>
-                ))}
+                <div className='flex flex-col'>
+                    {data.map((month, i) => (
+                        <div className='' key={i}>
+                            {month.map((entry, j) => (
+                                <DiaryEntry key={j} entry={entry} i={i} j={j} month={month} authorized={authorized} setUpdate={setUpdate} userData={userData}/>
+                            ))}
+                        </div>
+                    ))}
+                </div>
 
             </div>
 

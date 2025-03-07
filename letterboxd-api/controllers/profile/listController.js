@@ -4,6 +4,7 @@ import Profile from "../../models/profileModel.js"
 import Movie from "../../models/movieModel.js"
 import List from "../../models/listModel.js"
 import listStatusArr from "../../utils/listStatusArr.js"
+import { getGenreObjects } from "../../utils/getGenres.js"
 
 // @desc Create new list
 // route POST api/profile/create_list
@@ -19,7 +20,7 @@ const createList = asyncHandler(async (req, res) => {
     }
 
     //input validation
-    if(name.length > 50){
+    if(name.length > 100){
         res.status(400)
         throw new Error('List name too long.')
     }
@@ -43,7 +44,7 @@ const createList = asyncHandler(async (req, res) => {
                 title: list_item.title,
                 id: list_item.id,
                 image: list_item.poster_path,
-                genres: list_item.genres,
+                genres: getGenreObjects(list_item.genres),
                 release_date: list_item.release_date
             })
         }

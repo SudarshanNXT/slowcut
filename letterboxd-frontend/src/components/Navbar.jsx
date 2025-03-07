@@ -88,7 +88,7 @@ const Navbar = () => {
                                 <SearchBar />
                                 
                                 <div className='inline-flex items-center font-bold h-[28px] bg-hover rounded-md relative'>
-                                    <button onClick={() => setSuperMegaForm(true)} className=' hover:bg-green-500 flex items-center uppercase p-1 rounded-l-md'><FaPlus className='mr-1' size={12}/><div className='mr-1'>Log</div></button>
+                                    <button onClick={() => setSuperMegaForm(true)} className=' hover:bg-green-500 flex items-center uppercase p-1 rounded-l-md'><FaPlus className='mr-1' size={12}/><div className='mr-1 text-white'>Log</div></button>
                                     <div className='h-full w-[1px] bg-white'></div>
                                     <button onClick={() => setCreateList(prev => !prev)} className='hover:bg-green-500 flex items-center p-1 h-full rounded-r-md'><IoIosArrowDown className=' font-bold text-white' size={14}/></button>
 
