@@ -8,20 +8,13 @@ const ProfileSubPageMenu = ({ username }) => {
         <>
             {/*Desktop navigation */}
             <div className='hidden md:flex items-center justify-center border border-gray-500 rounded-md py-2 text-gray-400 font-semibold'>
-                {/* <Link to={`/${username}`} className={`px-2 ${location.pathname === `/${username}` ? 'border-b-2 border-b-hover text-white' : ''}`}>Profile</Link>
-                <Link to={`/${username}/watched`} className={`px-2 ${location.pathname === `/${username}/watched` ? 'border-b-2 border-b-hover text-white' : ''}`}>Watched</Link>
-                <Link to={`/${username}/diary`} className={`px-2 ${location.pathname === `/${username}/diary` ? 'border-b-2 border-b-hover text-white' : ''}`}>Diary</Link>
-                <Link to={`/${username}/reviews`} className={`px-2 ${location.pathname === `/${username}/reviews` ? 'border-b-2 border-b-hover text-white' : ''}`}>Reviews</Link>
-                <Link to={`/${username}/watchlist`} className={`px-2 ${location.pathname === `/${username}/watchlist` ? 'border-b-2 border-b-hover text-white' : ''}`}>Watchlist</Link>
-                <Link to={`/${username}/likes`} className={`px-2 ${location.pathname === `/${username}/likes` ? 'border-b-2 border-b-hover text-white' : ''}`}>Likes</Link>
-                <Link to={`/${username}/lists`} className={`px-2 ${location.pathname === `/${username}/lists` ? 'border-b-2 border-b-hover text-white' : ''}`}>Lists</Link> */}
-                <a href={`/${username}`} className={`px-2 ${location.pathname === `/${username}` ? 'border-b-2 border-b-hover text-white' : ''}`}>Profile</a>
-                <a href={`/${username}/watched`} className={`px-2 ${location.pathname === `/${username}/watched` ? 'border-b-2 border-b-hover text-white' : ''}`}>Watched</a>
-                <a href={`/${username}/diary`} className={`px-2 ${location.pathname === `/${username}/diary` ? 'border-b-2 border-b-hover text-white' : ''}`}>Diary</a>
-                <a href={`/${username}/reviews`} className={`px-2 ${location.pathname === `/${username}/reviews` ? 'border-b-2 border-b-hover text-white' : ''}`}>Reviews</a>
-                <a href={`/${username}/watchlist`} className={`px-2 ${location.pathname === `/${username}/watchlist` ? 'border-b-2 border-b-hover text-white' : ''}`}>Watchlist</a>
-                <a href={`/${username}/likes`} className={`px-2 ${location.pathname === `/${username}/likes` ? 'border-b-2 border-b-hover text-white' : ''}`}>Likes</a>
-                <a href={`/${username}/lists`} className={`px-2 ${location.pathname === `/${username}/lists` ? 'border-b-2 border-b-hover text-white' : ''}`}>Lists</a>
+                <a href={`/${username}`} className={`px-2 ${location.pathname === `/${username}` ? 'border-b-2 border-b-hover text-white' : ''} hover:text-white`}>Profile</a>
+                <a href={`/${username}/watched`} className={`px-2 ${location.pathname === `/${username}/watched` ? 'border-b-2 border-b-hover text-white' : ''} hover:text-white`}>Watched</a>
+                <a href={`/${username}/diary`} className={`px-2 ${location.pathname === `/${username}/diary` ? 'border-b-2 border-b-hover text-white' : ''} hover:text-white`}>Diary</a>
+                <a href={`/${username}/reviews`} className={`px-2 ${location.pathname === `/${username}/reviews` ? 'border-b-2 border-b-hover text-white' : ''} hover:text-white`}>Reviews</a>
+                <a href={`/${username}/watchlist`} className={`px-2 ${location.pathname === `/${username}/watchlist` ? 'border-b-2 border-b-hover text-white' : ''} hover:text-white`}>Watchlist</a>
+                <a href={`/${username}/likes`} className={`px-2 ${location.pathname === `/${username}/likes` ? 'border-b-2 border-b-hover text-white' : ''} hover:text-white`}>Likes</a>
+                <a href={`/${username}/lists`} className={`px-2 ${location.pathname === `/${username}/lists` ? 'border-b-2 border-b-hover text-white' : ''} hover:text-white`}>Lists</a>
                 
             </div>
 

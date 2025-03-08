@@ -14,6 +14,7 @@ const CreateListPage = () => {
     const [errorMessage, setErrorMessage] = useState('')
     const [loading, setLoading] = useState(false)
     const inputRef = useRef(null)
+    const [draggedIndex, setDraggedIndex] = useState(null);
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -110,6 +111,20 @@ const CreateListPage = () => {
             ...prev, 
             list_items: prev.list_items.filter((_, i) => i !== index)
         }));
+    }
+
+    const handleDrop = (index) => {
+        if (draggedIndex === null) return
+
+        const updatedItems = [...formData.list_items]
+        const [movedItem] = updatedItems.splice(draggedIndex, 1)
+        updatedItems.splice(index, 0, movedItem)
+
+        setFormData(prev => ({
+            ...prev,
+            list_items: updatedItems
+        }))
+        setDraggedIndex(null);
     }
 
     return loading ? (
@@ -218,12 +233,21 @@ const CreateListPage = () => {
             {formData && formData.list_items && formData.list_items.length > 0 && 
                 <div>
                     {formData.list_items.map((movie, index) => (
-                        <ListItemCard key={index} movie={movie} ranked={formData.ranked} createListPage={true} handleListItemDelete={handleListItemDelete} index={index}/>
+                        <ListItemCard 
+                            key={index} 
+                            movie={movie} 
+                            ranked={formData.ranked} 
+                            createListPage={true} 
+                            handleListItemDelete={handleListItemDelete} 
+                            index={index}
+                            setDraggedIndex={setDraggedIndex}
+                            handleDrop={handleDrop}
+                        />
                     ))}
                 </div>
             }
             {formData && formData.list_items && formData.list_items.length === 0 &&
-                <div className='w-full border flex flex-col justify-center items-center h-[250px] mt-2'>
+                <div className='w-full border flex flex-col justify-center items-center h-[250px] mt-2 p-2 md:p-0 rounded-md'>
                     <span className='text-white text-lg'>Your list is empty </span>
                     <span className='text-gray-400'>Add films using the field above, or from the links on a film poster or page.</span>
                 </div>

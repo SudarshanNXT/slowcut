@@ -281,6 +281,36 @@ const deleteFavoriteFilm = asyncHandler(async (req, res) => {
     res.json(`${movie.title} removed from ${user.username}'s watched movies`)
 })
 
+// @desc Update favorite films
+// route PUT api/profile/update_favorite_films
+// @access Private
+const updateFavoriteFilms = asyncHandler(async (req, res) => {
+    const { favorite_films } = req.body
+    const user = await User.findById(req.user._id)
+    const profile = await Profile.findOne({ user: req.user._id })
+
+    if(!profile || !user){
+        res.status(404)
+        throw new Error('User not found')
+    }
+
+    //update favorite films in profile
+    const newFavoriteFilms = []
+    for(const favorite_film of favorite_films){
+        if(favorite_film){
+            const obj = {
+                'movie': favorite_film.movie._id,
+                'id': favorite_film.id
+            }
+            newFavoriteFilms.push(obj)
+        }
+    }
+    profile.favorite_films = newFavoriteFilms
+    await profile.save()
+
+    res.json('Successfully updated favorite films')
+})
+
 // @desc Get pre display data (array of movies)
 // route POST api/profile/get_pre_display_data
 // @access Private
@@ -354,5 +384,6 @@ export {
     updateProfile,
     addFavoriteFilm,
     deleteFavoriteFilm,
+    updateFavoriteFilms,
     getPreDisplayData
 }

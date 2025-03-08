@@ -5,7 +5,7 @@ import SubSearchForm from './SubSearchForm';
 import { Link } from 'react-router-dom';
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
 
-const FavoriteFilms = ({ authorized, favorite_films, setUpdate }) => {
+const FavoriteFilms = ({ authorized, favorite_films, setUpdate, setDraggedIndex, handleDrop }) => {
     const [index, setIndex] = useState(null)
     const [subSearch, setSubSearch] = useState(false)
 
@@ -45,6 +45,14 @@ const FavoriteFilms = ({ authorized, favorite_films, setUpdate }) => {
         setSubSearch(true)
     }
 
+    const handleDragStart = (index) => {
+        setDraggedIndex(index);
+    }
+
+    const handleDragOver = (e, index) => {
+        e.preventDefault()
+    }
+
     return (
         <>
             <SubSearchForm subSearch={subSearch} setSubSearch={setSubSearch} favorite_films={favorite_films} replace_index={index} setIndex={setIndex} setUpdate={setUpdate}/>
@@ -55,7 +63,15 @@ const FavoriteFilms = ({ authorized, favorite_films, setUpdate }) => {
 
                 {favorite_films.map((movie, index) => (
                     movie ? (
-                        <Link to={`/film/${movie.movie.id}`} key={index} className='relative group'>
+                        <Link 
+                            to={`/film/${movie.movie.id}`} 
+                            key={index} 
+                            draggable 
+                            onDragStart={() => handleDragStart(index)}
+                            onDragOver={(e) => handleDragOver(e, index)}
+                            onDrop={() => handleDrop(index)}
+                            className='relative group cursor-move'
+                        >
                             {movie.movie.image ? <img src={`https://image.tmdb.org/t/p/w500/${movie.movie.image}`} alt={movie.movie.title} className='w-full rounded-md'/>
                             : <div className='w-full h-full bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-center rounded-md text-lg'>{movie.movie.title}</div>}
                             {authorized && <button onClick={(e) => handleFavoriteFilmDelete(e, movie.movie.id)} className='md:hidden md:group-hover:block absolute -top-1 -right-1 bg-gray-500 text-white rounded-full p-1 font-bold'><IoClose size={20}/></button>}

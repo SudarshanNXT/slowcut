@@ -67,7 +67,7 @@ const createList = asyncHandler(async (req, res) => {
 // @access Private
 const updateListData = asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { name, description, ranked, is_public } = req.body
+    const { name, description, ranked, is_public, list_items } = req.body
     const user = await User.findById(req.user._id)
     const profile = await Profile.findOne({ user: req.user._id })
     const list = await List.findById(id)
@@ -88,6 +88,20 @@ const updateListData = asyncHandler(async (req, res) => {
     list.description = description,
     list.ranked = ranked,
     list.is_public = is_public
+
+    //update list items
+    const newListItems = []
+    for(const list_item of list_items){
+        const movie = await Movie.findById(list_item._id)
+        const obj = {
+            'movie': list_item._id,
+            'type': 'Movie',
+            'id': movie.id
+        }
+        newListItems.push(obj)
+    }
+    list.list_items = newListItems
+
     await list.save()
     res.json(`${list.name} updated successfully`)
 

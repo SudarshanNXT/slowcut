@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext.jsx';
 import FavoriteFilms from '../components/FavoriteFilms.jsx';
 import ProfileHeader from '../components/ProfileHeader.jsx';
 import EditProfileForm from '../components/EditProfileForm.jsx';
 import ProfileSubPageMenu from '../components/ProfileSubPageMenu.jsx';
 import ReviewCard from '../components/cards/ReviewCard.jsx';
 import { FaCalendar } from "react-icons/fa";
-import { MdImageNotSupported } from "react-icons/md";
 import Loading from '../components/Loading.jsx';
 import ListCard from '../components/cards/ListCard.jsx';
 
 const ProfilePage = () => {
     const { username } = useParams()
-    const { deleteProfile } = useContext(AuthContext)
     const [profileData, setProfileData] = useState(null)
     const [authorized, setAuthorized] = useState(null)
+    const [draggedIndex, setDraggedIndex] = useState(null);
     
     const [loading, setLoading] = useState(true)
     const [update, setUpdate] = useState(1)
@@ -28,7 +25,6 @@ const ProfilePage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        
         const getProfileData = async () => {
             try {
                 const response = await fetch(`${apiBaseUrl}/profile/get_profile_data/${username}`, {
@@ -51,6 +47,45 @@ const ProfilePage = () => {
         }
         getProfileData()
     }, [username, update])
+
+    const handleDrop = async (index) => {
+        if (draggedIndex === null) return
+
+        const updatedItems = [...profileData.favorite_films]
+        const [movedItem] = updatedItems.splice(draggedIndex, 1)
+        updatedItems.splice(index, 0, movedItem)
+
+        setProfileData(prev => ({
+            ...prev,
+            favorite_films: updatedItems
+        }))
+        setDraggedIndex(null);
+
+        await updateFavoriteFilms(updatedItems)
+    }
+
+    const updateFavoriteFilms = async (updatedItems) => {
+        try {
+            const response = await fetch(`${apiBaseUrl}/profile/update_favorite_films`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }, 
+                body: JSON.stringify({
+                    favorite_films: updatedItems
+                })
+            })
+            if(response.ok){
+                const data = await response.json()
+            } else {
+                const error = response.json()
+                throw new Error(error.message)
+            }
+        } catch(error) {
+            console.error(error.message)   
+        }
+    }
     
     return loading ? (
         <div className='flex justify-center items-center min-h-[calc(90vh-65px)]'>
@@ -66,7 +101,7 @@ const ProfilePage = () => {
 
                 <div className='flex flex-col md:items-start space-y-6 md:space-y-0 lg:flex-row lg:space-x-8'>
                     <div className='flex flex-col w-full px-3 md:px-0 space-y-6'>
-                        <FavoriteFilms authorized={authorized} favorite_films={profileData.favorite_films} setUpdate={setUpdate}/>
+                        <FavoriteFilms authorized={authorized} favorite_films={profileData.favorite_films} setUpdate={setUpdate} setDraggedIndex={setDraggedIndex} handleDrop={handleDrop}/>
 
                         {/*Reviews section */}
                         <div>

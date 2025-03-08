@@ -8,7 +8,7 @@ const ListMovieCard = ({ movie, ranked }) => {
         <div className='flex flex-col items-center w-full h-full'>
             <Link to={`/film/${movie.id}`} className='rounded-md relative group w-full h-full'>
                 {movie.poster_path || movie.image ? <img src={imageUrl} alt={movie.title} className='w-full rounded-md'/> : (
-                    <div className='w-full h-full bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-center rounded-md'>{movie.title}</div>
+                    <div className='w-full aspect-[2/3] bg-gray-600 text-gray-300 flex items-center justify-center font-semibold text-center rounded-md'>{movie.title}</div>
                 )}
                 <div className='absolute opacity-0 group-hover:opacity-100 inset-0 border-4 border-hover rounded-md'></div>
             </Link>

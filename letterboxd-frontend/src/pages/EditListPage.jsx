@@ -11,6 +11,7 @@ const EditListPage = () => {
     const [results, setResults] = useState(null)
     const [loading, setLoading] = useState(true)
     const inputRef = useRef(null)
+    const [draggedIndex, setDraggedIndex] = useState(null);
 
     const [update, setUpdate] = useState(5)
     const [listData, setListData] = useState(null)
@@ -19,7 +20,8 @@ const EditListPage = () => {
         name: '',
         description: '',
         ranked: false,
-        is_public: true
+        is_public: true,
+        list_items: []
     })
 
     const navigate = useNavigate();
@@ -48,7 +50,8 @@ const EditListPage = () => {
                                 name: data.list.name,
                                 description: data.list.description,
                                 ranked: data.list.ranked,
-                                is_public: data.list.is_public
+                                is_public: data.list.is_public,
+                                list_items: data.movies
                             })
                             setListData(data)
                         } else {
@@ -188,6 +191,24 @@ const EditListPage = () => {
         }
     }
 
+    const handleDrop = (index) => {
+        if (draggedIndex === null) return
+        
+        const updatedItems = [...listData.movies];
+        const [movedItem] = updatedItems.splice(draggedIndex, 1);
+        updatedItems.splice(index, 0, movedItem);
+
+        setListData(prev => ({
+            ...prev,
+            movies: updatedItems
+        }))
+        setFormData(prev => ({
+            ...prev,
+            list_items: updatedItems
+        }))
+        setDraggedIndex(null);
+    };
+
     return (
         <div className='flex flex-col mx-3 md:mx-0'>
             <div className='text-left text-2xl font-semibold text-gray-400 border-b border-gray-400 pb-1 mt-3'>Edit List</div>
@@ -285,18 +306,25 @@ const EditListPage = () => {
                 </div>                
             </Form>
 
-            
-
             {/*List items display */}
             {listData && listData.movies && listData.movies.length > 0 && 
                 <div>
                     {listData.movies.map((movie, index) => (
-                        <ListItemCard key={index} movie={movie} ranked={formData.ranked} list_id={id} setUpdate={setUpdate}/>
+                        <ListItemCard 
+                            key={index} 
+                            movie={movie} 
+                            ranked={formData.ranked} 
+                            list_id={id} 
+                            setUpdate={setUpdate} 
+                            index={index}
+                            setDraggedIndex={setDraggedIndex}
+                            handleDrop={handleDrop}
+                        />
                     ))}
                 </div>
             }
             {listData && listData.movies && listData.movies.length === 0 &&
-                <div className='w-full border flex justify-center items-center text-white h-[250px] mt-2'>Your list is empty.</div>
+                <div className='w-full border flex justify-center items-center text-white h-[250px] mt-2 p-2 md:p-0 rounded-md'>Your list is empty.</div>
             }
         </div>
     )
