@@ -103,7 +103,12 @@ const deleteProfile = asyncHandler(async (req, res) => {
 // route GET api/users/check_token
 // @access Private
 const checkToken = asyncHandler(async (req, res) => {
-    res.json('check token')
+    if(req.user){
+        res.json('check token')
+    } else {
+        res.status(404)
+        throw new Error('Token not validated successfully')
+    }
 })
 
 export {
