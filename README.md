@@ -1,5 +1,5 @@
-🎬 SlowCut – A Social Platform for Movie Lovers
-SlowCut is a platform where movie lovers can discover films, share opinions, follow others, and build their own movie journal — like a personal and social diary for everything cinema.
+ SlowCut is a p![SlowCut Logo](./public/slowcut-brand.png) – A Social Platform for Movie Lovers
+latform where movie lovers can discover films, share opinions, follow others, and build their own movie journal — like a personal and social diary for everything cinema.
 
 🌐 Live Website
 Visit the live site: https://slowcut.vercel.app
